@@ -8,7 +8,7 @@ if ($conn->connect_error) {
 }
 
 // Retrieve data from database
-$sql = "SELECT * FROM sys_config";
+$sql = "SELECT * FROM users";
 $result = $conn->query($sql);
 
 // Check if query execution was successful
