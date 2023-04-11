@@ -17,7 +17,7 @@ $data = $data ?? [];
 
 <ul>
     <?php foreach ($data as $row): ?>
-        <p><?php echo $row['variable'] . '|   | ' . $row['value'] . '|   | ' . $row['set_time'] . '|   | ' . $row['set_by']; ?></p>
+        <p><?php echo $row['user_id'] . '|   | ' . $row['username'] . '|   | ' . $row['password'] . '|   | ' . $row['first_name'] . '|   | ' . $row['last_name'] . '|   | ' . $row['email']; ?></p>
     <?php endforeach; ?>
 </ul>
 
