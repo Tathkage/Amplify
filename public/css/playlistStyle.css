@@ -1,0 +1,33 @@
+body {
+    background-color: #D8BFD8; /* Lilac background color */
+    font-family: Arial, sans-serif;
+}
+
+.playlist-container {
+    margin: 0 auto;
+    max-width: 800px;
+    padding: 20px;
+    background-color: #FFFFFF; /* White container background color */
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Box shadow */
+}
+
+h1, h2 {
+    color: #800080; /* Purple text color */
+}
+
+ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+li {
+    margin-bottom: 5px;
+}
+
+form {
+    margin-top: 10px;
+}
+
+label, input, select {
+    margin-bottom: 5px;
+}
