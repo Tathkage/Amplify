@@ -23,9 +23,9 @@ $conn->select_db(DB_NAME);
 $sql = "DROP TABLE IF EXISTS album_artists, song_artists, song_playlists, admins, reviews, artists, songs, playlists, users, albums;
 
 CREATE TABLE `admins` (
-  `admin_id` int NOT NULL,
-  `admin_password` int NOT NULL,
-  `user_id` int NOT NULL
+  `admin_id` int(11) NOT NULL,
+  `admin_password` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -35,8 +35,8 @@ CREATE TABLE `admins` (
 --
 
 CREATE TABLE `albums` (
-  `album_id` int NOT NULL,
-  `album_title` varchar(100) COLLATE utf8mb4_general_ci NOT NULL,
+  `album_id` int(11) NOT NULL,
+  `album_title` varchar(100) NOT NULL,
   `release_date` date NOT NULL,
   `release_time` time NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -48,9 +48,9 @@ CREATE TABLE `albums` (
 --
 
 CREATE TABLE `album_artists` (
-  `album_artists_id` int NOT NULL,
-  `album_id` int NOT NULL,
-  `artist_id` int NOT NULL
+  `album_artists_id` int(11) NOT NULL,
+  `album_id` int(11) NOT NULL,
+  `artist_id` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -60,9 +60,9 @@ CREATE TABLE `album_artists` (
 --
 
 CREATE TABLE `artists` (
-  `artist_id` int NOT NULL,
-  `user_id` int NOT NULL,
-  `stage_name` varchar(50) COLLATE utf8mb4_general_ci NOT NULL
+  `artist_id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL,
+  `stage_name` varchar(50) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -72,8 +72,8 @@ CREATE TABLE `artists` (
 --
 
 CREATE TABLE `playlists` (
-  `playlist_id` int NOT NULL,
-  `user_id` int DEFAULT NULL
+  `playlist_id` int(11) NOT NULL,
+  `user_id` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -83,12 +83,12 @@ CREATE TABLE `playlists` (
 --
 
 CREATE TABLE `reviews` (
-  `review_id` int NOT NULL,
-  `user_id` int NOT NULL,
-  `song_id` int DEFAULT NULL,
-  `album_id` int DEFAULT NULL,
-  `comment` text COLLATE utf8mb4_general_ci NOT NULL,
-  `rating` int NOT NULL
+  `review_id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL,
+  `song_id` int(11) DEFAULT NULL,
+  `album_id` int(11) DEFAULT NULL,
+  `comment` text NOT NULL,
+  `rating` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -98,13 +98,13 @@ CREATE TABLE `reviews` (
 --
 
 CREATE TABLE `songs` (
-  `song_id` int NOT NULL,
-  `song_title` int NOT NULL,
-  `length` time NOT NULL,
-  `listens` int NOT NULL,
-  `album_id` int DEFAULT NULL,
-  `release_date` int NOT NULL,
-  `release_time` int NOT NULL
+  `song_id` int(11) NOT NULL,
+  `song_title` varchar(100) NOT NULL,
+  `length` int(11) NOT NULL,
+  `listens` int(11) NOT NULL,
+  `album_id` int(11) DEFAULT NULL,
+  `release_date` date NOT NULL,
+  `release_time` time NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -114,9 +114,9 @@ CREATE TABLE `songs` (
 --
 
 CREATE TABLE `song_artists` (
-  `song_artist_id` int NOT NULL,
-  `song_id` int NOT NULL,
-  `artist_id` int NOT NULL
+  `song_artist_id` int(11) NOT NULL,
+  `song_id` int(11) NOT NULL,
+  `artist_id` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -126,9 +126,9 @@ CREATE TABLE `song_artists` (
 --
 
 CREATE TABLE `song_playlists` (
-  `song_playlist_id` int NOT NULL,
-  `playlist_id` int NOT NULL,
-  `song_id` int NOT NULL
+  `song_playlist_id` int(11) NOT NULL,
+  `playlist_id` int(11) NOT NULL,
+  `song_id` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -138,12 +138,12 @@ CREATE TABLE `song_playlists` (
 --
 
 CREATE TABLE `users` (
-  `user_id` int NOT NULL,
-  `username` varchar(20) COLLATE utf8mb4_general_ci NOT NULL,
-  `password` varchar(20) COLLATE utf8mb4_general_ci NOT NULL,
-  `first_name` varchar(30) COLLATE utf8mb4_general_ci NOT NULL,
-  `last_name` varchar(30) COLLATE utf8mb4_general_ci NOT NULL,
-  `email` varchar(320) COLLATE utf8mb4_general_ci NOT NULL
+  `user_id` int(11) NOT NULL,
+  `username` varchar(20) NOT NULL,
+  `password` varchar(20) NOT NULL,
+  `first_name` varchar(30) NOT NULL,
+  `last_name` varchar(30) NOT NULL,
+  `email` varchar(320) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -242,49 +242,49 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT for table `albums`
 --
 ALTER TABLE `albums`
-  MODIFY `album_id` int NOT NULL AUTO_INCREMENT;
+  MODIFY `album_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT for table `album_artists`
 --
 ALTER TABLE `album_artists`
-  MODIFY `album_artists_id` int NOT NULL AUTO_INCREMENT;
+  MODIFY `album_artists_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT for table `artists`
 --
 ALTER TABLE `artists`
-  MODIFY `artist_id` int NOT NULL AUTO_INCREMENT;
+  MODIFY `artist_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `playlists`
 --
 ALTER TABLE `playlists`
-  MODIFY `playlist_id` int NOT NULL AUTO_INCREMENT;
+  MODIFY `playlist_id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `songs`
 --
 ALTER TABLE `songs`
-  MODIFY `song_id` int NOT NULL AUTO_INCREMENT;
+  MODIFY `song_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=22;
 
 --
 -- AUTO_INCREMENT for table `song_artists`
 --
 ALTER TABLE `song_artists`
-  MODIFY `song_artist_id` int NOT NULL AUTO_INCREMENT;
+  MODIFY `song_artist_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=20;
 
 --
 -- AUTO_INCREMENT for table `song_playlists`
 --
 ALTER TABLE `song_playlists`
-  MODIFY `song_playlist_id` int NOT NULL AUTO_INCREMENT;
+  MODIFY `song_playlist_id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `user_id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- Constraints for dumped tables
@@ -294,54 +294,54 @@ ALTER TABLE `users`
 -- Constraints for table `admins`
 --
 ALTER TABLE `admins`
-  ADD CONSTRAINT `Admin to User` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`) ON DELETE CASCADE ON UPDATE RESTRICT;
+  ADD CONSTRAINT `Admin to User` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`) ON DELETE CASCADE;
 
 --
 -- Constraints for table `album_artists`
 --
 ALTER TABLE `album_artists`
-  ADD CONSTRAINT `AA to Album` FOREIGN KEY (`album_id`) REFERENCES `albums` (`album_id`) ON DELETE CASCADE ON UPDATE RESTRICT,
-  ADD CONSTRAINT `AA to Artist` FOREIGN KEY (`artist_id`) REFERENCES `artists` (`artist_id`) ON DELETE CASCADE ON UPDATE RESTRICT;
+  ADD CONSTRAINT `AA to Album` FOREIGN KEY (`album_id`) REFERENCES `albums` (`album_id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `AA to Artist` FOREIGN KEY (`artist_id`) REFERENCES `artists` (`artist_id`) ON DELETE CASCADE;
 
 --
 -- Constraints for table `artists`
 --
 ALTER TABLE `artists`
-  ADD CONSTRAINT `Artist to User` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`) ON DELETE CASCADE ON UPDATE RESTRICT;
+  ADD CONSTRAINT `Artist to User` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`) ON DELETE CASCADE;
 
 --
 -- Constraints for table `playlists`
 --
 ALTER TABLE `playlists`
-  ADD CONSTRAINT `Playlist User` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`) ON DELETE SET NULL ON UPDATE RESTRICT;
+  ADD CONSTRAINT `Playlist User` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`) ON DELETE SET NULL;
 
 --
 -- Constraints for table `reviews`
 --
 ALTER TABLE `reviews`
-  ADD CONSTRAINT `Review to Album` FOREIGN KEY (`album_id`) REFERENCES `albums` (`album_id`) ON DELETE CASCADE ON UPDATE RESTRICT,
-  ADD CONSTRAINT `Review to Song` FOREIGN KEY (`song_id`) REFERENCES `songs` (`song_id`) ON DELETE CASCADE ON UPDATE RESTRICT,
-  ADD CONSTRAINT `Review to User` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`) ON DELETE CASCADE ON UPDATE RESTRICT;
+  ADD CONSTRAINT `Review to Album` FOREIGN KEY (`album_id`) REFERENCES `albums` (`album_id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `Review to Song` FOREIGN KEY (`song_id`) REFERENCES `songs` (`song_id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `Review to User` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`) ON DELETE CASCADE;
 
 --
 -- Constraints for table `songs`
 --
 ALTER TABLE `songs`
-  ADD CONSTRAINT `Song to Album` FOREIGN KEY (`album_id`) REFERENCES `albums` (`album_id`) ON DELETE SET NULL ON UPDATE RESTRICT;
+  ADD CONSTRAINT `Song to Album` FOREIGN KEY (`album_id`) REFERENCES `albums` (`album_id`) ON DELETE SET NULL;
 
 --
 -- Constraints for table `song_artists`
 --
 ALTER TABLE `song_artists`
-  ADD CONSTRAINT `SA to Artist` FOREIGN KEY (`artist_id`) REFERENCES `artists` (`artist_id`) ON DELETE CASCADE ON UPDATE RESTRICT,
-  ADD CONSTRAINT `SA to Song` FOREIGN KEY (`song_id`) REFERENCES `songs` (`song_id`) ON DELETE CASCADE ON UPDATE RESTRICT;
+  ADD CONSTRAINT `SA to Artist` FOREIGN KEY (`artist_id`) REFERENCES `artists` (`artist_id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `SA to Song` FOREIGN KEY (`song_id`) REFERENCES `songs` (`song_id`) ON DELETE CASCADE;
 
 --
 -- Constraints for table `song_playlists`
 --
 ALTER TABLE `song_playlists`
-  ADD CONSTRAINT `SP to Playlist` FOREIGN KEY (`playlist_id`) REFERENCES `playlists` (`playlist_id`) ON DELETE CASCADE ON UPDATE RESTRICT,
-  ADD CONSTRAINT `SP to Song` FOREIGN KEY (`song_id`) REFERENCES `songs` (`song_id`) ON DELETE CASCADE ON UPDATE RESTRICT;
+  ADD CONSTRAINT `SP to Playlist` FOREIGN KEY (`playlist_id`) REFERENCES `playlists` (`playlist_id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `SP to Song` FOREIGN KEY (`song_id`) REFERENCES `songs` (`song_id`) ON DELETE CASCADE;
 COMMIT;";
 
 // Execute the query
