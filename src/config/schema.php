@@ -65,13 +65,6 @@ CREATE TABLE `artists` (
   `stage_name` varchar(50) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
---
--- Dumping data for table `artists`
---
-
-INSERT INTO `artists` (`artist_id`, `user_id`, `stage_name`) VALUES
-(1, 2, 'Big Way');
-
 -- --------------------------------------------------------
 
 --
@@ -107,7 +100,7 @@ CREATE TABLE `reviews` (
 CREATE TABLE `songs` (
   `song_id` int(11) NOT NULL,
   `song_title` varchar(100) NOT NULL,
-  `length` time NOT NULL,
+  `length` int(11) NOT NULL,
   `listens` int(11) NOT NULL,
   `album_id` int(11) DEFAULT NULL,
   `release_date` date NOT NULL,
@@ -249,13 +242,13 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT for table `albums`
 --
 ALTER TABLE `albums`
-  MODIFY `album_id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `album_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT for table `album_artists`
 --
 ALTER TABLE `album_artists`
-  MODIFY `album_artists_id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `album_artists_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT for table `artists`
@@ -273,13 +266,13 @@ ALTER TABLE `playlists`
 -- AUTO_INCREMENT for table `songs`
 --
 ALTER TABLE `songs`
-  MODIFY `song_id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `song_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=22;
 
 --
 -- AUTO_INCREMENT for table `song_artists`
 --
 ALTER TABLE `song_artists`
-  MODIFY `song_artist_id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `song_artist_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=20;
 
 --
 -- AUTO_INCREMENT for table `song_playlists`

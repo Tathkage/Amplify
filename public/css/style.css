@@ -15,6 +15,7 @@ td, th {
     padding: 8px;
 }
 
+/* pop css style*/
 .popup {
     display: none;
     position: fixed;
@@ -28,7 +29,7 @@ td, th {
 
 .popup-content {
     background-color: white;
-    border: 1px solid black;
+    border:10px solid salmon;
     border-radius: 5px;
     padding: 100px;
     position: absolute;
