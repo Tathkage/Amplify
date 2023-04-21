@@ -2,7 +2,7 @@
 
 require_once '../src/config/config.php';
 
-class artistsController
+class artistPageController
 {
     private $conn;
 
@@ -18,7 +18,9 @@ class artistsController
     // disconnect from database
     public function disconnect()
     {
-        $this->conn->close();
+        if (mysqli_connect_errno()) {
+            $this->conn->close();
+        }
     }
 
     // function to collect songs for viewing
@@ -28,7 +30,7 @@ class artistsController
 
         // Collects all songs created by artist
         // artist_id hard coded until we get user code
-        $sql = "SELECT songs.song_title, songs.listens, songs.album_id, albums.album_title
+        $sql = "SELECT songs.song_title, songs.listens, songs.album_id, albums.album_title, songs.length
             FROM songs
             JOIN song_artists ON songs.song_id = song_artists.song_id
             JOIN artists ON song_artists.artist_id = artists.artist_id
@@ -112,23 +114,25 @@ class artistsController
     }
 
     // function to save information for new song
-    function saveNewSongData()
+    function saveNewSongData($song_title = 'default', $length = '100', $album_id ='NULL', $release_date ='/01/01/2022', $release_time = '12:45:00')
     {
         $this->connect();
 
-        //    get information from song form
-        $song_title = $_POST['song_title'];
-        $length = $_POST['length'];
-        $album_id = $_POST['album_id'];
-        $release_date = $_POST['release_date'];
-        $release_time = $_POST['release_time'];
+        if (!empty($_POST)) {
+            //    get information from song form
+            $song_title = $_POST['song_title'];
+            $length = $_POST['length'];
+            $album_id = $_POST['album_id'];
+            $release_date = $_POST['release_date'];
+            $release_time = $_POST['release_time'];
+        }
 
         //    handle empty cases
         if (empty($song_title) || empty($length) || empty($release_date) || empty($release_time)) {
             return;
         }
 
-        if (empty($album_id)) {
+        if ($album_id === 'NULL' || empty($album_id) ) {
             $album_id = NULL;
         }
 
@@ -158,7 +162,12 @@ class artistsController
         $album_title = $_POST['album_title'];
         $release_date = $_POST['release_date'];
         $release_time = $_POST['release_time'];
-        $songs = $_POST['songs'];
+        $previousSongs = $_POST['songs'];
+        $songTitles = $_POST['song_title'];
+        $songLengths = $_POST['length'];
+        $newSongs = array_combine($songTitles, $songLengths);
+
+
 
         //    handle empty cases
         if (empty($album_title) || empty($release_date) || empty($release_time)) {
@@ -180,8 +189,8 @@ class artistsController
         mysqli_stmt_close($albumArtistsInput);
 
         // give songs album id foreign key if necessary
-        if (!empty($songs)) {
-            foreach ($songs as $song_id) {
+        if (!empty($previousSongs)) {
+            foreach ($previousSongs as $song_id) {
                 $foreignKeyInsert = mysqli_prepare($this->conn, 'UPDATE songs set album_id = ? where song_id = ?');
                 mysqli_stmt_bind_param($foreignKeyInsert, 'ii', $album_id, $song_id);
                 mysqli_stmt_execute($foreignKeyInsert);
@@ -189,8 +198,17 @@ class artistsController
             }
         }
 
-        $this->disconnect();
-
+        // insert all songs created for album into database
+        foreach ($newSongs as $title => $length) {
+            // add new row to song table
+            if (empty($title) || empty($length)) {
+                continue;
+            }
+            $this->saveNewSongData($title, $length,$album_id, $release_date, $release_time);
+        }
+        if ($this->conn) {
+            $this->disconnect();
+        }
     }
 
     // function to handle which action to take based on form version
