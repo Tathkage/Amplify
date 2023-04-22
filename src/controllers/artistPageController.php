@@ -114,11 +114,12 @@ class artistPageController
     }
 
     // function to save information for new song
-    function saveNewSongData($song_title = 'default', $length = '100', $album_id ='NULL', $release_date ='/01/01/2022', $release_time = '12:45:00')
+    function saveNewSongData($song_title = 'default', $length = '100', $album_id ='NULL', $release_date ='/01/01/2022', $release_time = '12:45:00', $albumCreation = false)
     {
         $this->connect();
 
-        if (!empty($_POST)) {
+        // only take post values if it is a post from individual song creation
+        if ($albumCreation === false) {
             //    get information from song form
             $song_title = $_POST['song_title'];
             $length = $_POST['length'];
@@ -204,7 +205,7 @@ class artistPageController
             if (empty($title) || empty($length)) {
                 continue;
             }
-            $this->saveNewSongData($title, $length,$album_id, $release_date, $release_time);
+            $this->saveNewSongData($title, $length, $album_id, $release_date, $release_time, true);
         }
         if ($this->conn) {
             $this->disconnect();

@@ -117,9 +117,10 @@ $nonAlbumSongs = $controller->collectNonAlbumSongs() ?? [];
                     </div>
                 </div>
                 <button type="button" id="add-song">Add Song</button>
+                <br><br>
 
 
-                <label for="songs">Add Previous Songs?: </label>
+                <label for="songs">Add Previously Created Songs?: </label> <br> <br>
                 <select id="songs" name="songs[]" multiple>
                     <?php foreach ($nonAlbumSongs as $row): ?>
                         <option value="<?php echo $row['song_id']; ?>"><?php echo $row['song_title']; ?></option>
