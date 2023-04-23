@@ -2,10 +2,9 @@
 require_once '../src/controllers/homePageController.php';
 
 $controller = new homePageController();
-$playlist = $controller->collectPlaylists();
-$randomAlbums = $controller->collectRandomAlbums();
-$randomSongs = $controller->collectRandomSongs();
-
+$playlist = $controller->collectPlaylists(); // variables: playlist_title
+$randomAlbums = $controller->collectRandomAlbums(); // variables: album_title, stage_name
+$randomSongs = $controller->collectRandomSongs(); // song_title, listens, stage_name
 ?>
 <!DOCTYPE html>
 <html lang="">

@@ -55,8 +55,10 @@ class homePageController {
     public function collectRandomAlbums(){
         $this->connect();
 
-        $sql = "SELECT albums.album_title, albums.album_id
+        $sql = "SELECT albums.album_title, albums.album_id, artists.stage_name
         FROM albums 
+        JOIN album_artists ON albums.album_id = album_artists.album_id
+        JOIN artists ON album_artists.artist_id = artists.artist_id
         ORDER BY RAND() LIMIT 5";
 
         $result = mysqli_query($this->conn, $sql);
@@ -81,8 +83,10 @@ class homePageController {
     public function collectRandomSongs(){
         $this->connect();
 
-        $sql = "SELECT songs.song_title, songs.song_id
-        FROM songs 
+        $sql = "SELECT songs.song_title, songs.song_id, songs.listens, artists.stage_name
+        FROM songs
+        JOIN song_artists ON songs.song_id = song_artists.song_id
+        JOIN artists ON song_artists.artist_id = artists.artist_id
         ORDER BY RAND() LIMIT 5";
 
         $result = mysqli_query($this->conn, $sql);
