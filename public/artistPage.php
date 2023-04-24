@@ -16,6 +16,7 @@ $albumCollaborators = $controller->showCollaborators($albums, "album");
 <head>
     <title>Artist Page</title>
     <link rel="stylesheet" type="text/css" href="css/artistPage.css">
+    <link rel="icon" href="./images/amplifyIcon.png" type="image/x-icon">
 </head>
 <body>
 <h1>Hello Artist</h1>

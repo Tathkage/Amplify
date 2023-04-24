@@ -1,11 +1,12 @@
 <?php
-
+//require_once '../src/controllers/indAlbumController.php';
 ?>
 <!DOCTYPE html>
 <html lang="">
 <head>
     <title>Amplify</title>
     <link rel="stylesheet" type="text/css" href="css/albumStyle.css">
+    <link rel="icon" href="./images/amplifyIcon.png" type="image/x-icon">
 </head>
 <body>
 <h1>Amplify: Albums</h1>

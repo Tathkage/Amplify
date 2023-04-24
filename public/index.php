@@ -11,6 +11,7 @@ $data = $data ?? [];
 <head>
     <title>My Website</title>
     <link rel="stylesheet" type="text/css" href="css/style.css">
+    <link rel="icon" href="./images/amplifyIcon.png" type="image/x-icon">
 </head>
 <body>
 <h1>Welcome to My Website</h1>

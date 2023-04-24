@@ -11,6 +11,7 @@ $randomSongs = $controller->collectRandomSongs(); // song_title, listens, stage_
     <head>
         <title>Amplify</title>
         <link rel="stylesheet" type="text/css" href="css/homePage.css">
+        <link rel="icon" href="./images/amplifyIcon.png" type="image/x-icon">
     </head>
     <body>
     <header>

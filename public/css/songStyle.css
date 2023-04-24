@@ -28,6 +28,12 @@ form {
     margin-top: 10px;
 }
 
-label, textarea, input {
+label, input[type="range"] {
     margin-bottom: 5px;
+}
+
+/* Custom styles for slider ratings */
+.slider-rating-container select {
+    width: 200px;
+    margin-top: 10px;
 }
