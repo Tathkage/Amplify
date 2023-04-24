@@ -6,6 +6,9 @@ $controller = new artistPageController();
 $songs = $controller->collectSongs() ?? [];
 $albums = $controller->collectAlbums() ?? [];
 $nonAlbumSongs = $controller->collectNonAlbumSongs() ?? [];
+$otherArtists = $controller->collectOtherArtists() ?? [];
+$songCollaborators = $controller->showCollaborators($songs, "song");
+$albumCollaborators = $controller->showCollaborators($albums, "album");
 ?>
 
 <!DOCTYPE html>
@@ -17,7 +20,7 @@ $nonAlbumSongs = $controller->collectNonAlbumSongs() ?? [];
 <body>
 <h1>Hello Artist</h1>
 <div class="Artists-container">
-    <a href = "index.php"> Edit Artist </a>
+    <a href="index.php"> Edit Artist </a>
     <br>
 
     <!-- pop up for new song -->
@@ -35,6 +38,7 @@ $nonAlbumSongs = $controller->collectNonAlbumSongs() ?? [];
                 <label for="length">Length: </label>
                 <input type="text" id="length" name="length"> <br><br>
 
+                <!-- option selection for album -->
                 <label for="album_id">Album: </label>
                 <select id="album_id" name="album_id">
                     <option value="">No Album</option>
@@ -47,6 +51,7 @@ $nonAlbumSongs = $controller->collectNonAlbumSongs() ?? [];
                 <input type="date" id="release_date" name="release_date" min="YYYY-MM-DD" max="YYYY-MM-DD">
                 <br><br>
 
+                <!-- time selection for release time of song -->
                 <label for="release_time">Release Time: </label>
                 <select id="release_time" name="release_time">
                     <?php
@@ -59,7 +64,16 @@ $nonAlbumSongs = $controller->collectNonAlbumSongs() ?? [];
                         echo "<option value='" . date("H:i:s", $i) . "'>" . date("h:i A", $i) . "</option>";
                     }
                     ?>
-                </select>
+                </select> <br><br>
+
+                <!-- collaborator selection -->
+                <label for="collaborators">Collaborators: </label><br>
+                <select id="collaborators" name="collaborators[]" multiple>
+                    <?php foreach ($otherArtists as $row): ?>
+                        <option value="<?php echo $row['artist_id']; ?>"><?php echo $row['stage_name']; ?></option>
+                    <?php endforeach; ?>
+                </select> <br><br>
+
                 <input type="submit" value="Submit" name="songForm">
             </form>
         </div>
@@ -69,26 +83,33 @@ $nonAlbumSongs = $controller->collectNonAlbumSongs() ?? [];
     <h2>Your Songs</h2>
     <table>
         <thead>
-            <tr>
-                <th>Title</th>
-                <th>Album</th>
-                <th>Length</th>
-                <th>Listens</th>
-            </tr>
+        <tr>
+            <th>Title</th>
+            <th>Album</th>
+            <th>Collaborators</th>
+            <th>Length</th>
+            <th>Listens</th>
+        </tr>
         </thead>
         <tbody>
-            <?php foreach ($songs as $row): ?>
-                <tr>
 
-                    <td><?php echo $row['song_title']; ?></td>
-                    <td><?php if ($row['album_title']) {
-                        echo $row['album_title'];}
-                        else echo 'no album'
-                        ?></td>
-                    <td><?php echo gmdate("i:s", $row['length']); ?></td>
-                    <td><?php echo $row['listens']; ?></td>
-                </tr>
-            <?php endforeach; ?>
+        <!-- Loops through songs array along with songCollaborators to get needed information -->
+        <?php foreach ($songs as $index => $row): ?>
+            <tr>
+
+                <td><?php echo $row['song_title']; ?></td>
+                <td><?php if ($row['album_title']) {
+                        echo $row['album_title'];
+                    } else echo 'no album'
+                    ?></td>
+                <td><?php foreach ($songCollaborators[$index] as $name): ?>
+                        <?php echo $name['stage_name']; ?> |
+                    <?php endforeach; ?>
+                </td>
+                <td><?php echo gmdate("i:s", $row['length']); ?></td>
+                <td><?php echo $row['listens']; ?></td>
+            </tr>
+        <?php endforeach; ?>
         </tbody>
     </table>
     <br>
@@ -102,10 +123,19 @@ $nonAlbumSongs = $controller->collectNonAlbumSongs() ?? [];
             <h2>New Album</h2>
 
             <!--  form for creating new album  -->
-            <form action="<?php echo $controller->handleFormSubmit(); ?> " name="albumForm"  method="post">
+            <form action="<?php echo $controller->handleFormSubmit(); ?> " name="albumForm" method="post">
                 <label for="album_title">Album Title: </label>
                 <input type="text" id="album_title" name="album_title"> <br><br>
 
+                <!-- Collaborator Selection -->
+                <label for="collaborators">Collaborators: </label><br>
+                <select id="collaborators" name="collaborators[]" multiple>
+                    <?php foreach ($otherArtists as $row): ?>
+                        <option value="<?php echo $row['artist_id']; ?>"><?php echo $row['stage_name']; ?></option>
+                    <?php endforeach; ?>
+                </select> <br><br>
+
+                <!-- Form for adding new songs to album -->
                 <div id="song-list">
                     <h3>Enter Songs: </h3>
                     <div class="song-entry">
@@ -119,7 +149,7 @@ $nonAlbumSongs = $controller->collectNonAlbumSongs() ?? [];
                 <button type="button" id="add-song">Add Song</button>
                 <br><br>
 
-
+                <!-- Selection for adding previously created songs to album -->
                 <label for="songs">Add Previously Created Songs?: </label> <br> <br>
                 <select id="songs" name="songs[]" multiple>
                     <?php foreach ($nonAlbumSongs as $row): ?>
@@ -131,6 +161,7 @@ $nonAlbumSongs = $controller->collectNonAlbumSongs() ?? [];
                 <input type="date" id="release_date" name="release_date" min="YYYY-MM-DD" max="YYYY-MM-DD">
                 <br><br>
 
+                <!-- Release time selection -->
                 <label for="release_time">Release Time: </label>
                 <select id="release_time" name="release_time">
                     <?php
@@ -155,14 +186,21 @@ $nonAlbumSongs = $controller->collectNonAlbumSongs() ?? [];
         <thead>
         <tr>
             <th>Title</th>
+            <th>Collaborators</th>
             <th>Release Date</th>
             <th>Release Time</th>
         </tr>
         </thead>
         <tbody>
-        <?php foreach ($albums as $row): ?>
+
+        <!-- Loops through albums and albumCollaborators to show needed information -->
+        <?php foreach ($albums as $index => $row): ?>
             <tr>
                 <td><?php echo $row['album_title']; ?></td>
+                <td><?php foreach ($albumCollaborators[$index] as $name): ?>
+                        <?php echo $name['stage_name']; ?> |
+                    <?php endforeach; ?>
+                </td>
                 <td><?php echo $row['release_date']; ?></td>
                 <td><?php echo $row['release_time']; ?></td>
             </tr>
