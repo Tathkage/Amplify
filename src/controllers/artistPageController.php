@@ -30,7 +30,7 @@ class artistPageController
 
         // Collects all songs created by artist
         // artist_id hard coded until we get user code
-        $sql = "SELECT songs.song_title, songs.listens, songs.album_id, albums.album_title, songs.length
+        $sql = "SELECT songs.song_title, songs.listens, songs.album_id, songs.song_id, albums.album_title, songs.length
             FROM songs
             JOIN song_artists ON songs.song_id = song_artists.song_id
             JOIN artists ON song_artists.artist_id = artists.artist_id
@@ -39,7 +39,6 @@ class artistPageController
 
         $result = mysqli_query($this->conn, $sql);
 
-        // Check if query execution was successful
         if (!$result) {
             die("Query failed: " . $this->conn->error);
         }
@@ -69,7 +68,6 @@ class artistPageController
 
         $result = mysqli_query($this->conn, $sql);
 
-        // Check if query execution was successful
         if (!$result) {
             die("Query failed: " . $this->conn->error);
         }
@@ -97,7 +95,6 @@ class artistPageController
 
         $result = mysqli_query($this->conn, $sql);
 
-        // Check if query execution was successful
         if (!$result) {
             die("Query failed: " . $this->conn->error);
         }
@@ -113,8 +110,84 @@ class artistPageController
         return $nonAlbumSongs;
     }
 
+    //  Function to show other artists for potential collabs
+    function collectOtherArtists() {
+        $this->connect();
+
+        $sql = "SELECT artists.artist_id, artists.stage_name FROM artists WHERE artists.artist_id != 1 ";
+
+        $result = mysqli_query($this->conn, $sql);
+
+        if (!$result) {
+            die("Query failed: " . $this->conn->error);
+        }
+
+        // Store artists in array
+        $artists = array();
+        if ($result->num_rows > 0) {
+            while ($row = $result->fetch_assoc()) {
+                $artists[] = $row;
+            }
+        }
+        $this->disconnect();
+        return $artists;
+    }
+
+    // Function to show collaborators for song or album (input is the array) and type is either song or album
+    function showCollaborators($input, $type) {
+        $this->connect();
+        $collabArray = array();
+
+        // loop through song list to collect all collaborators for each song
+        foreach ($input as $value) {
+
+            if ($type === "song") {
+                $songID = $value['song_id'];
+                $sql = mysqli_prepare($this->conn, 'SELECT artists.stage_name
+                FROM songs
+                JOIN song_artists ON songs.song_id = song_artists.song_id
+                JOIN artists ON song_artists.artist_id = artists.artist_id
+                WHERE artists.artist_id != 1 AND songs.song_id = ?');
+                mysqli_stmt_bind_param($sql, 'i', $songID);
+                mysqli_stmt_execute($sql);
+            }
+
+            else {
+                $albumID = $value['album_id'];
+                $sql = mysqli_prepare($this->conn, 'SELECT artists.stage_name
+                FROM albums
+                JOIN album_artists ON albums.album_id = album_artists.album_id
+                JOIN artists ON album_artists.artist_id = artists.artist_id
+                WHERE artists.artist_id != 1 AND albums.album_id = ?');
+                mysqli_stmt_bind_param($sql, 'i', $albumID);
+                mysqli_stmt_execute($sql);
+            }
+
+            $result = mysqli_stmt_get_result($sql);
+            mysqli_stmt_close($sql);
+
+            if (!$result) {
+                die("Query failed: " . $this->conn->error);
+            }
+
+            // Store collaborators in array
+            $collaborators = array();
+            if ($result->num_rows > 0) {
+                while ($row = $result->fetch_assoc()) {
+                    $collaborators[] = $row;
+                }
+            }
+
+            // adds collaborators to new row of collabArray
+            $collabArray[] = $collaborators;
+        }
+
+        $this->disconnect();
+        return $collabArray;
+    }
+
     // function to save information for new song
-    function saveNewSongData($song_title = 'default', $length = '100', $album_id ='NULL', $release_date ='/01/01/2022', $release_time = '12:45:00', $albumCreation = false)
+    function saveNewSongData($song_title = 'default', $length = '100', $album_id ='NULL', $release_date ='/01/01/2022', $release_time = '12:45:00', $collaborators = [], $albumCreation = false)
     {
         $this->connect();
 
@@ -126,6 +199,7 @@ class artistPageController
             $album_id = $_POST['album_id'];
             $release_date = $_POST['release_date'];
             $release_time = $_POST['release_time'];
+            $collaborators = $_POST['collaborators'];
         }
 
         //    handle empty cases
@@ -152,6 +226,16 @@ class artistPageController
         mysqli_stmt_execute($songArtistsInput);
         mysqli_stmt_close($songArtistsInput);
 
+        // add collaborators to song if needed
+        if (!empty($collaborators)) {
+            foreach ($collaborators as $collaborator_id) {
+                $songArtistsInput = mysqli_prepare($this->conn, 'INSERT INTO song_artists (song_id, artist_id) VALUES (?,?)');
+                mysqli_stmt_bind_param($songArtistsInput, 'ii', $song_id, $collaborator_id);
+                mysqli_stmt_execute($songArtistsInput);
+                mysqli_stmt_close($songArtistsInput);
+            }
+        }
+
         $this->disconnect();
 
     }
@@ -166,6 +250,7 @@ class artistPageController
         $previousSongs = $_POST['songs'];
         $songTitles = $_POST['song_title'];
         $songLengths = $_POST['length'];
+        $collaborators = $_POST['collaborators'];
         $newSongs = array_combine($songTitles, $songLengths);
 
 
@@ -199,13 +284,23 @@ class artistPageController
             }
         }
 
+        // add collaborators to album if needed
+        if (!empty($collaborators)) {
+            foreach ($collaborators as $collaborator_id) {
+                $songArtistsInput = mysqli_prepare($this->conn, 'INSERT INTO album_artists (album_id, artist_id) VALUES (?,?)');
+                mysqli_stmt_bind_param($songArtistsInput, 'ii', $album_id, $collaborator_id);
+                mysqli_stmt_execute($songArtistsInput);
+                mysqli_stmt_close($songArtistsInput);
+            }
+        }
+
         // insert all songs created for album into database
         foreach ($newSongs as $title => $length) {
             // add new row to song table
             if (empty($title) || empty($length)) {
                 continue;
             }
-            $this->saveNewSongData($title, $length, $album_id, $release_date, $release_time, true);
+            $this->saveNewSongData($title, $length, $album_id, $release_date, $release_time, $collaborators, true);
         }
         if ($this->conn) {
             $this->disconnect();
