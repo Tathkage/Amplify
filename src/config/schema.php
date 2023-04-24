@@ -108,7 +108,7 @@ CREATE TABLE `reviews` (
 CREATE TABLE `songs` (
   `song_id` int(11) NOT NULL,
   `song_title` varchar(100) NOT NULL,
-  `length` int(11) NOT NULL,
+  `length` time NOT NULL,
   `listens` int(11) NOT NULL,
   `album_id` int(11) DEFAULT NULL,
   `release_date` date NOT NULL,
