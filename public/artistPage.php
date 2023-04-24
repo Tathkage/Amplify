@@ -37,7 +37,7 @@ $albumCollaborators = $controller->showCollaborators($albums, "album");
                 <input type="text" id="song_title" name="song_title"> <br><br>
 
                 <label for="length">Length: </label>
-                <input type="text" id="length" name="length"> <br><br>
+                <input type="text" id="length" name="length" placeholder="HH:MM:SS"> <br><br>
 
                 <!-- option selection for album -->
                 <label for="album_id">Album: </label>
@@ -107,7 +107,7 @@ $albumCollaborators = $controller->showCollaborators($albums, "album");
                         <?php echo $name['stage_name']; ?> |
                     <?php endforeach; ?>
                 </td>
-                <td><?php echo gmdate("i:s", $row['length']); ?></td>
+                <td><?php echo $row['length']; ?></td>
                 <td><?php echo $row['listens']; ?></td>
             </tr>
         <?php endforeach; ?>

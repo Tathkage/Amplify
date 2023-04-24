@@ -187,7 +187,7 @@ class artistPageController
     }
 
     // function to save information for new song
-    function saveNewSongData($song_title = 'default', $length = '100', $album_id ='NULL', $release_date ='/01/01/2022', $release_time = '12:45:00', $collaborators = [], $albumCreation = false)
+    function saveNewSongData($song_title = 'default', $length = '00:00:00', $album_id ='NULL', $release_date ='/01/01/2022', $release_time = '12:45:00', $collaborators = [], $albumCreation = false)
     {
         $this->connect();
 
@@ -213,7 +213,7 @@ class artistPageController
 
         // query for inputting new song
         $songInput = mysqli_prepare($this->conn, 'INSERT INTO songs (song_title, length, album_id, release_date, release_time ) VALUES (?,?,?,?,?)');
-        mysqli_stmt_bind_param($songInput, 'siiss', $song_title, $length, $album_id, $release_date, $release_time);
+        mysqli_stmt_bind_param($songInput, 'ssiss', $song_title, $length, $album_id, $release_date, $release_time);
         mysqli_stmt_execute($songInput);
         mysqli_stmt_close($songInput);
 
