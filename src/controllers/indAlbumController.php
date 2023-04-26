@@ -72,14 +72,14 @@ class indAlbumController
         }
 
         // Store songs in array
-        $songReviews = array();
+        $albumSongs = array();
         if ($result->num_rows > 0) {
             while ($row = $result->fetch_assoc()) {
-                $songReviews[] = $row;
+                $albumSongs[] = $row;
             }
         }
         $this->disconnect();
-        return $songReviews;
+        return $albumSongs;
     }
 
     public function albumReviews()
@@ -102,13 +102,13 @@ class indAlbumController
         }
 
         // Store songs in array
-        $songReviews = array();
+        $albumReviews = array();
         if ($result->num_rows > 0) {
             while ($row = $result->fetch_assoc()) {
-                $songReviews[] = $row;
+                $albumReviews[] = $row;
             }
         }
         $this->disconnect();
-        return $songReviews;
+        return $albumReviews;
     }
 }

@@ -31,3 +31,16 @@ form.review-form {
 label, textarea, input[type="text"], select {
     margin-bottom: 5px;
 }
+
+table {
+    border-collapse: collapse;
+    margin: 20px 0;
+    max-width: 800px;
+    background-color: #FFFFFF; /* White table background color */
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Box shadow */
+}
+
+td, th {
+    border: 1px solid #9370DB; /* Medium purple border color */
+    padding: 8px;
+}

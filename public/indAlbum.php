@@ -5,7 +5,8 @@ $controller = new indAlbumController();
 
 // Access the data array defined in artistsController.php
 $album = $controller->defaultAlbum() ?? [];
-//$songs = $controller->playlistSongs() ?? [];
+$reviews = $controller->albumReviews() ?? [];
+$songs = $controller->albumSongs() ?? [];
 ?>
 <!DOCTYPE html>
 <html lang="">
@@ -20,21 +21,47 @@ $album = $controller->defaultAlbum() ?? [];
     <h2><?php echo $album[0]; ?></h2>
     <p><strong>Songs:</strong> 10 | <strong>Reviews:</strong> 5 | <strong>Release Date:</strong> <?php echo $album[1]; ?></p>
     <h2>Songs</h2>
-    <ul class="songs-list">
-        <li>Song 1</li>
-        <li>Song 2</li>
-        <li>Song 3</li>
-        <li>Song 4</li>
-        <li>Song 5</li>
-    </ul>
+    <table>
+        <thead>
+        <tr>
+            <th>Song Title</th>
+            <th>Length</th>
+        </tr>
+        </thead>
+        <tbody>
+
+        <!-- Loops through albums and albumCollaborators to show needed information -->
+        <?php foreach ($songs as $song): ?>
+            <tr>
+                <td><?php echo $song['song_title']; ?></td>
+                <td><?php echo $song['length']; ?></td>
+            </tr>
+        <?php endforeach; ?>
+        </tbody>
+    </table>
 
     <button>Add Album to Playlist</button>
     <h2>Album Reviews</h2>
-    <ul class="reviews-list">
-        <li> Review 1</li>
-        <li> Review 2</li>
-        <li> Review 3</li>
-    </ul>
+    <table>
+        <thead>
+        <tr>
+            <th>Username</th>
+            <th>Rating</th>
+            <th>Review</th>
+        </tr>
+        </thead>
+        <tbody>
+
+        <!-- Loops through albums and albumCollaborators to show needed information -->
+        <?php foreach ($reviews as $review): ?>
+            <tr>
+                <td><?php echo $review['username']; ?></td>
+                <td><?php echo $review['rating']; ?></td>
+                <td><?php echo $review['comment']; ?></td>
+            </tr>
+        <?php endforeach; ?>
+        </tbody>
+    </table>
 
     <h2>Add Review</h2>
     <form method="post" action="add_review.php">
