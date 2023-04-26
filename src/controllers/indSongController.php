@@ -6,9 +6,12 @@ class indSongController
 {
     private $conn;
 
+    ///////////////////////////////////
+    // Database Connection Functions //
+    ///////////////////////////////////
+
     // Connect to database
-    public function connect()
-    {
+    public function connect() {
         $this->conn =  mysqli_connect(DB_HOST, DB_USERNAME, DB_PASSWORD, DB_NAME);
         if ($this->conn->connect_error) {
             die("Connection failed: " . $this->conn->connect_error);
@@ -16,10 +19,14 @@ class indSongController
     }
 
     // Disconnect from database
-    public function disconnect()
-    {
+    public function disconnect() {
         $this->conn->close();
     }
+
+
+    //////////////////////////
+    // SQL SELECT Functions //
+    //////////////////////////
 
     // Function to get default song for testing
     public function defaultSong()
@@ -28,9 +35,9 @@ class indSongController
 
         // Collects all songs created by artist
         // song_id hard coded for now
-        $sql = "SELECT songs.song_title, songs.listens, songs.release_date, songs.release_time
+        $sql = "SELECT songs.song_title, songs.listens, songs.length, songs.release_date, songs.release_time
             FROM songs
-            WHERE songs.song_id = 22";
+            WHERE songs.song_id = 79";
 
         $result = mysqli_query($this->conn, $sql);
 
@@ -45,6 +52,7 @@ class indSongController
             $row = $result->fetch_assoc();
             $song[] = $row['song_title'];
             $song[] = $row['listens'];
+            $song[] = $row['length'];
             $song[] = $row['release_date'];
             $song[] = $row['release_time'];
         }
@@ -59,9 +67,11 @@ class indSongController
 
         // Collects all songs created by artist
         // song_id hard coded for now
-        $sql = "SELECT reviews.review_id, reviews.user_id, reviews.comment, reviews.rating
-            FROM reviews
-            WHERE reviews.song_id = 22";
+        $sql = "SELECT reviews.review_id, reviews.user_id, users.username, reviews.comment, reviews.rating
+                FROM reviews
+                JOIN users ON reviews.user_id = users.user_id
+                WHERE reviews.song_id = 79";
+
 
         $result = mysqli_query($this->conn, $sql);
 
@@ -81,13 +91,40 @@ class indSongController
         return $songReviews;
     }
 
-    // Function to save information for new review
-    function saveReviewData()
+    // Function to get default song for testing
+    public function userPlaylists()
     {
         $this->connect();
 
+        // Collects all songs created by artist
+        // song_id hard coded for now
+        $sql = "SELECT playlists.playlist_title
+            FROM playlists
+            WHERE playlists.user_id = 2";
 
+
+        $result = mysqli_query($this->conn, $sql);
+
+        // Check if query execution was successful
+        if (!$result) {
+            die("Query failed: " . $this->conn->error);
+        }
+
+        // Store songs in array
+        $userPlaylists = array();
+        if ($result->num_rows > 0) {
+            while ($row = $result->fetch_assoc()) {
+                $userPlaylists[] = $row;
+            }
+        }
         $this->disconnect();
-
+        return $userPlaylists;
     }
+
+
+    //////////////////////////
+    // SQL INSERT Functions //
+    //////////////////////////
+
+
 }

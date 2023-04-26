@@ -2,7 +2,7 @@
 
 require_once '../src/config/config.php';
 
-class indPlaylistController
+class indAlbumController
 {
     private $conn;
 
@@ -29,15 +29,15 @@ class indPlaylistController
     //////////////////////////
 
     // Function to get default song for testing
-    public function defaultPlaylist()
+    public function defaultAlbum()
     {
         $this->connect();
 
         // Collects all songs created by artist
         // playlist_id hard coded for now
-        $sql = "SELECT playlists.playlist_id, playlists.user_id, playlists.playlist_title
-            FROM playlists
-            WHERE playlists.playlist_id = 7";
+        $sql = "SELECT albums.album_id, albums.album_title, albums.release_date, albums.release_time
+            FROM albums
+            WHERE albums.album_id = 38";
 
         $result = mysqli_query($this->conn, $sql);
 
@@ -47,28 +47,29 @@ class indPlaylistController
         }
 
         // Store songs in array
-        $playlist = array();
+        $album = array();
         if ($result->num_rows > 0) {
             $row = $result->fetch_assoc();
-            $playlist[] = $row['playlist_id'];
-            $playlist[] = $row['user_id'];
-            $playlist[] = $row['playlist_title'];
+            $album[] = $row['album_title'];
+            $album[] = $row['release_date'];
+            $album[] = $row['release_time'];
         }
         $this->disconnect();
-        return $playlist;
+        return $album;
     }
 
-    public function playlistSongs()
+    public function albumSongs()
     {
         $this->connect();
 
         // Collects all songs created by artist
         // song_id hard coded for now
-        $sql = "SELECT playlists.playlist_id, playlists.user_id, playlists.playlist_title, songs.song_title, songs.length
-                FROM playlists
-                JOIN song_playlists ON playlists.playlist_id = song_playlists.playlist_id
-                JOIN songs ON song_playlists.song_id = songs.song_id
-                WHERE playlists.playlist_id = 7";
+        $sql = "SELECT albums.album_id, albums.album_title, albums.release_date, albums.release_time,
+                songs.song_title, songs.length, songs.listens
+                FROM albums
+                JOIN songs ON albums.album_id = songs.album_id
+                WHERE albums.album_id = 38";
+
 
         $result = mysqli_query($this->conn, $sql);
 
@@ -78,14 +79,44 @@ class indPlaylistController
         }
 
         // Store songs in array
-        $songReviews = array();
+        $albumSongs = array();
         if ($result->num_rows > 0) {
             while ($row = $result->fetch_assoc()) {
-                $songReviews[] = $row;
+                $albumSongs[] = $row;
             }
         }
         $this->disconnect();
-        return $songReviews;
+        return $albumSongs;
+    }
+
+    public function albumReviews()
+    {
+        $this->connect();
+
+        // Collects all songs created by artist
+        // song_id hard coded for now
+        $sql = "SELECT reviews.review_id, reviews.user_id, users.username, reviews.comment, reviews.rating
+                FROM reviews
+                JOIN users ON reviews.user_id = users.user_id
+                WHERE reviews.album_id = 38";
+
+
+        $result = mysqli_query($this->conn, $sql);
+
+        // Check if query execution was successful
+        if (!$result) {
+            die("Query failed: " . $this->conn->error);
+        }
+
+        // Store songs in array
+        $albumReviews = array();
+        if ($result->num_rows > 0) {
+            while ($row = $result->fetch_assoc()) {
+                $albumReviews[] = $row;
+            }
+        }
+        $this->disconnect();
+        return $albumReviews;
     }
 
     //////////////////////////
