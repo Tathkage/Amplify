@@ -40,14 +40,11 @@ $songs = $controller->playlistSongs() ?? [];
     </table>
     <h2>Edit Playlist</h2>
     <form method="post" action="edit_playlist.php">
-        <label for="add-song">Add Song:</label>
-        <input type="text" id="add-song" name="add_song">
-        <input type="submit" value="Add">
         <label for="delete-song">Delete Song:</label>
         <select id="delete-song" name="delete_song">
-            <option value="Song 1">Song 1</option>
-            <option value="Song 2">Song 2</option>
-            <option value="Song 3">Song 3</option>
+            <?php foreach($songs as $song): ?>
+                <option value="<?php echo $song['song_title']; ?>"><?php echo $song['song_title']; ?></option>
+            <?php endforeach; ?>
         </select>
         <input type="submit" value="Delete">
     </form>

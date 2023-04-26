@@ -5,6 +5,7 @@ $controller = new indSongController();
 // Access the data array defined in artistsController.php
 $song = $controller->defaultSong() ?? [];
 $reviews = $controller->songReviews() ?? [];
+$playlists = $controller->userPlaylists() ?? [];
 ?>
 
 <!DOCTYPE html>
@@ -60,7 +61,11 @@ $reviews = $controller->songReviews() ?? [];
     <h2>Add to Playlist</h2>
     <form method="post" action="add_to_playlist.php">
         <label for="playlist-name">Playlist Name:</label>
-        <input type="text" id="playlist-name" name="playlist_name">
+        <select id="playlist-name" name="playlist_name">
+            <?php foreach ($playlists as $playlist): ?>
+                <option value="<?= htmlspecialchars($playlist['playlist_title']) ?>"><?= htmlspecialchars($playlist['playlist_title']) ?></option>
+            <?php endforeach; ?>
+        </select>
         <input type="submit" value="Add">
     </form>
 </div>

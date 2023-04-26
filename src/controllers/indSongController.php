@@ -6,9 +6,12 @@ class indSongController
 {
     private $conn;
 
+    ///////////////////////////////////
+    // Database Connection Functions //
+    ///////////////////////////////////
+
     // Connect to database
-    public function connect()
-    {
+    public function connect() {
         $this->conn =  mysqli_connect(DB_HOST, DB_USERNAME, DB_PASSWORD, DB_NAME);
         if ($this->conn->connect_error) {
             die("Connection failed: " . $this->conn->connect_error);
@@ -16,10 +19,14 @@ class indSongController
     }
 
     // Disconnect from database
-    public function disconnect()
-    {
+    public function disconnect() {
         $this->conn->close();
     }
+
+
+    //////////////////////////
+    // SQL SELECT Functions //
+    //////////////////////////
 
     // Function to get default song for testing
     public function defaultSong()
@@ -84,57 +91,40 @@ class indSongController
         return $songReviews;
     }
 
-    // Function to save information for new review
-    function saveReviewData($review_id = 'default', $user_id = '100', $song_id ='NULL', $album_id ='/01/01/2022', $comment = '12:45:00', $rating = [], $albumCreation = false)
+    // Function to get default song for testing
+    public function userPlaylists()
     {
         $this->connect();
 
-        // only take post values if it is a post from individual song creation
-        if ($albumCreation === false) {
-            //    get information from song form
-            $song_title = $_POST['song_title'];
-            $length = $_POST['length'];
-            $album_id = $_POST['album_id'];
-            $release_date = $_POST['release_date'];
-            $release_time = $_POST['release_time'];
-            $collaborators = $_POST['collaborators'];
+        // Collects all songs created by artist
+        // song_id hard coded for now
+        $sql = "SELECT playlists.playlist_title
+            FROM playlists
+            WHERE playlists.user_id = 2";
+
+
+        $result = mysqli_query($this->conn, $sql);
+
+        // Check if query execution was successful
+        if (!$result) {
+            die("Query failed: " . $this->conn->error);
         }
 
-        //    handle empty cases
-        if (empty($song_title) || empty($length) || empty($release_date) || empty($release_time)) {
-            return;
-        }
-
-        if ($album_id === 'NULL' || empty($album_id) ) {
-            $album_id = NULL;
-        }
-
-        // query for inputting new song
-        $songInput = mysqli_prepare($this->conn, 'INSERT INTO songs (song_title, length, album_id, release_date, release_time ) VALUES (?,?,?,?,?)');
-        mysqli_stmt_bind_param($songInput, 'siiss', $song_title, $length, $album_id, $release_date, $release_time);
-        mysqli_stmt_execute($songInput);
-        mysqli_stmt_close($songInput);
-
-
-        //  query for inputting new song_artists
-        $song_id = mysqli_insert_id($this->conn);
-        $artist_id = 1;
-        $songArtistsInput = mysqli_prepare($this->conn, 'INSERT INTO song_artists (song_id, artist_id) VALUES (?,?)');
-        mysqli_stmt_bind_param($songArtistsInput, 'ii', $song_id, $artist_id);
-        mysqli_stmt_execute($songArtistsInput);
-        mysqli_stmt_close($songArtistsInput);
-
-        // add collaborators to song if needed
-        if (!empty($collaborators)) {
-            foreach ($collaborators as $collaborator_id) {
-                $songArtistsInput = mysqli_prepare($this->conn, 'INSERT INTO song_artists (song_id, artist_id) VALUES (?,?)');
-                mysqli_stmt_bind_param($songArtistsInput, 'ii', $song_id, $collaborator_id);
-                mysqli_stmt_execute($songArtistsInput);
-                mysqli_stmt_close($songArtistsInput);
+        // Store songs in array
+        $userPlaylists = array();
+        if ($result->num_rows > 0) {
+            while ($row = $result->fetch_assoc()) {
+                $userPlaylists[] = $row;
             }
         }
-
         $this->disconnect();
-
+        return $userPlaylists;
     }
+
+
+    //////////////////////////
+    // SQL INSERT Functions //
+    //////////////////////////
+
+
 }
