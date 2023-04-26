@@ -60,9 +60,11 @@ class indSongController
 
         // Collects all songs created by artist
         // song_id hard coded for now
-        $sql = "SELECT reviews.review_id, reviews.user_id, reviews.comment, reviews.rating
-            FROM reviews
-            WHERE reviews.song_id = 79";
+        $sql = "SELECT reviews.review_id, reviews.user_id, users.username, reviews.comment, reviews.rating
+                FROM reviews
+                JOIN users ON reviews.user_id = users.user_id
+                WHERE reviews.song_id = 79";
+
 
         $result = mysqli_query($this->conn, $sql);
 

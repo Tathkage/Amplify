@@ -20,14 +20,26 @@ $reviews = $controller->songReviews() ?? [];
     <h2><?php echo $song[0]; ?></h2>
     <p><strong>Views:</strong> <?php echo $song[1]; ?> | <strong>Reviews:</strong> 5 | <strong>Length:</strong> <?php echo $song[2]; ?> | <strong>Release Date:</strong> <?php echo $song[3]; ?> </p>
     <h2>Reviews</h2>
-    <ul>
-        <?php
-        // Iterate through the reviews array and generate the list dynamically
-        foreach ($reviews as $review) {
-            echo '<li>' . $review . '</li>';
-        }
-        ?>
-    </ul>
+    <table>
+        <thead>
+        <tr>
+            <th>Username</th>
+            <th>Rating</th>
+            <th>Review</th>
+        </tr>
+        </thead>
+        <tbody>
+
+        <!-- Loops through albums and albumCollaborators to show needed information -->
+        <?php foreach ($reviews as $review): ?>
+            <tr>
+                <td><?php echo $review['username']; ?></td>
+                <td><?php echo $review['rating']; ?></td>
+                <td><?php echo $review['comment']; ?></td>
+            </tr>
+        <?php endforeach; ?>
+        </tbody>
+    </table>
     <h2>Add Review</h2>
     <form method="post" action="add_review.php">
         <label for="review-text">Review:</label>

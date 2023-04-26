@@ -1,5 +1,11 @@
 <?php
-//require_once '../src/controllers/indPlaylistController.php';
+require_once '../src/controllers/indPlaylistController.php';
+
+$controller = new indPlaylistController();
+
+// Access the data array defined in artistsController.php
+$playlist = $controller->defaultPlaylist() ?? [];
+$songs = $controller->playlistSongs() ?? [];
 ?>
 <!DOCTYPE html>
 <html lang="">
@@ -11,14 +17,27 @@
 <body>
 <h1>Amplify: Playlists</h1>
 <div class="playlist-container">
-    <h2>Playlist Title</h2>
+    <h2><?php echo $playlist[2]; ?></h2>
     <p><strong>Songs:</strong> 3 | <strong>Length:</strong> 3 Minutes</p>
     <h2>Playlist Songs</h2>
-    <ul>
-        <li>Song 1</li>
-        <li>Song 2</li>
-        <li>Song 3</li>
-    </ul>
+    <table>
+        <thead>
+        <tr>
+            <th>Song Title</th>
+            <th>Length</th>
+        </tr>
+        </thead>
+        <tbody>
+
+        <!-- Loops through albums and albumCollaborators to show needed information -->
+        <?php foreach ($songs as $song): ?>
+            <tr>
+                <td><?php echo $song['song_title']; ?></td>
+                <td><?php echo $song['length']; ?></td>
+            </tr>
+        <?php endforeach; ?>
+        </tbody>
+    </table>
     <h2>Edit Playlist</h2>
     <form method="post" action="edit_playlist.php">
         <label for="add-song">Add Song:</label>
