@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Apr 24, 2023 at 05:19 PM
+-- Generation Time: Apr 27, 2023 at 10:57 AM
 -- Server version: 8.0.32
 -- PHP Version: 8.0.25
 
@@ -105,6 +105,13 @@ CREATE TABLE `playlists` (
   `playlist_title` varchar(100) COLLATE utf8mb4_general_ci NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Dumping data for table `playlists`
+--
+
+INSERT INTO `playlists` (`playlist_id`, `user_id`, `playlist_title`) VALUES
+(7, 2, 'Test');
+
 -- --------------------------------------------------------
 
 --
@@ -119,6 +126,16 @@ CREATE TABLE `reviews` (
   `comment` text COLLATE utf8mb4_general_ci NOT NULL,
   `rating` int NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `reviews`
+--
+
+INSERT INTO `reviews` (`review_id`, `user_id`, `song_id`, `album_id`, `comment`, `rating`) VALUES
+(1, 3, 79, NULL, 'This song goes crazy. I\'m glad Kanye found God.', 4),
+(2, 2, 79, NULL, 'More of a Drake fan tbh... its aight though', 3),
+(3, 3, NULL, 38, 'Ye has inspired me to seek refuge in the lord.', 5),
+(4, 2, NULL, 38, 'One of his better albums. Mid at best though', 3);
 
 -- --------------------------------------------------------
 
@@ -183,6 +200,14 @@ CREATE TABLE `song_playlists` (
   `playlist_id` int NOT NULL,
   `song_id` int NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `song_playlists`
+--
+
+INSERT INTO `song_playlists` (`song_playlist_id`, `playlist_id`, `song_id`) VALUES
+(1, 7, 81),
+(2, 7, 79);
 
 -- --------------------------------------------------------
 
@@ -251,6 +276,7 @@ ALTER TABLE `playlists`
 -- Indexes for table `reviews`
 --
 ALTER TABLE `reviews`
+  ADD PRIMARY KEY (`review_id`),
   ADD KEY `Review to User` (`user_id`),
   ADD KEY `Review to Song` (`song_id`),
   ADD KEY `Review to Album` (`album_id`);
@@ -314,7 +340,13 @@ ALTER TABLE `artists`
 -- AUTO_INCREMENT for table `playlists`
 --
 ALTER TABLE `playlists`
-  MODIFY `playlist_id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `playlist_id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+
+--
+-- AUTO_INCREMENT for table `reviews`
+--
+ALTER TABLE `reviews`
+  MODIFY `review_id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `songs`
@@ -332,7 +364,7 @@ ALTER TABLE `song_artists`
 -- AUTO_INCREMENT for table `song_playlists`
 --
 ALTER TABLE `song_playlists`
-  MODIFY `song_playlist_id` int NOT NULL AUTO_INCREMENT;
+  MODIFY `song_playlist_id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `users`
