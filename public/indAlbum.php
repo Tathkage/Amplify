@@ -39,8 +39,6 @@ $songs = $controller->albumSongs() ?? [];
         <?php endforeach; ?>
         </tbody>
     </table>
-
-    <button>Add Album to Playlist</button>
     <h2>Album Reviews</h2>
     <table>
         <thead>
@@ -64,9 +62,9 @@ $songs = $controller->albumSongs() ?? [];
     </table>
 
     <h2>Add Review</h2>
-    <form method="post" action="add_review.php">
-        <label for="review-text">Review:</label>
-        <textarea id="review-text" name="review_text"></textarea>
+    <form action="<?php echo $controller->handleFormSubmit(); ?> " name="reviewForm" method="post">
+        <label for="review">Review:</label>
+        <textarea id="review" name="comment"></textarea>
         <input type="hidden" id="rating" name="rating" value="">
         <div class="slider-rating-container">
             <label for="rating">Rating:</label>
