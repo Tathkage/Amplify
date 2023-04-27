@@ -2,8 +2,7 @@
 
 require_once '../src/config/config.php';
 
-class indAlbumController
-{
+class indAlbumController {
     private $conn;
 
     ///////////////////////////////////
@@ -28,9 +27,8 @@ class indAlbumController
     // SQL SELECT Functions //
     //////////////////////////
 
-    // Function to get default song for testing
-    public function defaultAlbum()
-    {
+    // Get information on current album
+    public function defaultAlbum() {
         $this->connect();
 
         // Collects all songs created by artist
@@ -58,8 +56,8 @@ class indAlbumController
         return $album;
     }
 
-    public function albumSongs()
-    {
+    // Get all songs inside of album
+    public function albumSongs() {
         $this->connect();
 
         // Collects all songs created by artist
@@ -89,8 +87,8 @@ class indAlbumController
         return $albumSongs;
     }
 
-    public function albumReviews()
-    {
+    // Get all reviews on album
+    public function albumReviews() {
         $this->connect();
 
         // Collects all songs created by artist
