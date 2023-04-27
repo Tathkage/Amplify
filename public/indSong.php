@@ -42,9 +42,9 @@ $playlists = $controller->userPlaylists() ?? [];
         </tbody>
     </table>
     <h2>Add Review</h2>
-    <form method="post" action="add_review.php">
-        <label for="review-text">Review:</label>
-        <textarea id="review-text" name="review_text"></textarea>
+    <form action="<?php echo $controller->handleFormSubmit(); ?> " name="reviewForm" method="post">
+        <label for="review">Review:</label>
+        <textarea id="review" name="comment"></textarea>
         <input type="hidden" id="rating" name="rating" value="">
         <div class="slider-rating-container">
             <label for="rating">Rating:</label>
@@ -59,9 +59,9 @@ $playlists = $controller->userPlaylists() ?? [];
         <input type="submit" value="Submit">
     </form>
     <h2>Add to Playlist</h2>
-    <form method="post" action="add_to_playlist.php">
-        <label for="playlist-name">Playlist Name:</label>
-        <select id="playlist-name" name="playlist_name">
+    <form action="<?php echo $controller->handleFormSubmit(); ?> " name="playlistForm" method="post">
+        <label for="playlist_id">Playlist Name:</label>
+        <select id="playlist_id" name="playlist_id">
             <?php foreach ($playlists as $playlist): ?>
                 <option value="<?= htmlspecialchars($playlist['playlist_title']) ?>"><?= htmlspecialchars($playlist['playlist_title']) ?></option>
             <?php endforeach; ?>

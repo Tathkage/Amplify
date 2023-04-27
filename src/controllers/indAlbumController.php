@@ -2,8 +2,7 @@
 
 require_once '../src/config/config.php';
 
-class indAlbumController
-{
+class indAlbumController {
     private $conn;
 
     ///////////////////////////////////
@@ -28,9 +27,8 @@ class indAlbumController
     // SQL SELECT Functions //
     //////////////////////////
 
-    // Function to get default song for testing
-    public function defaultAlbum()
-    {
+    // Get information on current album
+    public function defaultAlbum() {
         $this->connect();
 
         // Collects all songs created by artist
@@ -58,8 +56,8 @@ class indAlbumController
         return $album;
     }
 
-    public function albumSongs()
-    {
+    // Get all songs inside of album
+    public function albumSongs() {
         $this->connect();
 
         // Collects all songs created by artist
@@ -89,8 +87,8 @@ class indAlbumController
         return $albumSongs;
     }
 
-    public function albumReviews()
-    {
+    // Get all reviews on album
+    public function albumReviews() {
         $this->connect();
 
         // Collects all songs created by artist
@@ -123,5 +121,44 @@ class indAlbumController
     // SQL INSERT Functions //
     //////////////////////////
 
+    // Save information for new review
+    function saveAlbumReview($user_id = 3, $song_id ='NULL', $album_id ='NULL', $comment = 'Default comment.', $rating = 5) {
 
+        $this->connect();
+
+        // Get information from page
+        $user_id = 3;
+        $album_id = 38;
+
+        // Get information from review form
+        $comment = $_POST['comment'];
+        $rating = $_POST['rating'];
+
+        // Handle empty cases
+        if (empty($comment) || empty($rating)) {
+            return;
+        }
+
+        if ($song_id === 'NULL' || empty($song_id) ) {
+            $song_id = NULL;
+        }
+
+        // Query for inputting new review
+        $reviewInput = mysqli_prepare($this->conn, 'INSERT INTO reviews (user_id, song_id, album_id, comment, rating) VALUES (?,?,?,?,?)');
+        mysqli_stmt_bind_param($reviewInput, 'ssiss', $user_id, $song_id, $album_id, $comment, $rating);
+        mysqli_stmt_execute($reviewInput);
+        mysqli_stmt_close($reviewInput);
+
+        $this->disconnect();
+
+    }
+
+    // Handle which information to save based off form submitted
+    public function handleFormSubmit() {
+        if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['comment'])) {
+            $this->saveAlbumReview();
+            header("Location: " . $_SERVER['REQUEST_URI']);
+            exit();
+        }
+    }
 }

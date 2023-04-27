@@ -2,8 +2,7 @@
 
 require_once '../src/config/config.php';
 
-class indSongController
-{
+class indSongController {
     private $conn;
 
     ///////////////////////////////////
@@ -28,9 +27,8 @@ class indSongController
     // SQL SELECT Functions //
     //////////////////////////
 
-    // Function to get default song for testing
-    public function defaultSong()
-    {
+    // Get information on the current song
+    public function defaultSong() {
         $this->connect();
 
         // Collects all songs created by artist
@@ -60,9 +58,8 @@ class indSongController
         return $song;
     }
 
-    // Function to get default song for testing
-    public function songReviews()
-    {
+    // Get all reviews on the current song
+    public function songReviews() {
         $this->connect();
 
         // Collects all songs created by artist
@@ -91,9 +88,8 @@ class indSongController
         return $songReviews;
     }
 
-    // Function to get default song for testing
-    public function userPlaylists()
-    {
+    // Get all playlists created by the user
+    public function userPlaylists() {
         $this->connect();
 
         // Collects all songs created by artist
@@ -126,5 +122,71 @@ class indSongController
     // SQL INSERT Functions //
     //////////////////////////
 
+    // Save information for new review
+    function saveSongReview($user_id = 3, $song_id ='NULL', $album_id ='NULL', $comment = 'Default comment.', $rating = 5) {
 
+        $this->connect();
+
+        // Get information from page
+        $user_id = 3;
+        $song_id = 79;
+
+        // Get information from review form
+        $comment = $_POST['comment'];
+        $rating = $_POST['rating'];
+
+        // Handle empty cases
+        if (empty($comment) || empty($rating)) {
+            return;
+        }
+
+        if ($album_id === 'NULL' || empty($album_id) ) {
+            $album_id = NULL;
+        }
+
+        // Query for inputting new review
+        $reviewInput = mysqli_prepare($this->conn, 'INSERT INTO reviews (user_id, song_id, album_id, comment, rating) VALUES (?,?,?,?,?)');
+        mysqli_stmt_bind_param($reviewInput, 'ssiss', $user_id, $song_id, $album_id, $comment, $rating);
+        mysqli_stmt_execute($reviewInput);
+        mysqli_stmt_close($reviewInput);
+
+        $this->disconnect();
+
+    }
+
+    // Save information to add song to playlist
+    function saveSongToPlaylist($song_id = 79, $playlist_id = 7) {
+
+        $this->connect();
+
+        // Handle empty cases
+        if (empty($song_id) || empty($playlist_id)) {
+            return;
+        }
+
+
+        // Query for inputting new song_playlists
+        $songPlaylistsInput = mysqli_prepare($this->conn, 'INSERT INTO song_playlists (playlist_id, song_id) VALUES (?,?)');
+        mysqli_stmt_bind_param($songPlaylistsInput, 'ii', $playlist_id, $song_id);
+        mysqli_stmt_execute($songPlaylistsInput);
+        mysqli_stmt_close($songPlaylistsInput);
+
+        $this->disconnect();
+
+    }
+
+    // Handle which information to save based off form submitted
+    public function handleFormSubmit() {
+        if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['comment'])) {
+            $this->saveSongReview();
+            header("Location: " . $_SERVER['REQUEST_URI']);
+            exit();
+        }
+
+        else if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['playlist_id'])) {
+            $this->saveSongToPlaylist();
+            header("Location: " . $_SERVER['REQUEST_URI']);
+            exit();
+        }
+    }
 }

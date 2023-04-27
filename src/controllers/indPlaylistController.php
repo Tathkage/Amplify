@@ -2,8 +2,7 @@
 
 require_once '../src/config/config.php';
 
-class indPlaylistController
-{
+class indPlaylistController {
     private $conn;
 
     ///////////////////////////////////
@@ -28,9 +27,8 @@ class indPlaylistController
     // SQL SELECT Functions //
     //////////////////////////
 
-    // Function to get default song for testing
-    public function defaultPlaylist()
-    {
+    // Get information on current playlist
+    public function defaultPlaylist() {
         $this->connect();
 
         // Collects all songs created by artist
@@ -58,8 +56,8 @@ class indPlaylistController
         return $playlist;
     }
 
-    public function playlistSongs()
-    {
+    // Get all songs in a playlist
+    public function playlistSongs() {
         $this->connect();
 
         // Collects all songs created by artist
@@ -78,14 +76,14 @@ class indPlaylistController
         }
 
         // Store songs in array
-        $songReviews = array();
+        $playlistSongs = array();
         if ($result->num_rows > 0) {
             while ($row = $result->fetch_assoc()) {
-                $songReviews[] = $row;
+                $playlistSongs[] = $row;
             }
         }
         $this->disconnect();
-        return $songReviews;
+        return $playlistSongs;
     }
 
     //////////////////////////
