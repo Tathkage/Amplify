@@ -39,15 +39,23 @@ $songs = $controller->playlistSongs() ?? [];
         </tbody>
     </table>
     <h2>Edit Playlist</h2>
-    <form method="post" action="edit_playlist.php">
+    <form action="<?php echo $controller->handleFormSubmit(); ?> " name="songDeleteForm" method="post">
         <label for="delete-song">Delete Song:</label>
         <select id="delete-song" name="delete_song">
             <?php foreach($songs as $song): ?>
                 <option value="<?php echo $song['song_title']; ?>"><?php echo $song['song_title']; ?></option>
             <?php endforeach; ?>
         </select>
-        <input type="submit" value="Delete">
+        <input type="hidden" name="selected_song" id="selected-song" value="">
+        <input type="submit" value="Delete" onclick="handleSubmit()">
     </form>
+    <script>
+        function handleSubmit() {
+            var select = document.getElementById("delete-song");
+            var selectedSong = select.options[select.selectedIndex].value;
+            document.getElementById("selected-song").value = selectedSong;
+        }
+    </script>
 </div>
 </body>
 </html>
