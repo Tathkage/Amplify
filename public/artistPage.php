@@ -218,6 +218,10 @@ $artistName = $controller->collectStageName()[0];
 
         <input type="submit" value="Submit" name="changeNameForm">
     </form>
+
+    <form action="<?php echo $controller->handleFormSubmit(); ?> " name="deleteArtistForm" method="post" >
+        <input type="submit" value="Retire Artist" name="deleteArtistForm">
+    </form>
 </div>
 <script type="text/javascript" src="js/artistPage.js"></script>
 </body>

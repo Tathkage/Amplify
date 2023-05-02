@@ -350,6 +350,20 @@ class artistPageController
 
     }
 
+    function deleteArtist() {
+        $this->connect();
+
+
+        // Delete artist from database
+        $removeArtist = mysqli_prepare($this->conn, 'DELETE FROM artists WHERE artist_id = 1');
+        mysqli_stmt_execute($removeArtist);
+        mysqli_stmt_close($removeArtist);
+
+        if ($this->conn) {
+            $this->disconnect();
+        }
+
+    }
     // function to handle which action to take based on form version
     public function handleFormSubmit()
     {
@@ -365,6 +379,13 @@ class artistPageController
             elseif (isset($_POST['changeNameForm'])) {
                 $this->changeName();
             }
+
+            elseif (isset($_POST['deleteArtistForm'])) {
+                $this->deleteArtist();
+                header("Location: /homePage.php" );
+                exit();
+            }
+
             header("Location: " . $_SERVER['REQUEST_URI']);
             exit();
         }
