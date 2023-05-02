@@ -18,6 +18,19 @@ function closeNewAlbumPopup() {
     document.getElementById("popup2").style.display = "none";
 }
 
+function showChangeNameForm() {
+    if (document.getElementById("nf").style.display == "none")
+    {
+        document.getElementById("nameButton").textContent = "Keep Stage Name";
+        document.getElementById("nf").style.display = "block";
+    }
+
+    else {
+        document.getElementById("nameButton").textContent = "Change Stage Name";
+        document.getElementById("nf").style.display = "none";
+    }
+}
+
 // functionality for adding new song form to album form
 
 const addSongButton = document.querySelector('#add-song');

@@ -23,6 +23,30 @@ class artistPageController
         }
     }
 
+    public function collectStageName() {
+        $this->connect();
+
+        //
+        $sql = "SELECT stage_name FROM artists WHERE artist_id = 1";
+
+        $name = mysqli_query($this->conn, $sql);
+
+        if (!$name) {
+            die("Query failed: " . $this->conn->error);
+        }
+
+        // Store songs in array
+        $artistName = array();
+        if ($name->num_rows > 0) {
+            while ($row = $name->fetch_assoc()) {
+                $artistName[] = $row;
+            }
+        }
+        $this->disconnect();
+        return $artistName;
+    }
+
+
     // function to collect songs for viewing
     public function collectSongs()
     {
@@ -307,6 +331,39 @@ class artistPageController
         }
     }
 
+    function changeName() {
+        $this->connect();
+
+        //    get information from album form
+        $newName = $_POST['new_name'];
+
+        //    handle empty cases
+        if (empty($newName)) {
+            return;
+        }
+
+        // Update Artists name in database
+        $nameChange = mysqli_prepare($this->conn, 'UPDATE artists set stage_name = ? WHERE artist_id = 1');
+        mysqli_stmt_bind_param($nameChange, 's', $newName);
+        mysqli_stmt_execute($nameChange);
+        mysqli_stmt_close($nameChange);
+
+    }
+
+    function deleteArtist() {
+        $this->connect();
+
+
+        // Delete artist from database
+        $removeArtist = mysqli_prepare($this->conn, 'DELETE FROM artists WHERE artist_id = 1');
+        mysqli_stmt_execute($removeArtist);
+        mysqli_stmt_close($removeArtist);
+
+        if ($this->conn) {
+            $this->disconnect();
+        }
+
+    }
     // function to handle which action to take based on form version
     public function handleFormSubmit()
     {
@@ -318,6 +375,17 @@ class artistPageController
             elseif (isset($_POST['albumForm'])) {
                 $this->saveNewAlbumData();
             }
+
+            elseif (isset($_POST['changeNameForm'])) {
+                $this->changeName();
+            }
+
+            elseif (isset($_POST['deleteArtistForm'])) {
+                $this->deleteArtist();
+                header("Location: /homePage.php" );
+                exit();
+            }
+
             header("Location: " . $_SERVER['REQUEST_URI']);
             exit();
         }

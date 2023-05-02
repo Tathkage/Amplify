@@ -9,6 +9,7 @@ $nonAlbumSongs = $controller->collectNonAlbumSongs() ?? [];
 $otherArtists = $controller->collectOtherArtists() ?? [];
 $songCollaborators = $controller->showCollaborators($songs, "song");
 $albumCollaborators = $controller->showCollaborators($albums, "album");
+$artistName = $controller->collectStageName()[0];
 ?>
 
 <!DOCTYPE html>
@@ -19,9 +20,8 @@ $albumCollaborators = $controller->showCollaborators($albums, "album");
     <link rel="icon" href="./images/amplifyIcon.png" type="image/x-icon">
 </head>
 <body>
-<h1>Hello Artist</h1>
+<h1>Hello <?php echo $artistName['stage_name']; ?></h1>
 <div class="Artists-container">
-    <a href="index.php"> Edit Artist </a>
     <br>
 
     <!-- pop up for new song -->
@@ -209,6 +209,19 @@ $albumCollaborators = $controller->showCollaborators($albums, "album");
         </tbody>
     </table>
     <br>
+
+    <!-- Edit Artists From -->
+    <button onclick="showChangeNameForm()" id="nameButton">Change Stage Name</button> <br><br>
+    <form action="<?php echo $controller->handleFormSubmit(); ?> " name="changeNameForm" method="post" id="nf">
+        <label for="new_name">New name: </label>
+        <input type="text" id="new_name" name="new_name"> <br><br>
+
+        <input type="submit" value="Submit" name="changeNameForm">
+    </form>
+
+    <form action="<?php echo $controller->handleFormSubmit(); ?> " name="deleteArtistForm" method="post" >
+        <input type="submit" value="Retire Artist" name="deleteArtistForm">
+    </form>
 </div>
 <script type="text/javascript" src="js/artistPage.js"></script>
 </body>

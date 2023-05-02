@@ -56,6 +56,12 @@ td, th {
     transform: translate(-50%, -50%);
 }
 
+#nf {
+    display: none;
+}
+
+
+
 .close {
     color: black;
     float: right;
