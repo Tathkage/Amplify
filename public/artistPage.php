@@ -10,6 +10,7 @@ $otherArtists = $controller->collectOtherArtists() ?? [];
 $songCollaborators = $controller->showCollaborators($songs, "song");
 $albumCollaborators = $controller->showCollaborators($albums, "album");
 $artistName = $controller->collectStageName()[0];
+$potentialCollabs = $controller->collectPotentialCollabs();
 ?>
 
 <!DOCTYPE html>
@@ -208,6 +209,15 @@ $artistName = $controller->collectStageName()[0];
         <?php endforeach; ?>
         </tbody>
     </table>
+    <br>
+
+    <h2>Potential Collaborators</h2>
+    <ul>
+        <?php foreach ($potentialCollabs as $row): ?>
+            <li><?php echo $row['stage_name']; ?></li>
+        <?php endforeach; ?>
+    </ul>
+    
     <br>
 
     <!-- Edit Artists From -->

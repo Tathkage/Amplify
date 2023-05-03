@@ -22,6 +22,8 @@ $conn->select_db(DB_NAME);
 // Create the tables if they don't exist
 $sql = "DROP TABLE IF EXISTS album_artists, song_artists, song_playlists, admins, reviews, artists, songs, playlists, users, albums;
 
+DROP VIEW IF EXISTS potential_collabs;
+
 CREATE TABLE `admins` (
   `admin_id` int(11) NOT NULL,
   `admin_password` int(11) NOT NULL,
@@ -70,7 +72,8 @@ CREATE TABLE `artists` (
 --
 
 INSERT INTO `artists` (`artist_id`, `user_id`, `stage_name`) VALUES
-(1, 2, 'WAY');
+(1, 2, 'casH Money Mawk'),
+(2, 3, 'ROH');
 
 -- --------------------------------------------------------
 
@@ -83,6 +86,16 @@ CREATE TABLE `playlists` (
   `user_id` int(11) DEFAULT NULL,
   `playlist_title` varchar(100) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Stand-in structure for view `potential_collabs`
+-- (See below for the actual view)
+--
+CREATE TABLE `potential_collabs` (
+`stage_name` varchar(50)
+);
 
 -- --------------------------------------------------------
 
@@ -163,6 +176,15 @@ INSERT INTO `users` (`user_id`, `username`, `password`, `first_name`, `last_name
 (2, 'nutz', 'yes', 'Wayland', 'Moody', 'wayland@gmail.com'),
 (3, 'got_eem', 'nope', 'Tathluach', 'Chol', 'tathluach@gmail.com');
 
+-- --------------------------------------------------------
+
+--
+-- Structure for view `potential_collabs`
+--
+DROP TABLE IF EXISTS `potential_collabs`;
+
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `potential_collabs`  AS SELECT `artists`.`stage_name` AS `stage_name` FROM `artists` ORDER BY rand() ASC LIMIT 0, 1010  ;
+
 --
 -- Indexes for dumped tables
 --
@@ -192,7 +214,8 @@ ALTER TABLE `album_artists`
 --
 ALTER TABLE `artists`
   ADD PRIMARY KEY (`artist_id`),
-  ADD KEY `Artist to User` (`user_id`);
+  ADD KEY `Artist to User` (`user_id`),
+  ADD KEY `stage_name` (`stage_name`);
 
 --
 -- Indexes for table `playlists`
@@ -250,13 +273,13 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT for table `albums`
 --
 ALTER TABLE `albums`
-  MODIFY `album_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=38;
+  MODIFY `album_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=39;
 
 --
 -- AUTO_INCREMENT for table `album_artists`
 --
 ALTER TABLE `album_artists`
-  MODIFY `album_artists_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=38;
+  MODIFY `album_artists_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=39;
 
 --
 -- AUTO_INCREMENT for table `artists`
@@ -274,13 +297,13 @@ ALTER TABLE `playlists`
 -- AUTO_INCREMENT for table `songs`
 --
 ALTER TABLE `songs`
-  MODIFY `song_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=79;
+  MODIFY `song_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=85;
 
 --
 -- AUTO_INCREMENT for table `song_artists`
 --
 ALTER TABLE `song_artists`
-  MODIFY `song_artist_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=72;
+  MODIFY `song_artist_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=78;
 
 --
 -- AUTO_INCREMENT for table `song_playlists`
