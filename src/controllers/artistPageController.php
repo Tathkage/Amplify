@@ -23,6 +23,28 @@ class artistPageController
         }
     }
 
+    public function collectPotentialCollabs() {
+        $this->connect();
+
+        $sql = "SELECT *  FROM potential_collabs";
+
+        $otherArtists = mysqli_query($this->conn, $sql);
+
+        if (!$otherArtists) {
+            die("Query failed: " . $this->conn->error);
+        }
+
+        // Store songs in array
+        $Artists = array();
+        if ($otherArtists->num_rows > 0) {
+            while ($row = $otherArtists->fetch_assoc()) {
+                $Artists[] = $row;
+            }
+        }
+        $this->disconnect();
+        return $Artists;
+    }
+
     public function collectStageName() {
         $this->connect();
 
