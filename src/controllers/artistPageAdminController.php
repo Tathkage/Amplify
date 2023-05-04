@@ -52,10 +52,10 @@ class artistPageAdminController
         $this->connect();
         // Collects all albums created by artist
         // artist_id hard coded until we get user code
-        $sql = "SELECT albums.album_title, albums.release_date, albums.release_time, albums.album_id
+        $sql = "SELECT albums.album_title, albums.release_date, albums.release_time, albums.album_id, albums.album_id
             FROM albums
-            JOIN album_artists ON albums.album_id = album_artists.album_id
-            JOIN artists ON album_artists.artist_id = artists.artist_id";
+            LEFT JOIN album_artists ON albums.album_id = album_artists.album_id
+            LEFT JOIN artists ON album_artists.artist_id = artists.artist_id";
 
         $result = mysqli_query($this->conn, $sql);
 
@@ -153,7 +153,7 @@ class artistPageAdminController
     // Function to show collaborators for song or album (input is the array) and type is either song or album
     function showCollaborators($input, $type) {
         $this->connect();
-        $collabArray = array();
+        $artistArray = array();
 
         // loop through song list to collect all collaborators for each song
         foreach ($input as $value) {
@@ -318,8 +318,38 @@ class artistPageAdminController
         }
     }
 
-    // function to handle which action to take based on form version
-    public function handleFormSubmit()
+    // function that deletes song give song id, it will delete all records including in album_song table
+    function deleteSong($song_id) {
+        $this->connect();
+
+        // add new row to album table
+        $deleteSongStatement = mysqli_prepare($this->conn, 'DELETE FROM songs WHERE song_id = ?');
+        mysqli_stmt_bind_param($deleteSongStatement, 'i', $song_id);
+        mysqli_stmt_execute($deleteSongStatement);
+        mysqli_stmt_close($deleteSongStatement);
+
+        if ($this->conn) {
+            $this->disconnect();
+        }
+    }
+    // function that deletes album given the specific album_id this will delete and all records including in album_artist table
+    function deleteAlbum($album_id) {
+        $this->connect();
+
+        // add new row to album table
+        $deleteAlbumStatement = mysqli_prepare($this->conn, 'DELETE FROM albums WHERE album_id = ?');
+        mysqli_stmt_bind_param($deleteAlbumStatement, 'i', $album_id);
+        mysqli_stmt_execute($deleteAlbumStatement);
+        mysqli_stmt_close($deleteAlbumStatement);
+
+        if ($this->conn) {
+            $this->disconnect();
+        }
+    }
+
+
+    // function to handle which action to take based on form version album_id is optional
+    public function handleFormSubmit($album_id = NULL)
     {
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             if (isset($_POST['songForm'])) {
@@ -334,11 +364,13 @@ class artistPageAdminController
 //                $this->changeName();
 //            }
 //
-//            elseif (isset($_POST['deleteArtistForm'])) {
-//                $this->deleteArtist();
-//                header("Location: /homePage.php" );
-//                exit();
-//            }
+            elseif (isset($_POST['deleteAlbumForm'])) {
+                $this->deleteAlbum($_POST['album_id']);
+            }
+
+            elseif (isset($_POST['deleteSongForm'])) {
+                $this->deleteSong($_POST['song_id']);
+            }
 
             header("Location: " . $_SERVER['REQUEST_URI']);
             exit();

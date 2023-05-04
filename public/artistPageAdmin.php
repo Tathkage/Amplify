@@ -100,6 +100,12 @@ $nonAlbumSongs = $controller->collectNonAlbumSongs() ?? [];
                 </td>
                 <td><?php echo $row['length']; ?></td>
                 <td><?php echo $row['listens']; ?></td>
+                <td>
+                    <form action="<?php echo $controller->handleFormSubmit(); ?> " name="deleteSongForm" method="post" >
+                        <input type="hidden" name="song_id" value="<?php echo $row['song_id']; ?>">
+                        <input type="submit" value="Delete Song" name="deleteSongForm">
+                    </form>
+                </td>
             </tr>
         <?php endforeach; ?>
         </tbody>
@@ -194,6 +200,12 @@ $nonAlbumSongs = $controller->collectNonAlbumSongs() ?? [];
                 </td>
                 <td><?php echo $row['release_date']; ?></td>
                 <td><?php echo $row['release_time']; ?></td>
+                <td>
+                    <form action="<?php echo $controller->handleFormSubmit(); ?> " name="deleteAlbumForm" method="post" >
+                        <input type="hidden" name="album_id" value="<?php echo $row['album_id']; ?>">
+                        <input type="submit" value="Delete Album" name="deleteAlbumForm">
+                    </form>
+                </td>
             </tr>
         <?php endforeach; ?>
         </tbody>
