@@ -19,7 +19,7 @@ $randomSongs = $controller->collectRandomSongs(); // song_title, listens, stage_
 
         <nav>
             <ul class ="nav_links">
-                <li><a href="artists.php">Artists</a></li>
+                <li><a href="artistPage.php">Artists</a></li>
                 <li><a href="indAlbum.php">ind Album</a></li>
                 <li><a href="index.php">Index</a></li>
             </ul>

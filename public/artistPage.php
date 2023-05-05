@@ -2,7 +2,7 @@
 require_once '../src/controllers/artistPageController.php';
 $controller = new artistPageController();
 
-// Access the data array defined in artistPageController.php
+//collection of needed variables
 $songs = $controller->collectSongs() ?? [];
 $albums = $controller->collectAlbums() ?? [];
 $nonAlbumSongs = $controller->collectNonAlbumSongs() ?? [];
@@ -11,6 +11,7 @@ $songCollaborators = $controller->showCollaborators($songs, "song");
 $albumCollaborators = $controller->showCollaborators($albums, "album");
 $artistName = $controller->collectStageName()[0];
 $potentialCollabs = $controller->collectPotentialCollabs();
+
 ?>
 
 <!DOCTYPE html>
@@ -25,6 +26,7 @@ $potentialCollabs = $controller->collectPotentialCollabs();
 <div class="Artists-container">
     <br>
 
+    <a href="http://localhost:81/homePage.php">Back To Home</a> <br><br>
     <!-- pop up for new song -->
     <button onclick="newSongPopup()">New Song</button>
     <div id="popup" class="popup">
