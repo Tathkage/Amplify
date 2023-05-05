@@ -22,73 +22,97 @@ $randomSongs = $controller->collectRandomSongs(); // song_title, listens, stage_
                 <li><a href="artistPage.php">Artists</a></li>
                 <li><a href="indAlbum.php">ind Album</a></li>
                 <li><a href="index.php">Index</a></li>
+                <li><a href="playlistcreation.php">Playlist Creation</a></li>
             </ul>
         </nav>
         <a class="cta" href="#"><button>Username</button></a>
     </header>
     <h1>BROWSE</h1>
         <div class = "Submission-Form">
-        <div class = "child">
-            <form class="form" action = "query_song" method = 'post'>
-                <h2>Search for a song</h2>
+                <div>
+                    <!-- Add this HTML form to your homePage.php file -->
+                    <form method="post">
+                        <label for="song-search">Search for songs:</label>
+                        <input type="text" id="song-search" name="song-search" required>
+                        <button type="submit">Search</button>
+                    </form>
+                    <?php
+                    // Check if form has been submitted
+                    if ($_SERVER["REQUEST_METHOD"] == "POST") {
+                        // Get search term from form
+                        $searchTerm = $_POST["song-search"];
 
-                <div class="form__item">
-                    <label htmlFor = "name" class="form__label">Item Name</label>
-                    <input type = "text" name = "name" class="form__input" placeholder="Enter song name">
+                        // Call searchSongs function to search for songs
+                        $songs = $controller->searchSongs($searchTerm);
 
-                    <br>
-                    <input type="submit" value="Submit" class="form_submit">
+                        // Display search results
+                        if (count($songs) > 0) {
+                            echo "<h2>Search results for '{$searchTerm}'</h2>";
+                            echo "<ul>";
+                            foreach ($songs as $song) {
+                                echo "<li>{$song['song_title']} by {$song['stage_name']}</li>";
+                            }
+                            echo "</ul>";
+                        } else {
+                            echo "<p>No results found for '{$searchTerm}'</p>";
+                        }
+                    }
+                    ?>
                 </div>
-            </form>
-        </div>
+                <div>
+                    <!-- Add this HTML form to your homePage.php file -->
+                    <form method="post">
+                        <label for="album-search">Search for albums:</label>
+                        <input type="text" id="album-search" name="album-search" required>
+                        <button type="submit">Search</button>
+                    </form>
+                    <?php
+                    // Check if form has been submitted
+                    if ($_SERVER["REQUEST_METHOD"] == "POST") {
+                        // Get search term from form
+                        $searchTerm = $_POST["song-search"];
+
+                        // Call searchAlbums function to search for albums
+                        $albums = $controller->searchAlbums($searchTerm);
+
+                        // Display search results
+                        if (count($albums) > 0) {
+                            echo "<h2>Search results for '{$searchTerm}'</h2>";
+                            echo "<ul>";
+                            foreach ($albums as $album) {
+                                echo "<li>{$album['album_title']} by {$album['stage_name']}</li>";
+                            }
+                            echo "</ul>";
+                        } else {
+                            echo "<p>No results found for '{$searchTerm}'</p>";
+                        }
+                    }
+                    ?>
+                </div>
 
             <div class = "child">
-                <form class="form" action = "query_album" method = 'post'>
-                    <h2>Search for an album</h2>
+                <form class="form" action = "User_Info" method = 'post'>
+                    <h2>Edit Your Info</h2>
 
                     <div class="form__item">
-                        <label htmlFor = "name" class="form__label">Item Name</label>
-                        <input type = "text" name = "name" class="form__input" placeholder="Enter album name">
-
+                        <label htmlFor = "name" class="form__label">Previous Username</label>
+                        <input type = "text" name = "name" class="form__input" placeholder="Enter previous username">
+                        <label htmlFor = "name" class="form__label">Username</label>
+                        <input type = "text" name = "name" class="form__input" placeholder="Enter username">
+                        <label htmlFor = "name" class="form__label">Password</label>
+                        <input type = "text" name = "name" class="form__input" placeholder="Enter password">
+                        <label htmlFor = "name" class="form__label">First Name</label>
+                        <input type = "text" name = "name" class="form__input" placeholder="Enter first name">
+                        <label htmlFor = "name" class="form__label">Last Name</label>
+                        <input type = "text" name = "name" class="form__input" placeholder="Enter last name">
+                        <label htmlFor = "name" class="form__label">Email</label>
+                        <input type = "text" name = "name" class="form__input" placeholder="Enter email">
                         <br>
                         <input type="submit" value="Submit" class="form_submit">
                     </div>
                 </form>
             </div>
         </div>
-        <h3>Music For You</h3>
-        <table class="content-table">
-            <thead>
-            <tr>
-                <th>Song Name</th>
-                <th>Song Artist</th>
-                <th>Song Length</th>
-            </tr>
-            </thead>
-            <tr>
-                <tbody>
-                <td>My song</td>
-                <td>My Artist</td>
-                <td>30 seconds</td>
-                </tr>
-            </tbody>
-        </table>
 
-        <button onclick="newPlaylistPopup()">New Playlist</button>
-        <div id="popup" class="popup">
-            <div class="popup-content">
-                <span class="close" onclick="closeNewPlaylistPopup()">&times;</span>
-                <h2>New Playlist</h2> <br>
-
-                <!-- form for creating new playlist -->
-                <form action="<?php echo $controller->handleFormSubmit(); ?> " method="post">
-                    <label for="playlist_title">Title: </label>
-                    <input type="text" id="playlist_title" name="playlist_title"> <br><br>
-
-                    <input type="submit" value="Submit" name="playlistForm">
-                </form>
-            </div>
-        </div>
-        <script type="text/javascript" src="js/homePage.js"></script>
     </body>
 </html>
