@@ -109,7 +109,7 @@ $nonAlbumSongs = $controller->collectNonAlbumSongs() ?? [];
 
                 <!-- link allows you to pass id to next page -->
                 <td>
-                    <a href="http://localhost:81/indSong.php?songid=<?php echo $row['song_id']; ?>"><?php echo $row['song_title']; ?></a>
+                    <a href="http://localhost:81/indSongAdmin.php?songid=<?php echo $row['song_id']; ?>"><?php echo $row['song_title']; ?></a>
                 </td>
                 <td><?php if ($row['album_title']) {
                         echo $row['album_title'];
@@ -220,7 +220,7 @@ $nonAlbumSongs = $controller->collectNonAlbumSongs() ?? [];
             <tr>
                 <!-- link allows you to pass id to next page -->
                 <td>
-                    <a href="http://localhost:81/indAlbum.php?albumid=<?php echo $row['album_id']; ?>"><?php echo $row['album_title']; ?></a>
+                    <a href="http://localhost:81/indAlbumAdmin.php?albumid=<?php echo $row['album_id']; ?>"><?php echo $row['album_title']; ?></a>
                 </td>
                 <td><?php foreach ($albumArtists[$index] as $name): ?>
                         <?php echo $name['stage_name']; ?> |

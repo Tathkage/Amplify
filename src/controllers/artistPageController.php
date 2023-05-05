@@ -16,6 +16,7 @@ require_once '../src/config/config.php';
 class artistPageController
 {
     private $conn;
+    private $artist_id = 1; // artist id is hardcoded as login is not implemented
 
     ///////////////////////////////////
     // Database Connection Functions //
@@ -71,13 +72,17 @@ class artistPageController
         $this->connect();
 
         //
-        $sql = "SELECT stage_name FROM artists WHERE artist_id = 1"; // artist id is hardcoded as login is not implemented
-
-        $name = mysqli_query($this->conn, $sql);
+        $sql = "SELECT stage_name FROM artists WHERE artist_id = ?";
+        $collectStageName = mysqli_prepare($this->conn, $sql);
+        mysqli_stmt_bind_param($collectStageName, 'i', $this->artist_id);
+        mysqli_stmt_execute($collectStageName);
+        $name = mysqli_stmt_get_result($collectStageName);
+        mysqli_stmt_close($collectStageName);
 
         if (!$name) {
             die("Query failed: " . $this->conn->error);
         }
+
 
         // Store songs in array
         $artistName = array();
@@ -103,9 +108,13 @@ class artistPageController
             JOIN song_artists ON songs.song_id = song_artists.song_id
             JOIN artists ON song_artists.artist_id = artists.artist_id
             LEFT JOIN albums ON songs.album_id = albums.album_ID
-            WHERE artists.artist_id = 1"; // artist id is hardcoded as login is not implemented
+            WHERE artists.artist_id = ?";
 
-        $result = mysqli_query($this->conn, $sql);
+        $collectSongs = mysqli_prepare($this->conn, $sql);
+        mysqli_stmt_bind_param($collectSongs, 'i', $this->artist_id);
+        mysqli_stmt_execute($collectSongs);
+        $result = mysqli_stmt_get_result($collectSongs);
+        mysqli_stmt_close($collectSongs);
 
         if (!$result) {
             die("Query failed: " . $this->conn->error);
@@ -132,9 +141,13 @@ class artistPageController
             FROM albums
             JOIN album_artists ON albums.album_id = album_artists.album_id
             JOIN artists ON album_artists.artist_id = artists.artist_id
-            WHERE artists.artist_id = 1"; // artist id is hardcoded as login is not implemented
+            WHERE artists.artist_id = ?";
 
-        $result = mysqli_query($this->conn, $sql);
+        $collectAlbums = mysqli_prepare($this->conn, $sql);
+        mysqli_stmt_bind_param($collectAlbums, 'i', $this->artist_id);
+        mysqli_stmt_execute($collectAlbums);
+        $result = mysqli_stmt_get_result($collectAlbums);
+        mysqli_stmt_close($collectAlbums);
 
         if (!$result) {
             die("Query failed: " . $this->conn->error);
@@ -160,9 +173,13 @@ class artistPageController
             FROM songs
             JOIN song_artists ON songs.song_id = song_artists.song_id
             JOIN artists ON song_artists.artist_id = artists.artist_id
-            WHERE artists.artist_id = 1 AND songs.album_id is NULL"; // artist id is hardcoded as login is not implemented
+            WHERE artists.artist_id = ? AND songs.album_id is NULL";
 
-        $result = mysqli_query($this->conn, $sql);
+        $collectAlbums = mysqli_prepare($this->conn, $sql);
+        mysqli_stmt_bind_param($collectAlbums, 'i', $this->artist_id);
+        mysqli_stmt_execute($collectAlbums);
+        $result = mysqli_stmt_get_result($collectAlbums);
+        mysqli_stmt_close($collectAlbums);
 
         if (!$result) {
             die("Query failed: " . $this->conn->error);
@@ -293,9 +310,8 @@ class artistPageController
 
         //  query for inputting new song_artists
         $song_id = mysqli_insert_id($this->conn);
-        $artist_id = 1; // artist id is hardcoded as login is not implemented
         $songArtistsInput = mysqli_prepare($this->conn, 'INSERT INTO song_artists (song_id, artist_id) VALUES (?,?)');
-        mysqli_stmt_bind_param($songArtistsInput, 'ii', $song_id, $artist_id);
+        mysqli_stmt_bind_param($songArtistsInput, 'ii', $song_id, $this->artist_id);
         mysqli_stmt_execute($songArtistsInput);
         mysqli_stmt_close($songArtistsInput);
 
@@ -341,9 +357,8 @@ class artistPageController
 
         // add new rows to album artists
         $album_id = mysqli_insert_id($this->conn);
-        $artist_id = 1; // artist id is hardcoded as login is not implemented
         $albumArtistsInput = mysqli_prepare($this->conn, 'INSERT INTO album_artists (album_id, artist_id) VALUES (?,?)');
-        mysqli_stmt_bind_param($albumArtistsInput, 'ii', $album_id, $artist_id);
+        mysqli_stmt_bind_param($albumArtistsInput, 'ii', $album_id, $this->artist_id);
         mysqli_stmt_execute($albumArtistsInput);
         mysqli_stmt_close($albumArtistsInput);
 
@@ -441,9 +456,15 @@ class artistPageController
         $this->connect();
 
         // Delete artist from database
-        $removeArtist = mysqli_prepare($this->conn, 'DELETE FROM artists WHERE artist_id = 1'); // artist id is hardcoded as login is not implemented
-        mysqli_stmt_execute($removeArtist);
-        mysqli_stmt_close($removeArtist);
+        $removeArtists = mysqli_prepare($this->conn, 'DELETE FROM artists WHERE artist_id = ?');
+        mysqli_stmt_bind_param($removeArtists, 'i', $this->artist_id);
+        mysqli_stmt_execute($removeArtists);
+        $result = mysqli_stmt_get_result($removeArtists);
+        mysqli_stmt_close($removeArtists);
+
+        if (!$result) {
+            die("Query failed: " . $this->conn->error);
+        }
 
         if ($this->conn) {
             $this->disconnect();
@@ -457,7 +478,7 @@ class artistPageController
         $this->connect();
 
         // delete row from table
-        $deleteSongStatement = mysqli_prepare($this->conn, 'DELETE FROM song_artists WHERE song_id = ? AND artist_id = 1'); // artist id is hardcoded as login is not implemented
+        $deleteSongStatement = mysqli_prepare($this->conn, 'DELETE FROM song_artists WHERE song_id = ? AND artist_id = 1');
         mysqli_stmt_bind_param($deleteSongStatement, 'i', $song_id);
         mysqli_stmt_execute($deleteSongStatement);
         mysqli_stmt_close($deleteSongStatement);

@@ -251,7 +251,7 @@ CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW 
 --
 DROP TABLE IF EXISTS `potential_collabs`;
 
-CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `potential_collabs`  AS SELECT `artists`.`stage_name` AS `stage_name` FROM `artists` ORDER BY rand() ASC LIMIT 0, 10101010  ;
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `potential_collabs`  AS SELECT `artists`.`stage_name` AS `stage_name` FROM `artists` ORDER BY rand() ASC LIMIT 10;
 
 --
 -- Indexes for dumped tables
