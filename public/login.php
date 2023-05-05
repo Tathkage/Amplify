@@ -21,7 +21,7 @@ if ($user && password_verify($password, $user['password'])) {
     $_SESSION['is_artist'] = $user['is_artist'];
 
     // redirect the user to the home page
-    header('Location: home.php');
+    header('Location: homePage.php');
     exit();
 } else {
     // display an error message

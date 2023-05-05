@@ -30,7 +30,7 @@ $stmt->execute([$username, $password, $email, $artist]);
 $_SESSION['username'] = $username;
 $_SESSION['email'] = $email;
 $_SESSION['loggedin'] = true;
-header('Location: home.php');
+header('Location: homePage.php');
 exit();
 
 
