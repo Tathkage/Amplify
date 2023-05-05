@@ -103,21 +103,14 @@ class indSongAdminController {
     public function getFlaggedReviews() {
         $this->connect();
 
-        // Define an array of popular curse words
-        $curseWords = array('first curse', 'second curse', 'third curse');
-
         // Collect reviews with popular curse words in the comments
         $sql = "SELECT reviews.review_id, reviews.user_id, users.username, reviews.comment, reviews.rating
             FROM reviews
             JOIN users ON reviews.user_id = users.user_id
-            WHERE reviews.song_id = 79 AND (";
-
-        foreach ($curseWords as $curseWord) {
-            $sql .= "reviews.comment LIKE '%$curseWord%' OR ";
-        }
-
-        $sql = rtrim($sql, " OR ");
-        $sql .= ")";
+            WHERE reviews.song_id = 79 AND (
+                reviews.comment LIKE '%first curse%' OR
+                reviews.comment LIKE '%second curse%' OR
+                reviews.comment LIKE '%third curse%')";
 
         $result = mysqli_query($this->conn, $sql);
 
