@@ -2,20 +2,20 @@
 File Creator: Tathluach Chol
 
 File Description:
-    This file creates the front end view for when a user looks at an album and gets values from the back end
+    This file creates the front end view for when an admin looks at an album and gets values from the back end
     to populate the elements on the page.
 
 All Coding Sections: Tathluach Chol
 -->
 
 <?php
-require_once '../src/controllers/indAlbumController.php';
+require_once '../src/controllers/indAlbumAdminController.php';
 
 // Instantiate a new instance of the indAlbumController class
-$controller = new indAlbumController();
+$controller = new indAlbumAdminController();
 
 // Get the album, reviews, and songs data from the back-end
-$album = $controller->getAlbumInfo() ?? [];
+$album = $controller->defaultAlbum() ?? [];
 $reviews = $controller->getAlbumReviews() ?? [];
 $songs = $controller->getAlbumSongs() ?? [];
 

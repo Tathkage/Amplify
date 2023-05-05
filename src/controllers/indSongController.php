@@ -1,3 +1,14 @@
+<!--
+File Creator: Tathluach Chol
+
+File Description:
+    This file supports the front end of the user song page view. It handles the back end code that gets specific
+    values from the database given specific values from the front end. This allows the user to see specific
+    song elements and interact with elements on the page.
+
+All Coding Sections: Tathluach Chol
+-->
+
 <?php
 
 require_once '../src/config/config.php';
@@ -28,7 +39,7 @@ class indSongController {
     //////////////////////////
 
     // Get information on the current song
-    public function defaultSong() {
+    public function getSongInfo() {
         $this->connect();
 
         // Collects all songs created by artist
@@ -59,7 +70,7 @@ class indSongController {
     }
 
     // Get all reviews on the current song
-    public function songReviews() {
+    public function getSongReviews() {
         $this->connect();
 
         // Collects all songs created by artist
@@ -89,7 +100,7 @@ class indSongController {
     }
 
     // Get all playlists created by the user
-    public function userPlaylists() {
+    public function getUserPlaylisst() {
         $this->connect();
 
         // Collects all songs created by artist
@@ -155,7 +166,7 @@ class indSongController {
     }
 
     // Save information to add song to playlist
-    function saveSongToPlaylist($song_id = 79, $playlist_id = 7) {
+    function savePlaylistSong($song_id = 79, $playlist_id = 7) {
 
         $this->connect();
 
@@ -184,7 +195,7 @@ class indSongController {
         }
 
         else if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['playlist_id'])) {
-            $this->saveSongToPlaylist();
+            $this->savePlaylistSong();
             header("Location: " . $_SERVER['REQUEST_URI']);
             exit();
         }

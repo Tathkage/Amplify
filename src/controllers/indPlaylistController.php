@@ -1,3 +1,14 @@
+<!--
+File Creator: Tathluach Chol
+
+File Description:
+    This file supports the front end of the user playlist page view. It handles the back end code that gets specific
+    values from the database given specific values from the front end. This allows the user to see specific
+    playlist elements and interact with elements on the page.
+
+All Coding Sections: Tathluach Chol
+-->
+
 <?php
 
 require_once '../src/config/config.php';
@@ -28,7 +39,7 @@ class indPlaylistController {
     //////////////////////////
 
     // Get information on current playlist
-    public function defaultPlaylist() {
+    public function getPlaylistInfo() {
         $this->connect();
 
         // Collects all songs created by artist
@@ -57,7 +68,7 @@ class indPlaylistController {
     }
 
     // Get all songs in a playlist
-    public function playlistSongs() {
+    public function getPlaylistSongs() {
         $this->connect();
 
         // Collects all songs created by artist
@@ -91,7 +102,7 @@ class indPlaylistController {
     /// //////////////////////
 
     // Function to delete song from playlist
-    function deleteSong($selectedSong) {
+    function deletePlaylistSong($selectedSong) {
         $this->connect();
 
         // Find the song_id corresponding to the selected song title
@@ -119,7 +130,7 @@ class indPlaylistController {
     public function handleFormSubmit() {
         if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['selected_song'])) {
             $selectedSong = $_POST['selected_song'];
-            $this->deleteSong($selectedSong);
+            $this->deletePlaylistSong($selectedSong);
             header("Location: " . $_SERVER['REQUEST_URI']);
             exit();
         }

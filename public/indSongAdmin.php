@@ -2,22 +2,22 @@
 File Creator: Tathluach Chol
 
 File Description:
-    This file creates the front end view for when a user looks at a song and gets values from the back end
+    This file creates the front end view for when an admin looks at a song and gets values from the back end
     to populate the elements on the page.
 
 All Coding Sections: Tathluach Chol
 -->
 
 <?php
-require_once '../src/controllers/indSongController.php';
+require_once '../src/controllers/indSongAdminController.php';
 
 // Instantiate a new instance of the indSongController class
-$controller = new indSongController();
+$controller = new indSongAdminController();
 
 // Get the song, reviews, and playlistss data from the back-end
 $song = $controller->getSongInfo() ?? [];
 $reviews = $controller->getSongReviews() ?? [];
-$playlists = $controller->getUserPlaylisst() ?? [];
+$playlists = $controller->getUserPlaylists() ?? [];
 
 // Get the song ID from the URL parameter
 $song_id = $_GET['songid'];
