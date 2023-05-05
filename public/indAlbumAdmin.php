@@ -2,35 +2,54 @@
 File Creator: Tathluach Chol
 
 File Description:
-    This file creates the front end view for when a user looks at a song and gets values from the back end
+    This file creates the front end view for when an admin looks at an album and gets values from the back end
     to populate the elements on the page.
 
 All Coding Sections: Tathluach Chol
 -->
 
 <?php
-require_once '../src/controllers/indSongController.php';
-$controller = new indSongController();
+require_once '../src/controllers/indAlbumAdminController.php';
+
+$controller = new indAlbumAdminController();
 
 // Access the data array defined in artistsController.php
-$song = $controller->defaultSong() ?? [];
-$reviews = $controller->songReviews() ?? [];
-$playlists = $controller->userPlaylists() ?? [];
+$album = $controller->defaultAlbum() ?? [];
+$reviews = $controller->albumReviews() ?? [];
+$songs = $controller->albumSongs() ?? [];
 ?>
-
 <!DOCTYPE html>
 <html lang="">
 <head>
     <title>Amplify</title>
-    <link rel="stylesheet" type="text/css" href="css/songStyle.css">
+    <link rel="stylesheet" type="text/css" href="css/albumStyle.css">
     <link rel="icon" href="./images/amplifyIcon.png" type="image/x-icon">
 </head>
 <body>
-<h1>Amplify: Songs</h1>
-<div class="song-container">
-    <h2><?php echo $song[0]; ?></h2>
-    <p><strong>Views:</strong> <?php echo $song[1]; ?> | <strong>Reviews:</strong> 5 | <strong>Length:</strong> <?php echo $song[2]; ?> | <strong>Release Date:</strong> <?php echo $song[3]; ?> </p>
-    <h2>Reviews</h2>
+<h1>Amplify: Albums</h1>
+<div class="album-container">
+    <h2><?php echo $album[0]; ?></h2>
+    <p><strong>Songs:</strong> 10 | <strong>Reviews:</strong> 5 | <strong>Release Date:</strong> <?php echo $album[1]; ?></p>
+    <h2>Songs</h2>
+    <table>
+        <thead>
+        <tr>
+            <th>Song Title</th>
+            <th>Length</th>
+        </tr>
+        </thead>
+        <tbody>
+
+        <!-- Loops through albums and albumCollaborators to show needed information -->
+        <?php foreach ($songs as $song): ?>
+            <tr>
+                <td><?php echo $song['song_title']; ?></td>
+                <td><?php echo $song['length']; ?></td>
+            </tr>
+        <?php endforeach; ?>
+        </tbody>
+    </table>
+    <h2>Album Reviews</h2>
     <table>
         <thead>
         <tr>
@@ -51,6 +70,7 @@ $playlists = $controller->userPlaylists() ?? [];
         <?php endforeach; ?>
         </tbody>
     </table>
+
     <h2>Add Review</h2>
     <form action="<?php echo $controller->handleFormSubmit(); ?> " name="reviewForm" method="post">
         <label for="review">Review:</label>
@@ -67,16 +87,6 @@ $playlists = $controller->userPlaylists() ?? [];
             </select>
         </div>
         <input type="submit" value="Submit">
-    </form>
-    <h2>Add to Playlist</h2>
-    <form action="<?php echo $controller->handleFormSubmit(); ?> " name="playlistForm" method="post">
-        <label for="playlist_id">Playlist Name:</label>
-        <select id="playlist_id" name="playlist_id">
-            <?php foreach ($playlists as $playlist): ?>
-                <option value="<?= htmlspecialchars($playlist['playlist_title']) ?>"><?= htmlspecialchars($playlist['playlist_title']) ?></option>
-            <?php endforeach; ?>
-        </select>
-        <input type="submit" value="Add">
     </form>
 </div>
 </body>

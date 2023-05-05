@@ -1,3 +1,14 @@
+<!--
+File Creator: Tathluach Chol
+
+File Description:
+    This file supports the front end of the user playlist page view. It handles the back end code that gets specific
+    values from the database given specific values from the front end. This allows the user to see specific
+    playlist elements and interact with elements on the page.
+
+All Coding Sections: Tathluach Chol
+-->
+
 <?php
 
 require_once '../src/config/config.php';

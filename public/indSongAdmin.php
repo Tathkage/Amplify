@@ -2,15 +2,16 @@
 File Creator: Tathluach Chol
 
 File Description:
-    This file creates the front end view for when a user looks at a song and gets values from the back end
+    This file creates the front end view for when an admin looks at a song and gets values from the back end
     to populate the elements on the page.
 
 All Coding Sections: Tathluach Chol
 -->
 
 <?php
-require_once '../src/controllers/indSongController.php';
-$controller = new indSongController();
+require_once '../src/controllers/indSongAdminController.php';
+
+$controller = new indSongAdminController();
 
 // Access the data array defined in artistsController.php
 $song = $controller->defaultSong() ?? [];

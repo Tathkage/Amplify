@@ -2,7 +2,7 @@
 File Creator: Tathluach Chol
 
 File Description:
-    This file supports the front end of the user album page view. It handles the back end code that gets specific
+    This file supports the front end of the admin album page view. It handles the back end code that gets specific
     values from the database given specific values from the front end. This allows the user to see specific
     album elements and interact with elements on the page.
 
@@ -13,7 +13,7 @@ All Coding Sections: Tathluach Chol
 
 require_once '../src/config/config.php';
 
-class indAlbumController {
+class indAlbumAdminController {
     private $conn;
 
     ///////////////////////////////////

@@ -1,3 +1,13 @@
+<!--
+File Creator: Tathluach Chol
+
+File Description:
+    This file creates the front end view for when a user looks at a playlist and gets values from the back end
+    to populate the elements on the page.
+
+All Coding Sections: Tathluach Chol
+-->
+
 <?php
 require_once '../src/controllers/indPlaylistController.php';
 
