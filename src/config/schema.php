@@ -141,20 +141,6 @@ CREATE TABLE `potential_collabs` (
 -- --------------------------------------------------------
 
 --
--- Stand-in structure for view `flagged_album_reviews`
--- (See below for the actual view)
---
-CREATE TABLE `flagged_album_reviews` (
-`comment` text
-,`rating` int
-,`review_id` int
-,`user_id` int
-,`username` varchar(20)
-);
-
--- --------------------------------------------------------
-
---
 -- Table structure for table `reviews`
 --
 
