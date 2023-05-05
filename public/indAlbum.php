@@ -17,6 +17,7 @@ $controller = new indAlbumController();
 $album = $controller->defaultAlbum() ?? [];
 $reviews = $controller->albumReviews() ?? [];
 $songs = $controller->albumSongs() ?? [];
+$album_id = $_GET['albumid'];
 ?>
 <!DOCTYPE html>
 <html lang="">
@@ -28,7 +29,7 @@ $songs = $controller->albumSongs() ?? [];
 <body>
 <h1>Amplify: Albums</h1>
 <div class="album-container">
-    <h2><?php echo $album[0]; ?></h2>
+    <h2><?php echo $album_id; ?></h2>
     <p><strong>Songs:</strong> 10 | <strong>Reviews:</strong> 5 | <strong>Release Date:</strong> <?php echo $album[1]; ?></p>
     <h2>Songs</h2>
     <table>

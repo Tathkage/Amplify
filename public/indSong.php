@@ -16,6 +16,7 @@ $controller = new indSongController();
 $song = $controller->defaultSong() ?? [];
 $reviews = $controller->songReviews() ?? [];
 $playlists = $controller->userPlaylists() ?? [];
+$song_id = $_GET['songid'];
 ?>
 
 <!DOCTYPE html>
@@ -28,7 +29,7 @@ $playlists = $controller->userPlaylists() ?? [];
 <body>
 <h1>Amplify: Songs</h1>
 <div class="song-container">
-    <h2><?php echo $song[0]; ?></h2>
+    <h2><?php echo $song_id; ?></h2>
     <p><strong>Views:</strong> <?php echo $song[1]; ?> | <strong>Reviews:</strong> 5 | <strong>Length:</strong> <?php echo $song[2]; ?> | <strong>Release Date:</strong> <?php echo $song[3]; ?> </p>
     <h2>Reviews</h2>
     <table>

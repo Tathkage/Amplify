@@ -1,6 +1,8 @@
 <?php
 require_once '../src/controllers/artistPageAdminController.php';
 $controller = new artistPageAdminController();
+
+// collection of needed variables
 $admin_name = $controller->collectAdminName()[0];
 $albums = $controller->collectAlbums() ?? [];
 $allArtists = $controller->collectAllArtists() ?? [];
@@ -8,7 +10,6 @@ $songs = $controller->collectAllSongs() ?? [];
 $songArtists = $controller->showCollaborators($songs, "song");
 $albumArtists = $controller->showCollaborators($albums, "album");
 $nonAlbumSongs = $controller->collectNonAlbumSongs() ?? [];
-// Access the data array defined in artistPageController.php
 
 ?>
 
@@ -23,6 +24,8 @@ $nonAlbumSongs = $controller->collectNonAlbumSongs() ?? [];
 <body>
 <h1>Hello <?php echo $admin_name['username']; ?></h1>
 <div class="Admin-container">
+
+    <a href="http://localhost:81/homePage.php">Back To Home</a> <br><br>
     <br>
     <!-- pop up for new song -->
     <button onclick="newSongPopup()">New Song</button>
@@ -92,7 +95,10 @@ $nonAlbumSongs = $controller->collectNonAlbumSongs() ?? [];
         <?php foreach ($songs as $index => $row): ?>
             <tr>
 
-                <td><?php echo $row['song_title']; ?></td>
+                <!-- link allows you to pass id to next page -->
+                <td>
+                    <a href="http://localhost:81/indSong.php?songid=<?php echo $row['song_id']; ?>"><?php echo $row['song_title']; ?></a>
+                </td>
                 <td><?php if ($row['album_title']) {
                         echo $row['album_title'];
                     } else echo 'no album'
@@ -106,7 +112,7 @@ $nonAlbumSongs = $controller->collectNonAlbumSongs() ?? [];
                 <td><?php echo $row['release_date']; ?></td>
                 <td><?php echo $row['release_time']; ?></td>
                 <td>
-                    <form action="<?php echo $controller->handleFormSubmit(); ?> " name="deleteSongForm" method="post" >
+                    <form action="<?php echo $controller->handleFormSubmit(); ?> " name="deleteSongForm" method="post">
                         <input type="hidden" name="song_id" value="<?php echo $row['song_id']; ?>">
                         <input type="submit" value="Delete Song" name="deleteSongForm">
                     </form>
@@ -200,7 +206,10 @@ $nonAlbumSongs = $controller->collectNonAlbumSongs() ?? [];
         <!-- Loops through albums and albumCollaborators to show needed information -->
         <?php foreach ($albums as $index => $row): ?>
             <tr>
-                <td><?php echo $row['album_title']; ?></td>
+                <!-- link allows you to pass id to next page -->
+                <td>
+                    <a href="http://localhost:81/indAlbum.php?albumid=<?php echo $row['album_id']; ?>"><?php echo $row['album_title']; ?></a>
+                </td>
                 <td><?php foreach ($albumArtists[$index] as $name): ?>
                         <?php echo $name['stage_name']; ?> |
                     <?php endforeach; ?>
@@ -208,7 +217,7 @@ $nonAlbumSongs = $controller->collectNonAlbumSongs() ?? [];
                 <td><?php echo $row['release_date']; ?></td>
                 <td><?php echo $row['release_time']; ?></td>
                 <td>
-                    <form action="<?php echo $controller->handleFormSubmit(); ?> " name="deleteAlbumForm" method="post" >
+                    <form action="<?php echo $controller->handleFormSubmit(); ?> " name="deleteAlbumForm" method="post">
                         <input type="hidden" name="album_id" value="<?php echo $row['album_id']; ?>">
                         <input type="submit" value="Delete Album" name="deleteAlbumForm">
                     </form>
@@ -217,14 +226,17 @@ $nonAlbumSongs = $controller->collectNonAlbumSongs() ?? [];
                     <button onclick="editAlbumPopup(<?php echo $row['album_id']; ?>)">Edit Album Information</button>
                     <div id="id<?php echo $row['album_id']; ?>" class="popup">
                         <div class="popup-content">
-                            <span class="close" onclick="closeEditAlbumPopup(<?php echo $row['album_id']; ?>)">&times;</span>
+                            <span class="close"
+                                  onclick="closeEditAlbumPopup(<?php echo $row['album_id']; ?>)">&times;</span>
                             <h2>Edit Album</h2>
 
                             <!--  form for creating new album  -->
-                            <form action="<?php echo $controller->handleFormSubmit(); ?> " name="editAlbumForm" method="post">
+                            <form action="<?php echo $controller->handleFormSubmit(); ?> " name="editAlbumForm"
+                                  method="post">
 
                                 <label for="release_date">Release Date: </label>
-                                <input type="date" id="release_date" name="release_date" min="YYYY-MM-DD" max="YYYY-MM-DD" value= "<?php echo $row['release_date'] ?>">
+                                <input type="date" id="release_date" name="release_date" min="YYYY-MM-DD"
+                                       max="YYYY-MM-DD" value="<?php echo $row['release_date'] ?>">
                                 <br><br>
 
                                 <!-- Release time selection -->
@@ -243,7 +255,8 @@ $nonAlbumSongs = $controller->collectNonAlbumSongs() ?? [];
                                 </select> <br><br>
 
                                 <label for="album_title">Album Title: </label>
-                                <input type="text" id="album_title" name="album_title" value="<?php echo $row['album_title'] ?>"> <br><br>
+                                <input type="text" id="album_title" name="album_title"
+                                       value="<?php echo $row['album_title'] ?>"> <br><br>
 
                                 <input type="hidden" name="album_id" value="<?php echo $row['album_id']; ?>">
 
