@@ -129,6 +129,7 @@ class indPlaylistController {
     // SQL Update Functions //
     //////////////////////////
 
+    // Function to edit the playlists name
     function editPlaylistName($playlistID, $newPlaylistName) {
         $this->connect();
 
@@ -140,11 +141,11 @@ class indPlaylistController {
         $this->disconnect();
     }
 
-    ////
+    /////////////////////////////
     // Handle Form Submissions //
-    ///
-    ///
-    // Handle what to delete depending on form
+    /////////////////////////////
+
+    // Handle what to function to do depending on form
     public function handleFormSubmit() {
         if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['selected_song'])) {
             $selectedSong = $_POST['selected_song'];

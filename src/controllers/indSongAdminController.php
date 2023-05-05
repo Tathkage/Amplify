@@ -99,6 +99,44 @@ class indSongAdminController {
         return $songReviews;
     }
 
+    // Get flagged reviews on the current song
+    public function getFlaggedReviews() {
+        $this->connect();
+
+        // Define an array of popular curse words
+        $curseWords = array('first curse', 'second curse', 'third curse');
+
+        // Collect reviews with popular curse words in the comments
+        $sql = "SELECT reviews.review_id, reviews.user_id, users.username, reviews.comment, reviews.rating
+            FROM reviews
+            JOIN users ON reviews.user_id = users.user_id
+            WHERE reviews.song_id = 79 AND (";
+
+        foreach ($curseWords as $curseWord) {
+            $sql .= "reviews.comment LIKE '%$curseWord%' OR ";
+        }
+
+        $sql = rtrim($sql, " OR ");
+        $sql .= ")";
+
+        $result = mysqli_query($this->conn, $sql);
+
+        // Check if query execution was successful
+        if (!$result) {
+            die("Query failed: " . $this->conn->error);
+        }
+
+        // Store songs in array
+        $flaggedReviews = array();
+        if ($result->num_rows > 0) {
+            while ($row = $result->fetch_assoc()) {
+                $flaggedReviews[] = $row;
+            }
+        }
+        $this->disconnect();
+        return $flaggedReviews;
+    }
+
     // Get all playlists created by the user
     public function getUserPlaylists() {
         $this->connect();
@@ -186,16 +224,71 @@ class indSongAdminController {
 
     }
 
-    // Handle which information to save based off form submitted
+    //////////////////////////
+    // SQL Delete Functions //
+    //////////////////////////
+
+    // Function to delete song from playlist
+    function deleteSongReview($reviewID) {
+        $this->connect();
+
+        // Delete the corresponding entity from the reviews table
+        $stmt = $this->conn->prepare("DELETE FROM reviews WHERE review_id = ?");
+        $stmt->bind_param("i", $reviewID);
+        $stmt->execute();
+
+        $this->disconnect();
+    }
+
+    //////////////////////////
+    // SQL Update Functions //
+    //////////////////////////
+
+    // Function to update the reviews comment
+    function editReviewComment($reviewID, $newComment) {
+        $this->connect();
+
+        // Update the playlist title for the given playlist ID
+        $stmt = $this->conn->prepare("UPDATE reviews SET comment = ? WHERE review_id = ?");
+        $stmt->bind_param("si", $newComment, $reviewID);
+        $stmt->execute();
+
+        $this->disconnect();
+    }
+
+    /////////////////////////////
+    // Handle Form Submissions //
+    /////////////////////////////
+
+    // Handle what to function to do depending on form
     public function handleFormSubmit() {
+
+        // If a review information is sent, call the function to add it to the database
         if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['comment'])) {
             $this->saveSongReview();
             header("Location: " . $_SERVER['REQUEST_URI']);
             exit();
         }
 
+        // If playlist information is sent, call the function to add it to the database
         else if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['playlist_id'])) {
             $this->savePlaylistSong();
+            header("Location: " . $_SERVER['REQUEST_URI']);
+            exit();
+        }
+
+        // If a review needs to be changed call the appropriate function to delete or update it
+        else if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['review_id'])) {
+            $reviewID = $_POST['review_id'];
+
+            if (isset($_POST['review_comment']) && !empty($_POST['review_comment'])) {
+                $reviewComment = $_POST['review_comment'];
+                $this->editReviewComment($reviewID, $reviewComment);
+            }
+            else {
+                $this->deleteSongReview($reviewID);
+            }
+
             header("Location: " . $_SERVER['REQUEST_URI']);
             exit();
         }

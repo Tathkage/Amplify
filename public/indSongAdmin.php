@@ -17,10 +17,12 @@ $controller = new indSongAdminController();
 // Get the song, reviews, and playlistss data from the back-end
 $song = $controller->getSongInfo() ?? [];
 $reviews = $controller->getSongReviews() ?? [];
+$flaggedReviews = $controller->getFlaggedReviews() ?? [];
 $playlists = $controller->getUserPlaylists() ?? [];
 
 // Get the song ID from the URL parameter
 $song_id = $_GET['songid'];
+$song_id = 79;
 
 ?>
 
@@ -38,9 +40,9 @@ $song_id = $_GET['songid'];
     <!-- Display the song details on the page -->
     <h2><?php echo $song_id; ?></h2>
     <p><strong>Views:</strong> <?php echo $song[1]; ?> | <strong>Reviews:</strong> 5 | <strong>Length:</strong> <?php echo $song[2]; ?> | <strong>Release Date:</strong> <?php echo $song[3]; ?> </p>
-    <h2>Reviews</h2>
 
     <!-- Display reviews in a table -->
+    <h2>Song Reviews</h2>
     <table>
         <thead>
         <tr>
@@ -61,6 +63,42 @@ $song_id = $_GET['songid'];
         <?php endforeach; ?>
         </tbody>
     </table>
+
+    <!-- Display flagged reviews in a table -->
+    <h2>Flagged Song Reviews</h2>
+    <table>
+        <thead>
+        <tr>
+            <th>Review ID</th>
+            <th>User ID</th>
+            <th>Username</th>
+            <th>Rating</th>
+            <th>Review</th>
+        </tr>
+        </thead>
+        <tbody>
+
+        <!-- Loop through each flagged review and display its information -->
+        <?php foreach ($flaggedReviews as $flaggedReview): ?>
+            <tr>
+                <td><?php echo $flaggedReview['review_id']; ?></td>
+                <td><?php echo $flaggedReview['user_id']; ?></td>
+                <td><?php echo $flaggedReview['username']; ?></td>
+                <td><?php echo $flaggedReview['rating']; ?></td>
+                <td><?php echo $flaggedReview['comment']; ?></td>
+            </tr>
+        <?php endforeach; ?>
+        </tbody>
+    </table>
+
+    <!-- A form to remove or update review from song -->
+    <form action="<?php echo $controller->handleFormSubmit(); ?> " name="reviewChangeForm" method="post">
+        <label for="review_id">Review ID:</label>
+        <input type="text" name="review_id">
+        <label for="review_comment">Review Comment:</label>
+        <input type="text" name="review_comment">
+        <input type="submit" name="change_review" value="Submit">
+    </form>
 
     <!-- Allow users to add reviews through a form -->
     <h2>Add Review</h2>

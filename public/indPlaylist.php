@@ -22,12 +22,6 @@ $songs = $controller->getPlaylistSongs() ?? [];
 $playlist_id = $_GET['playlistid'];
 $playlist_id = 7;
 
-// Handle post request
-if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    $playlist_id = $_POST['playlist_id'];
-    $playlist_name = $_POST['playlist_name'];
-    $controller->handleFormSubmit($playlist_id, $playlist_name);
-}
 ?>
 
 <!DOCTYPE html>
