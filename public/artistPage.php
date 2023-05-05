@@ -1,8 +1,20 @@
-a<?php
+<!--
+File Creator: Wayland Moody
+
+File Description:
+
+    This file is the front end view for the Artist Page. It allows artist certain functionalities like viewing songs, and albums as well as
+    removing themselves from the song and album etc. The page receives its information from the artistPageController file to
+    populate database elements on the page.
+
+All Coding Sections: Wayland Moody
+-->
+
+<?php
 require_once '../src/controllers/artistPageController.php';
 $controller = new artistPageController();
 
-// Access the data array defined in artistPageController.php
+//collection of needed variables
 $songs = $controller->collectSongs() ?? [];
 $albums = $controller->collectAlbums() ?? [];
 $nonAlbumSongs = $controller->collectNonAlbumSongs() ?? [];
@@ -11,6 +23,7 @@ $songCollaborators = $controller->showCollaborators($songs, "song");
 $albumCollaborators = $controller->showCollaborators($albums, "album");
 $artistName = $controller->collectStageName()[0];
 $potentialCollabs = $controller->collectPotentialCollabs();
+
 ?>
 
 <!DOCTYPE html>
@@ -25,6 +38,7 @@ $potentialCollabs = $controller->collectPotentialCollabs();
 <div class="Artists-container">
     <br>
 
+    <a href="http://localhost:81/homePage.php">Back To Home</a> <br><br>
     <!-- pop up for new song -->
     <button onclick="newSongPopup()">New Song</button>
     <div id="popup" class="popup">
@@ -101,8 +115,8 @@ $potentialCollabs = $controller->collectPotentialCollabs();
         <!-- Loops through songs array along with songCollaborators to get needed information -->
         <?php foreach ($songs as $index => $row): ?>
             <tr>
-
-                <td><?php echo $row['song_title']; ?></td>
+                <!-- link allows you to pass id to next page -->
+                <td><a href="http://localhost:81/indSong.php?songid=<?php echo $row['song_id']; ?>"><?php echo $row['song_title']; ?></a></td>
                 <td><?php if ($row['album_title']) {
                         echo $row['album_title'];
                     } else echo 'no album'
@@ -213,7 +227,8 @@ $potentialCollabs = $controller->collectPotentialCollabs();
         <!-- Loops through albums and albumCollaborators to show needed information -->
         <?php foreach ($albums as $index => $row): ?>
             <tr>
-                <td><?php echo $row['album_title']; ?></td>
+                <!-- link allows you to pass id to next page -->
+                <td><a href="http://localhost:81/indAlbum.php?albumid=<?php echo $row['album_id']; ?>"><?php echo $row['album_title']; ?></a></td>
                 <td><?php foreach ($albumCollaborators[$index] as $name): ?>
                         <?php echo $name['stage_name']; ?> |
                     <?php endforeach; ?>
@@ -228,7 +243,7 @@ $potentialCollabs = $controller->collectPotentialCollabs();
                     </form>
                 </td>
 
-                <!-- Option to edit the album on the given row through a pop up-->
+                <!-- Option to edit the album on the given row through a pop-up-->
                 <td>
                     <button onclick="editAlbumPopup(<?php echo $row['album_id']; ?>)">Edit Album Times</button>
                     <div id="id<?php echo $row['album_id']; ?>" class="popup">

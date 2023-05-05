@@ -2,26 +2,26 @@
 File Creator: Tathluach Chol
 
 File Description:
-    This file creates the front end view for when a user looks at a song and gets values from the back end
+    This file creates the front end view for when an admin looks at a song and gets values from the back end
     to populate the elements on the page.
 
 All Coding Sections: Tathluach Chol
 -->
 
 <?php
-require_once '../src/controllers/indSongController.php';
+require_once '../src/controllers/indSongAdminController.php';
 
 // Instantiate a new instance of the indSongController class
-$controller = new indSongController();
+$controller = new indSongAdminController();
 
 // Get the song, reviews, and playlistss data from the back-end
 $song = $controller->getSongInfo() ?? [];
 $reviews = $controller->getSongReviews() ?? [];
-$playlists = $controller->getUserPlaylisst() ?? [];
+$playlists = $controller->getUserPlaylists() ?? [];
 
 // Get the song ID from the URL parameter
 $song_id = $_GET['songid'];
-$song_id = 79;
+
 ?>
 
 <!DOCTYPE html>
@@ -37,11 +37,10 @@ $song_id = 79;
 
     <!-- Display the song details on the page -->
     <h2><?php echo $song_id; ?></h2>
-    <h2><?php echo $song[0]; ?></h2>
     <p><strong>Views:</strong> <?php echo $song[1]; ?> | <strong>Reviews:</strong> 5 | <strong>Length:</strong> <?php echo $song[2]; ?> | <strong>Release Date:</strong> <?php echo $song[3]; ?> </p>
+    <h2>Reviews</h2>
 
     <!-- Display reviews in a table -->
-    <h2>Song Reviews</h2>
     <table>
         <thead>
         <tr>

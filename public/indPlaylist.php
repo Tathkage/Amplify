@@ -1,12 +1,35 @@
+<!--
+File Creator: Tathluach Chol
+
+File Description:
+    This file creates the front end view for when a user looks at a playlist and gets values from the back end
+    to populate the elements on the page.
+
+All Coding Sections: Tathluach Chol
+-->
+
 <?php
 require_once '../src/controllers/indPlaylistController.php';
 
+// Instantiate a new instance of the indPlaylistController class
 $controller = new indPlaylistController();
 
-// Access the data array defined in artistsController.php
-$playlist = $controller->defaultPlaylist() ?? [];
-$songs = $controller->playlistSongs() ?? [];
+// Get the playlist and songs data from the back-end
+$playlist = $controller->getPlaylistInfo() ?? [];
+$songs = $controller->getPlaylistSongs() ?? [];
+
+// Get the playlist ID from the URL parameter
+$playlist_id = $_GET['playlistid'];
+$playlist_id = 7;
+
+// Handle post request
+if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+    $playlist_id = $_POST['playlist_id'];
+    $playlist_name = $_POST['playlist_name'];
+    $controller->handleFormSubmit($playlist_id, $playlist_name);
+}
 ?>
+
 <!DOCTYPE html>
 <html lang="">
 <head>
@@ -17,8 +40,20 @@ $songs = $controller->playlistSongs() ?? [];
 <body>
 <h1>Amplify: Playlists</h1>
 <div class="playlist-container">
+
+    <!-- Display the playlist details on the page -->
+    <h2><?php echo $playlist_id; ?></h2>
     <h2><?php echo $playlist[2]; ?></h2>
+    <!-- A form to edit the name of a playlist -->
+    <form action="<?php echo $controller->handleFormSubmit(); ?> " name="playlistNameChangeForm" method="post">
+        <input type="hidden" name="playlist_id" value="<?php echo $playlist_id; ?>">
+        <label for="playlist_name">New Playlist Name:</label>
+        <input type="text" name="playlist_name">
+        <input type="submit" value="Submit">
+    </form>
     <p><strong>Songs:</strong> 3 | <strong>Length:</strong> 3 Minutes</p>
+
+    <!-- Display the list of songs on the playlist -->
     <h2>Playlist Songs</h2>
     <table>
         <thead>
@@ -29,7 +64,7 @@ $songs = $controller->playlistSongs() ?? [];
         </thead>
         <tbody>
 
-        <!-- Loops through albums and albumCollaborators to show needed information -->
+        <!-- Loop through the list of songs and display their titles and lengths -->
         <?php foreach ($songs as $song): ?>
             <tr>
                 <td><?php echo $song['song_title']; ?></td>
@@ -38,6 +73,8 @@ $songs = $controller->playlistSongs() ?? [];
         <?php endforeach; ?>
         </tbody>
     </table>
+
+    <!-- A form to delete a selected song from the playlist -->
     <h2>Edit Playlist</h2>
     <form action="<?php echo $controller->handleFormSubmit(); ?> " name="songDeleteForm" method="post">
         <label for="delete-song">Delete Song:</label>
@@ -49,6 +86,8 @@ $songs = $controller->playlistSongs() ?? [];
         <input type="hidden" name="selected_song" id="selected-song" value="">
         <input type="submit" value="Delete" onclick="handleSubmit()">
     </form>
+
+    <!-- A Javascript function to assign the selected song's title to the hidden input field -->
     <script>
         function handleSubmit() {
             var select = document.getElementById("delete-song");

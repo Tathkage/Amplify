@@ -1,3 +1,14 @@
+<!--
+File Creator: Tathluach Chol
+
+File Description:
+    This file supports the front end of the user playlist page view. It handles the back end code that gets specific
+    values from the database given specific values from the front end. This allows the user to see specific
+    playlist elements and interact with elements on the page.
+
+All Coding Sections: Tathluach Chol
+-->
+
 <?php
 
 require_once '../src/config/config.php';
@@ -28,7 +39,7 @@ class indPlaylistController {
     //////////////////////////
 
     // Get information on current playlist
-    public function defaultPlaylist() {
+    public function getPlaylistInfo() {
         $this->connect();
 
         // Collects all songs created by artist
@@ -57,7 +68,7 @@ class indPlaylistController {
     }
 
     // Get all songs in a playlist
-    public function playlistSongs() {
+    public function getPlaylistSongs() {
         $this->connect();
 
         // Collects all songs created by artist
@@ -88,10 +99,10 @@ class indPlaylistController {
 
     //////////////////////////
     // SQL Delete Functions //
-    /// //////////////////////
+    //////////////////////////
 
     // Function to delete song from playlist
-    function deleteSong($selectedSong) {
+    function deletePlaylistSong($selectedSong) {
         $this->connect();
 
         // Find the song_id corresponding to the selected song title
@@ -114,12 +125,37 @@ class indPlaylistController {
         $this->disconnect();
     }
 
+    //////////////////////////
+    // SQL Update Functions //
+    //////////////////////////
 
+    function editPlaylistName($playlistID, $newPlaylistName) {
+        $this->connect();
+
+        // Update the playlist title for the given playlist ID
+        $stmt = $this->conn->prepare("UPDATE playlists SET playlist_title = ? WHERE playlist_id = ?");
+        $stmt->bind_param("si", $newPlaylistName, $playlistID);
+        $stmt->execute();
+
+        $this->disconnect();
+    }
+
+    ////
+    // Handle Form Submissions //
+    ///
+    ///
     // Handle what to delete depending on form
     public function handleFormSubmit() {
         if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['selected_song'])) {
             $selectedSong = $_POST['selected_song'];
-            $this->deleteSong($selectedSong);
+            $this->deletePlaylistSong($selectedSong);
+            header("Location: " . $_SERVER['REQUEST_URI']);
+            exit();
+        }
+        else if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['playlist_name'])) {
+            $playlistID = $_POST['playlist_id'];
+            $playlistName = $_POST['playlist_name'];
+            $this->editPlaylistName($playlistID, $playlistName);
             header("Location: " . $_SERVER['REQUEST_URI']);
             exit();
         }

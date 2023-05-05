@@ -2,26 +2,26 @@
 File Creator: Tathluach Chol
 
 File Description:
-    This file creates the front end view for when a user looks at an album and gets values from the back end
+    This file creates the front end view for when an admin looks at an album and gets values from the back end
     to populate the elements on the page.
 
 All Coding Sections: Tathluach Chol
 -->
 
 <?php
-require_once '../src/controllers/indAlbumController.php';
+require_once '../src/controllers/indAlbumAdminController.php';
 
 // Instantiate a new instance of the indAlbumController class
-$controller = new indAlbumController();
+$controller = new indAlbumAdminController();
 
 // Get the album, reviews, and songs data from the back-end
-$album = $controller->getAlbumInfo() ?? [];
+$album = $controller->defaultAlbum() ?? [];
 $reviews = $controller->getAlbumReviews() ?? [];
 $songs = $controller->getAlbumSongs() ?? [];
 
 // Get the album ID from the URL parameter
 $album_id = $_GET['albumid'];
-$album_id = 38;
+
 ?>
 
 <!DOCTYPE html>
@@ -37,7 +37,6 @@ $album_id = 38;
 
     <!-- Display the album details on the page -->
     <h2><?php echo $album_id; ?></h2>
-    <h2><?php echo $album[0]; ?></h2>
     <p><strong>Songs:</strong> 10 | <strong>Reviews:</strong> 5 | <strong>Release Date:</strong> <?php echo $album[1]; ?></p>
 
     <!-- Display the list of songs on the album -->
