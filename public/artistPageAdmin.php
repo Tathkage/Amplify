@@ -92,7 +92,8 @@ $nonAlbumSongs = $controller->collectNonAlbumSongs() ?? [];
         <?php foreach ($songs as $index => $row): ?>
             <tr>
 
-                <td><?php echo $row['song_title']; ?></td>
+                <!-- link allows you to pass id to next page -->
+                <td><a href="http://localhost:81/indSong.php?songid=<?php echo $row['song_id']; ?>"><?php echo $row['song_title']; ?></a></td>
                 <td><?php if ($row['album_title']) {
                         echo $row['album_title'];
                     } else echo 'no album'
@@ -200,7 +201,8 @@ $nonAlbumSongs = $controller->collectNonAlbumSongs() ?? [];
         <!-- Loops through albums and albumCollaborators to show needed information -->
         <?php foreach ($albums as $index => $row): ?>
             <tr>
-                <td><?php echo $row['album_title']; ?></td>
+                <!-- link allows you to pass id to next page -->
+                <td><a href="http://localhost:81/indAlbum.php?albumid=<?php echo $row['album_id']; ?>"><?php echo $row['album_title']; ?></a></td>
                 <td><?php foreach ($albumArtists[$index] as $name): ?>
                         <?php echo $name['stage_name']; ?> |
                     <?php endforeach; ?>
