@@ -1,0 +1,72 @@
+.Admin-container {
+    margin: 0 auto;
+    max-width: 800px;
+    padding: 20px;
+    background-color: #FFFFFF; /* White container background color */
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Box shadow */
+}
+
+body {
+    background-color: #D8BFD8; /* Lilac background color */
+    font-family: Arial, sans-serif;
+}
+
+h1, h2, h3 {
+    color: #800080; /* Purple text color */
+}
+
+p {
+    font-size: 18px;
+    color: #4B0082; /* Indigo text color */
+}
+
+table {
+    border-collapse: collapse;
+    margin: 20px 0;
+    max-width: 800px;
+    background-color: #FFFFFF; /* White table background color */
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Box shadow */
+}
+
+td, th {
+    border: 1px solid #9370DB; /* Medium purple border color */
+    padding: 8px;
+}
+
+/* Pop-up CSS style */
+.popup {
+    display: none;
+    position: fixed;
+    z-index: 1;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(216, 191, 216, 0.4); /* Lilac semi-transparent background color */
+}
+
+.popup-content {
+    background-color: white;
+    border: 10px solid #800080; /* Lilac border color */
+    border-radius: 5px;
+    padding: 100px;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+
+.close {
+    color: black;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+    color: #800080; /* Purple text color */
+    text-decoration: none;
+    cursor: pointer;
+}
