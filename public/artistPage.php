@@ -1,3 +1,15 @@
+<!--
+File Creator: Wayland Moody
+
+File Description:
+
+    This file is the front end view for the Artist Page. It allows artist certain functionalities like viewing songs, and albums as well as
+    removing themselves from the song and album etc. The page receives its information from the artistPageController file to
+    populate database elements on the page.
+
+All Coding Sections: Wayland Moody
+-->
+
 <?php
 require_once '../src/controllers/artistPageController.php';
 $controller = new artistPageController();

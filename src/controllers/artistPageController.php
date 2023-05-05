@@ -1,3 +1,14 @@
+<!--
+File Creator: Wayland Moody
+
+File Description:
+
+    This file is the back end page for the artistPage.php page
+    it executes queries and returns the result back to artistPage.php
+
+All Coding Sections: Wayland Moody
+-->
+
 <?php
 
 require_once '../src/config/config.php';

@@ -1,3 +1,15 @@
+<!--
+File Creator: Wayland Moody
+
+File Description:
+
+    This file is the front end view for the Artist Page (Admin access). It allows the admin certain functionalities like viewing songs, and albums as well as
+    delete songs and album etc. The page receives its information from the artistPageAdminController file to
+    populate database elements on the page.
+
+All Coding Sections: Wayland Moody
+-->
+
 <?php
 require_once '../src/controllers/artistPageAdminController.php';
 $controller = new artistPageAdminController();
