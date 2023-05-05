@@ -87,8 +87,41 @@ class indPlaylistController {
     }
 
     //////////////////////////
-    // SQL INSERT Functions //
-    //////////////////////////
+    // SQL Delete Functions //
+    /// //////////////////////
+
+    // Function to delete song from playlist
+    function deleteSong($selectedSong) {
+        $this->connect();
+
+        // Find the song_id corresponding to the selected song title
+        $stmt = $this->conn->prepare("SELECT song_id FROM songs WHERE song_title = ?");
+        $stmt->bind_param("s", $selectedSong);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        if ($result->num_rows == 0) {
+            // Handle error: no matching song found
+            return;
+        }
+        $row = $result->fetch_assoc();
+        $songId = $row['song_id'];
+
+        // Delete the corresponding entity from the song_playlists table
+        $stmt = $this->conn->prepare("DELETE FROM song_playlists WHERE song_id = ?");
+        $stmt->bind_param("i", $songId);
+        $stmt->execute();
+
+        $this->disconnect();
+    }
 
 
+    // Handle what to delete depending on form
+    public function handleFormSubmit() {
+        if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['selected_song'])) {
+            $selectedSong = $_POST['selected_song'];
+            $this->deleteSong($selectedSong);
+            header("Location: " . $_SERVER['REQUEST_URI']);
+            exit();
+        }
+    }
 }
