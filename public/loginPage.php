@@ -1,37 +1,9 @@
 <?php
-session_start();
-if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    // Connect to database
-    $servername = "localhost";
-    $username = "your_username";
-    $password = "your_password";
-    $dbname = "amplify";
-    $conn = new mysqli($servername, $username, $password, $dbname);
-    if ($conn->connect_error) {
-        die("Connection failed: " . $conn->connect_error);
-    }
+require_once '../src/controllers/loginPageController.php.php';
+$controller = new loginPageController();
 
-    // Get username and password from POST request
-    $username = $_POST['username'];
-    $password = $_POST['password'];
 
-    // SQL query to check if username and password combination is valid
-    $sql = "SELECT * FROM users WHERE username = '$username' AND password = '$password'";
-    $result = $conn->query($sql);
 
-    if ($result->num_rows == 1) {
-        // Valid username and password combination
-        $_SESSION['loggedin'] = true;
-        $_SESSION['username'] = $username;
-        header("Location: homePage.php");
-        exit;
-    } else {
-        // Invalid username and password combination
-        $error = "Invalid username or password";
-    }
-
-    $conn->close();
-}
 ?>
 
 <!DOCTYPE html>

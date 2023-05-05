@@ -1,6 +1,15 @@
 <?php
 // Start a session to store user data
 session_start();
+require_once '../src/config/config.php';
+
+public function connect()
+{
+    $this->conn =  mysqli_connect(DB_HOST, DB_USERNAME, DB_PASSWORD, DB_NAME);
+    if ($this->conn->connect_error) {
+        die("Connection failed: " . $this->conn->connect_error);
+    }
+}
 
 // Get the username, email, and password from the form
 $username = $_POST['username'];
