@@ -1,5 +1,3 @@
-console.log("Hello from script.js");
-
 // new song pop up function
 function newSongPopup() {
     document.getElementById("popup").style.display = "block";
@@ -25,19 +23,6 @@ function editAlbumPopup(album_id) {
 
 function closeEditAlbumPopup(album_id) {
     document.getElementById("id" + album_id).style.display = "none";
-}
-
-function showChangeNameForm() {
-    if (document.getElementById("nf").style.display == "none")
-    {
-        document.getElementById("nameButton").textContent = "Keep Stage Name";
-        document.getElementById("nf").style.display = "block";
-    }
-
-    else {
-        document.getElementById("nameButton").textContent = "Change Stage Name";
-        document.getElementById("nf").style.display = "none";
-    }
 }
 
 // functionality for adding new song form to album form

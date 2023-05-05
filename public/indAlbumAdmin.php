@@ -2,29 +2,28 @@
 File Creator: Tathluach Chol
 
 File Description:
-    This file creates the front end view for when a user looks at an album and gets values from the back end
+    This file creates the front end view for when an admin looks at an album and gets values from the back end
     to populate the elements on the page.
 
 All Coding Sections: Tathluach Chol
 -->
 
 <?php
-require_once '../src/controllers/indAlbumController.php';
+require_once '../src/controllers/indAlbumAdminController.php';
 
 // Instantiate a new instance of the indAlbumController class
-$controller = new indAlbumController();
+$controller = new indAlbumAdminController();
 
 // Get the album ID from the URL parameter
 $album_id = $_GET['albumid'];
 $album_id = 38;
 
-$user_id = $_GET['userid'];
-$user_id = 3;
-
 // Get the album, reviews, and songs data from the back-end
 $album = $controller->getAlbumInfo($album_id) ?? [];
 $reviews = $controller->getAlbumReviews($album_id) ?? [];
 $songs = $controller->getAlbumSongs($album_id) ?? [];
+$collaborators = $controller->getAlbumCollaborators($album_id) ?? [];
+$nonCollaborators = $controller->getNonCollaborators($album_id) ?? [];
 ?>
 
 <!DOCTYPE html>
@@ -88,11 +87,10 @@ $songs = $controller->getAlbumSongs($album_id) ?? [];
 
     <!-- Display a form to allow the user to submit a new review -->
     <h2>Add Review</h2>
-    <form action="<?php echo $controller->handleFormSubmit(); ?>" name="reviewForm" method="post">
-        <input type="hidden" name="album_id" value="<?php echo $album_id; ?>">
-        <input type="hidden" name="user_id" value="<?php echo $user_id; ?>">
+    <form action="<?php echo $controller->handleFormSubmit(); ?> " name="reviewForm" method="post">
         <label for="review">Review:</label>
         <textarea id="review" name="comment"></textarea>
+        <input type="hidden" id="rating" name="rating" value="">
         <div class="slider-rating-container">
             <label for="rating">Rating:</label>
             <select id="rating" name="rating">
@@ -105,6 +103,54 @@ $songs = $controller->getAlbumSongs($album_id) ?? [];
         </div>
         <input type="submit" value="Submit">
     </form>
+
+    <!-- Display the list of collaborators for the album -->
+    <h2>Album Collaborators</h2>
+    <table>
+        <thead>
+        <tr>
+            <th>Artist ID</th>
+            <th>Stage Name</th>
+
+        </tr>
+        </thead>
+        <tbody>
+
+        <!-- Loop through each review and display the reviewer's username, rating, and comment -->
+        <?php foreach ($collaborators as $collaborator): ?>
+            <tr>
+                <td><?php echo $collaborator['artist_id']; ?></td>
+                <td><?php echo $collaborator['stage_name']; ?></td>
+            </tr>
+        <?php endforeach; ?>
+        </tbody>
+    </table>
+
+    <!-- Allow admins to add an artist as a collaborator through a form -->
+    <h2>Add to Album</h2>
+    <form action="<?php echo $controller->handleFormSubmit(); ?> " name="addCollaborator" method="post">
+        <input type="hidden" name="album_id" value="<?php echo $album_id; ?>">
+        <label for="noncollab_id">Artist Stage Name:</label>
+        <select id="noncollab_id" name="noncollab_id">
+            <?php foreach ($nonCollaborators as $nonCollaborator): ?>
+                <option value="<?= htmlspecialchars($nonCollaborator['artist_id']) ?>"><?= htmlspecialchars($nonCollaborator['stage_name']) ?></option>
+            <?php endforeach; ?>
+        </select>
+        <input type="submit" value="Add">
+    </form>
+
+    <!-- Allow admins to remove an artist from the album through a form -->
+    <h2>Remove from Album</h2>
+    <form action="<?php echo $controller->handleFormSubmit(); ?>" name="removeCollaborator" method="post">
+        <label for="collab_id">Artist Stage Name:</label>
+        <select id="collab_id" name="collab_id">
+            <?php foreach ($collaborators as $collaborator): ?>
+                <option value="<?= htmlspecialchars($collaborator['artist_id']) ?>"><?= htmlspecialchars($collaborator['stage_name']) ?></option>
+            <?php endforeach; ?>
+        </select>
+        <input type="submit" value="Remove">
+    </form>
+
 </div>
 </body>
 </html>

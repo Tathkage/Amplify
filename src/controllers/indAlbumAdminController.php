@@ -2,7 +2,7 @@
 File Creator: Tathluach Chol
 
 File Description:
-    This file supports the front end of the user album page view. It handles the back end code that gets specific
+    This file supports the front end of the admin album page view. It handles the back end code that gets specific
     values from the database given specific values from the front end. This allows the user to see specific
     album elements and interact with elements on the page.
 
@@ -13,7 +13,7 @@ All Coding Sections: Tathluach Chol
 
 require_once '../src/config/config.php';
 
-class indAlbumController {
+class indAlbumAdminController {
     private $conn;
 
     ///////////////////////////////////
@@ -165,13 +165,94 @@ class indAlbumController {
         return $albumReviews;
     }
 
+    // Get all album collaborators
+    public function getAlbumCollaborators($album_id) {
+        $this->connect();
+
+        $sql = "SELECT artists.artist_id, artists.stage_name
+            FROM album_artists
+            JOIN artists ON album_artists.artist_id = artists.artist_id
+            WHERE album_artists.album_id = $album_id";
+
+        $result = mysqli_query($this->conn, $sql);
+
+        if (!$result) {
+            die("Query failed: " . $this->conn->error);
+        }
+
+        $collaborators = array();
+        if ($result->num_rows > 0) {
+            while ($row = $result->fetch_assoc()) {
+                $collaborators[] = $row;
+            }
+        }
+
+        $this->disconnect();
+        return $collaborators;
+    }
+
+    // Get all album non-collaborators
+    public function getNonCollaborators($album_id) {
+        $this->connect();
+
+        $sql = "SELECT artists.artist_id, artists.stage_name
+            FROM artists
+            WHERE artists.artist_id NOT IN (
+                SELECT album_artists.artist_id
+                FROM album_artists
+                WHERE album_artists.album_id = $album_id
+            )";
+
+        $result = mysqli_query($this->conn, $sql);
+
+        if (!$result) {
+            die("Query failed: " . $this->conn->error);
+        }
+
+        $nonCollaborators = array();
+        if ($result->num_rows > 0) {
+            while ($row = $result->fetch_assoc()) {
+                $nonCollaborators[] = $row;
+            }
+        }
+
+        $this->disconnect();
+        return $nonCollaborators;
+    }
+
+    //////////////////////////
+    // SQL Delete Functions //
+    //////////////////////////
+
+    // Remove artist from album
+    function deleteAlbumCollaborator($artistID) {
+        $this->connect();
+
+        // Delete the corresponding entity from the album_artists table
+        $stmt = $this->conn->prepare("DELETE FROM album_artists WHERE artist_id = ?");
+        $stmt->bind_param("i", $artistID);
+        $stmt->execute();
+
+        $this->disconnect();
+    }
+
+
     //////////////////////////
     // SQL INSERT Functions //
     //////////////////////////
 
     // Save information for new review
-    public function saveAlbumReview($user_id, $song_id = null, $album_id, $comment, $rating) {
+    function saveAlbumReview($user_id = 3, $song_id ='NULL', $album_id ='NULL', $comment = 'Default comment.', $rating = 5) {
+
         $this->connect();
+
+        // Get information from page
+        $user_id = 3;
+        $album_id = 38;
+
+        // Get information from review form
+        $comment = $_POST['comment'];
+        $rating = $_POST['rating'];
 
         // Handle empty cases
         if (empty($comment) || empty($rating)) {
@@ -179,7 +260,7 @@ class indAlbumController {
         }
 
         if ($song_id === 'NULL' || empty($song_id) ) {
-            $song_id = null;
+            $song_id = NULL;
         }
 
         // Query for inputting new review
@@ -191,14 +272,42 @@ class indAlbumController {
         $this->disconnect();
     }
 
-    // Handle which information to save based off form submitted
+    // Save information for new review
+    public function saveAlbumCollaborator($artistID, $albumID) {
+        $this->connect();
+
+        // Query to insert into the album_artists table
+        $albumArtistInput = mysqli_prepare($this->conn, 'INSERT INTO album_artists (album_id, artist_id) VALUES (?,?)');
+        mysqli_stmt_bind_param($albumArtistInput, 'ii', $albumID, $artistID);
+        mysqli_stmt_execute($albumArtistInput);
+        mysqli_stmt_close($albumArtistInput);
+
+        $this->disconnect();
+    }
+
+    /////////////////////////////
+    // Handle Form Submissions //
+    /////////////////////////////
+
+    // Handle what to function to do depending on form
     public function handleFormSubmit() {
         if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['comment'])) {
-            $user_id = $_POST['user_id'] ?? 3;
-            $album_id = $_POST['album_id'] ?? 38;
-            $comment = $_POST['comment'];
-            $rating = $_POST['rating'];
-            $this->saveAlbumReview($user_id, null, $album_id, $comment, $rating);
+            $this->saveAlbumReview();
+            header("Location: " . $_SERVER['REQUEST_URI']);
+            exit();
+        }
+        else if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['collab_id'])) {
+            $artistID = $_POST['collab_id'];
+            $this->deleteAlbumCollaborator($artistID);
+
+            header("Location: " . $_SERVER['REQUEST_URI']);
+            exit();
+        }
+        else if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['noncollab_id'])) {
+            $artistID = $_POST['noncollab_id'];
+            $albumID = $_POST['album_id'];
+            $this->saveAlbumCollaborator($artistID, $albumID);
+
             header("Location: " . $_SERVER['REQUEST_URI']);
             exit();
         }

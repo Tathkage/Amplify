@@ -2,17 +2,17 @@
 File Creator: Tathluach Chol
 
 File Description:
-    This file creates the front end view for when a user looks at a song and gets values from the back end
+    This file creates the front end view for when an admin looks at a song and gets values from the back end
     to populate the elements on the page.
 
 All Coding Sections: Tathluach Chol
 -->
 
 <?php
-require_once '../src/controllers/indSongController.php';
+require_once '../src/controllers/indSongAdminController.php';
 
 // Instantiate a new instance of the indSongController class
-$controller = new indSongController();
+$controller = new indSongAdminController();
 
 // Get the song ID from the URL parameter
 $song_id = $_GET['songid'];
@@ -21,10 +21,11 @@ $song_id = 79;
 $user_id = $_GET['userid'];
 $user_id = 2;
 
-// Get the song, reviews, and playlistss data from the back-end
+// Get the song, reviews, and playlists data from the back-end
 $song = $controller->getSongInfo($song_id) ?? [];
 $reviews = $controller->getSongReviews($song_id) ?? [];
-$playlists = $controller->getUserPlaylist($user_id) ?? [];
+$flaggedReviews = $controller->getFlaggedReviews($song_id) ?? [];
+$playlists = $controller->getUserPlaylists($user_id) ?? [];
 ?>
 
 <!DOCTYPE html>
@@ -39,7 +40,7 @@ $playlists = $controller->getUserPlaylist($user_id) ?? [];
 <div class="song-container">
 
     <!-- Display the song details on the page -->
-    <h2><?php echo $song[0]; ?></h2>
+    <h2><?php echo $song_id; ?></h2>
     <p><strong>Views:</strong> <?php echo $song[1]; ?> | <strong>Reviews:</strong> 5 | <strong>Length:</strong> <?php echo $song[2]; ?> | <strong>Release Date:</strong> <?php echo $song[3]; ?> </p>
 
     <!-- Display reviews in a table -->
@@ -65,13 +66,48 @@ $playlists = $controller->getUserPlaylist($user_id) ?? [];
         </tbody>
     </table>
 
+    <!-- Display flagged reviews in a table -->
+    <h2>Flagged Song Reviews</h2>
+    <table>
+        <thead>
+        <tr>
+            <th>Review ID</th>
+            <th>User ID</th>
+            <th>Username</th>
+            <th>Rating</th>
+            <th>Review</th>
+        </tr>
+        </thead>
+        <tbody>
+
+        <!-- Loop through each flagged review and display its information -->
+        <?php foreach ($flaggedReviews as $flaggedReview): ?>
+            <tr>
+                <td><?php echo $flaggedReview['review_id']; ?></td>
+                <td><?php echo $flaggedReview['user_id']; ?></td>
+                <td><?php echo $flaggedReview['username']; ?></td>
+                <td><?php echo $flaggedReview['rating']; ?></td>
+                <td><?php echo $flaggedReview['comment']; ?></td>
+            </tr>
+        <?php endforeach; ?>
+        </tbody>
+    </table>
+
+    <!-- A form to remove or update review from song -->
+    <form action="<?php echo $controller->handleFormSubmit(); ?> " name="reviewChangeForm" method="post">
+        <label for="review_id">Review ID:</label>
+        <input type="text" name="review_id">
+        <label for="review_comment">Review Comment:</label>
+        <input type="text" name="review_comment">
+        <input type="submit" name="change_review" value="Submit">
+    </form>
+
     <!-- Allow users to add reviews through a form -->
     <h2>Add Review</h2>
-    <form action="<?php echo $controller->handleFormSubmit(); ?>" name="reviewForm" method="post">
-        <input type="hidden" name="song_id" value="<?php echo $song_id; ?>">
-        <input type="hidden" name="user_id" value="<?php echo $user_id; ?>">
+    <form action="<?php echo $controller->handleFormSubmit(); ?> " name="reviewForm" method="post">
         <label for="review">Review:</label>
         <textarea id="review" name="comment"></textarea>
+        <input type="hidden" id="rating" name="rating" value="">
         <div class="slider-rating-container">
             <label for="rating">Rating:</label>
             <select id="rating" name="rating">
@@ -97,7 +133,6 @@ $playlists = $controller->getUserPlaylist($user_id) ?? [];
         </select>
         <input type="submit" name="add_to_playlist" value="Add">
     </form>
-
 </div>
 </body>
 </html>
