@@ -14,14 +14,17 @@ require_once '../src/controllers/indSongController.php';
 // Instantiate a new instance of the indSongController class
 $controller = new indSongController();
 
-// Get the song, reviews, and playlistss data from the back-end
-$song = $controller->getSongInfo() ?? [];
-$reviews = $controller->getSongReviews() ?? [];
-$playlists = $controller->getUserPlaylisst() ?? [];
-
 // Get the song ID from the URL parameter
 $song_id = $_GET['songid'];
 $song_id = 79;
+
+$user_id = $_GET['userid'];
+$user_id = 2;
+
+// Get the song, reviews, and playlistss data from the back-end
+$song = $controller->getSongInfo($song_id) ?? [];
+$reviews = $controller->getSongReviews($song_id) ?? [];
+$playlists = $controller->getUserPlaylist($user_id) ?? [];
 ?>
 
 <!DOCTYPE html>
@@ -36,7 +39,6 @@ $song_id = 79;
 <div class="song-container">
 
     <!-- Display the song details on the page -->
-    <h2><?php echo $song_id; ?></h2>
     <h2><?php echo $song[0]; ?></h2>
     <p><strong>Views:</strong> <?php echo $song[1]; ?> | <strong>Reviews:</strong> 5 | <strong>Length:</strong> <?php echo $song[2]; ?> | <strong>Release Date:</strong> <?php echo $song[3]; ?> </p>
 
@@ -65,10 +67,11 @@ $song_id = 79;
 
     <!-- Allow users to add reviews through a form -->
     <h2>Add Review</h2>
-    <form action="<?php echo $controller->handleFormSubmit(); ?> " name="reviewForm" method="post">
+    <form action="<?php echo $controller->handleFormSubmit(); ?>" name="reviewForm" method="post">
+        <input type="hidden" name="song_id" value="<?php echo $song_id; ?>">
+        <input type="hidden" name="user_id" value="<?php echo $user_id; ?>">
         <label for="review">Review:</label>
         <textarea id="review" name="comment"></textarea>
-        <input type="hidden" id="rating" name="rating" value="">
         <div class="slider-rating-container">
             <label for="rating">Rating:</label>
             <select id="rating" name="rating">
@@ -84,15 +87,17 @@ $song_id = 79;
 
     <!-- Allow users to add the song to their playlists through a form -->
     <h2>Add to Playlist</h2>
-    <form action="<?php echo $controller->handleFormSubmit(); ?> " name="playlistForm" method="post">
+    <form action="<?php echo $_SERVER['PHP_SELF']; ?>" name="playlistForm" method="post">
+        <input type="hidden" name="song_id" value="<?php echo $song_id; ?>">
         <label for="playlist_id">Playlist Name:</label>
         <select id="playlist_id" name="playlist_id">
             <?php foreach ($playlists as $playlist): ?>
-                <option value="<?= htmlspecialchars($playlist['playlist_title']) ?>"><?= htmlspecialchars($playlist['playlist_title']) ?></option>
+                <option value="<?= htmlspecialchars($playlist['playlist_id']) ?>"><?= htmlspecialchars($playlist['playlist_title']) ?></option>
             <?php endforeach; ?>
         </select>
-        <input type="submit" value="Add">
+        <input type="submit" name="add_to_playlist" value="Add">
     </form>
+
 </div>
 </body>
 </html>
