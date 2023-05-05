@@ -18,6 +18,16 @@ $controller = new indPlaylistController();
 $playlist = $controller->getPlaylistInfo() ?? [];
 $songs = $controller->getPlaylistSongs() ?? [];
 
+// Get the playlist ID from the URL parameter
+$playlist_id = $_GET['playlistid'];
+$playlist_id = 7;
+
+// Handle post request
+if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+    $playlist_id = $_POST['playlist_id'];
+    $playlist_name = $_POST['playlist_name'];
+    $controller->handleFormSubmit($playlist_id, $playlist_name);
+}
 ?>
 
 <!DOCTYPE html>
@@ -32,7 +42,15 @@ $songs = $controller->getPlaylistSongs() ?? [];
 <div class="playlist-container">
 
     <!-- Display the playlist details on the page -->
+    <h2><?php echo $playlist_id; ?></h2>
     <h2><?php echo $playlist[2]; ?></h2>
+    <!-- A form to edit the name of a playlist -->
+    <form action="<?php echo $controller->handleFormSubmit(); ?> " name="playlistNameChangeForm" method="post">
+        <input type="hidden" name="playlist_id" value="<?php echo $playlist_id; ?>">
+        <label for="playlist_name">New Playlist Name:</label>
+        <input type="text" name="playlist_name">
+        <input type="submit" value="Submit">
+    </form>
     <p><strong>Songs:</strong> 3 | <strong>Length:</strong> 3 Minutes</p>
 
     <!-- Display the list of songs on the playlist -->
