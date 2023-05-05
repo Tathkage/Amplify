@@ -20,6 +20,12 @@ class loginPageController
             $this->conn->close();
         }
     }
+    public function query($sql)
+    {
+        return $this->conn->query($sql);
+    }
+
+
     public function login()
     {
         $this->connect();

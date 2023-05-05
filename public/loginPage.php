@@ -1,9 +1,9 @@
 <?php
-require_once '../src/controllers/loginPageController.php.php';
+session_start();
+require_once '../src/controllers/loginPageController.php';
+
 $controller = new loginPageController();
-
-
-
+$controller->login();
 ?>
 
 <!DOCTYPE html>
