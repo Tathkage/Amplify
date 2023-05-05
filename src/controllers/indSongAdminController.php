@@ -39,23 +39,19 @@ class indSongAdminController {
     //////////////////////////
 
     // Get information on the current song
-    public function getSongInfo() {
+    public function getSongInfo($song_id) {
         $this->connect();
 
-        // Collects all songs created by artist
-        // song_id hard coded for now
         $sql = "SELECT songs.song_title, songs.listens, songs.length, songs.release_date, songs.release_time
-            FROM songs
-            WHERE songs.song_id = 79";
+        FROM songs
+        WHERE songs.song_id = $song_id";
 
         $result = mysqli_query($this->conn, $sql);
 
-        // Check if query execution was successful
         if (!$result) {
             die("Query failed: " . $this->conn->error);
         }
 
-        // Store songs in array
         $song = array();
         if ($result->num_rows > 0) {
             $row = $result->fetch_assoc();
@@ -70,25 +66,21 @@ class indSongAdminController {
     }
 
     // Get all reviews on the current song
-    public function getSongReviews() {
+    public function getSongReviews($song_id) {
         $this->connect();
 
-        // Collects all songs created by artist
-        // song_id hard coded for now
         $sql = "SELECT reviews.review_id, reviews.user_id, users.username, reviews.comment, reviews.rating
                 FROM reviews
                 JOIN users ON reviews.user_id = users.user_id
-                WHERE reviews.song_id = 79";
+                WHERE reviews.song_id = $song_id";
 
 
         $result = mysqli_query($this->conn, $sql);
 
-        // Check if query execution was successful
         if (!$result) {
             die("Query failed: " . $this->conn->error);
         }
 
-        // Store songs in array
         $songReviews = array();
         if ($result->num_rows > 0) {
             while ($row = $result->fetch_assoc()) {
@@ -100,14 +92,14 @@ class indSongAdminController {
     }
 
     // Get flagged reviews on the current song
-    public function getFlaggedReviews() {
+    public function getFlaggedReviews($song_id) {
         $this->connect();
 
         // Collect reviews with popular curse words in the comments
         $sql = "SELECT reviews.review_id, reviews.user_id, users.username, reviews.comment, reviews.rating
             FROM reviews
             JOIN users ON reviews.user_id = users.user_id
-            WHERE reviews.song_id = 79 AND (
+            WHERE reviews.song_id = $song_id AND (
                 reviews.comment LIKE '%first curse%' OR
                 reviews.comment LIKE '%second curse%' OR
                 reviews.comment LIKE '%third curse%')";
@@ -131,15 +123,12 @@ class indSongAdminController {
     }
 
     // Get all playlists created by the user
-    public function getUserPlaylists() {
+    public function getUserPlaylists($user_id) {
         $this->connect();
 
-        // Collects all songs created by artist
-        // song_id hard coded for now
-        $sql = "SELECT playlists.playlist_title
+        $sql = "SELECT playlists.playlist_id, playlists.playlist_title
             FROM playlists
-            WHERE playlists.user_id = 2";
-
+            WHERE playlists.user_id = $user_id";
 
         $result = mysqli_query($this->conn, $sql);
 
@@ -148,7 +137,7 @@ class indSongAdminController {
             die("Query failed: " . $this->conn->error);
         }
 
-        // Store songs in array
+        // Store playlists in array
         $userPlaylists = array();
         if ($result->num_rows > 0) {
             while ($row = $result->fetch_assoc()) {
@@ -158,7 +147,6 @@ class indSongAdminController {
         $this->disconnect();
         return $userPlaylists;
     }
-
 
     //////////////////////////
     // SQL INSERT Functions //
@@ -197,7 +185,7 @@ class indSongAdminController {
     }
 
     // Save information to add song to playlist
-    function savePlaylistSong($song_id = 79, $playlist_id = 7) {
+    function savePlaylistSong($song_id, $playlist_id) {
 
         $this->connect();
 
@@ -265,7 +253,9 @@ class indSongAdminController {
 
         // If playlist information is sent, call the function to add it to the database
         else if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['playlist_id'])) {
-            $this->savePlaylistSong();
+            $song_id = $_POST['song_id'];
+            $playlist_id = $_POST['playlist_id'];
+            $this->savePlaylistSong($song_id, $playlist_id);
             header("Location: " . $_SERVER['REQUEST_URI']);
             exit();
         }

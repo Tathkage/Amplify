@@ -39,16 +39,18 @@ class indPlaylistController {
     //////////////////////////
 
     // Get information on current playlist
-    public function getPlaylistInfo() {
+    public function getPlaylistInfo($playlist_id) {
         $this->connect();
 
         // Collects all songs created by artist
-        // playlist_id hard coded for now
         $sql = "SELECT playlists.playlist_id, playlists.user_id, playlists.playlist_title
             FROM playlists
-            WHERE playlists.playlist_id = 7";
+            WHERE playlists.playlist_id = ?";
 
-        $result = mysqli_query($this->conn, $sql);
+        $stmt = mysqli_prepare($this->conn, $sql);
+        mysqli_stmt_bind_param($stmt, "i", $playlist_id);
+        mysqli_stmt_execute($stmt);
+        $result = mysqli_stmt_get_result($stmt);
 
         // Check if query execution was successful
         if (!$result) {
@@ -68,18 +70,20 @@ class indPlaylistController {
     }
 
     // Get all songs in a playlist
-    public function getPlaylistSongs() {
+    public function getPlaylistSongs($playlist_id) {
         $this->connect();
 
         // Collects all songs created by artist
-        // song_id hard coded for now
         $sql = "SELECT playlists.playlist_id, playlists.user_id, playlists.playlist_title, songs.song_title, songs.length
-                FROM playlists
-                JOIN song_playlists ON playlists.playlist_id = song_playlists.playlist_id
-                JOIN songs ON song_playlists.song_id = songs.song_id
-                WHERE playlists.playlist_id = 7";
+            FROM playlists
+            JOIN song_playlists ON playlists.playlist_id = song_playlists.playlist_id
+            JOIN songs ON song_playlists.song_id = songs.song_id
+            WHERE playlists.playlist_id = ?";
 
-        $result = mysqli_query($this->conn, $sql);
+        $stmt = mysqli_prepare($this->conn, $sql);
+        mysqli_stmt_bind_param($stmt, 'i', $playlist_id);
+        mysqli_stmt_execute($stmt);
+        $result = mysqli_stmt_get_result($stmt);
 
         // Check if query execution was successful
         if (!$result) {

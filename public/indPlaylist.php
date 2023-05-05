@@ -14,14 +14,13 @@ require_once '../src/controllers/indPlaylistController.php';
 // Instantiate a new instance of the indPlaylistController class
 $controller = new indPlaylistController();
 
-// Get the playlist and songs data from the back-end
-$playlist = $controller->getPlaylistInfo() ?? [];
-$songs = $controller->getPlaylistSongs() ?? [];
-
 // Get the playlist ID from the URL parameter
 $playlist_id = $_GET['playlistid'];
 $playlist_id = 7;
 
+// Get the playlist and songs data from the back-end
+$playlist = $controller->getPlaylistInfo($playlist_id) ?? [];
+$songs = $controller->getPlaylistSongs($playlist_id) ?? [];
 ?>
 
 <!DOCTYPE html>
@@ -36,7 +35,6 @@ $playlist_id = 7;
 <div class="playlist-container">
 
     <!-- Display the playlist details on the page -->
-    <h2><?php echo $playlist_id; ?></h2>
     <h2><?php echo $playlist[2]; ?></h2>
     <!-- A form to edit the name of a playlist -->
     <form action="<?php echo $controller->handleFormSubmit(); ?> " name="playlistNameChangeForm" method="post">

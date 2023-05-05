@@ -14,16 +14,18 @@ require_once '../src/controllers/indSongAdminController.php';
 // Instantiate a new instance of the indSongController class
 $controller = new indSongAdminController();
 
-// Get the song, reviews, and playlistss data from the back-end
-$song = $controller->getSongInfo() ?? [];
-$reviews = $controller->getSongReviews() ?? [];
-$flaggedReviews = $controller->getFlaggedReviews() ?? [];
-$playlists = $controller->getUserPlaylists() ?? [];
-
 // Get the song ID from the URL parameter
 $song_id = $_GET['songid'];
 $song_id = 79;
 
+$user_id = $_GET['userid'];
+$user_id = 2;
+
+// Get the song, reviews, and playlists data from the back-end
+$song = $controller->getSongInfo($song_id) ?? [];
+$reviews = $controller->getSongReviews($song_id) ?? [];
+$flaggedReviews = $controller->getFlaggedReviews($song_id) ?? [];
+$playlists = $controller->getUserPlaylists($user_id) ?? [];
 ?>
 
 <!DOCTYPE html>
@@ -121,14 +123,15 @@ $song_id = 79;
 
     <!-- Allow users to add the song to their playlists through a form -->
     <h2>Add to Playlist</h2>
-    <form action="<?php echo $controller->handleFormSubmit(); ?> " name="playlistForm" method="post">
+    <form action="<?php echo $_SERVER['PHP_SELF']; ?>" name="playlistForm" method="post">
+        <input type="hidden" name="song_id" value="<?php echo $song_id; ?>">
         <label for="playlist_id">Playlist Name:</label>
         <select id="playlist_id" name="playlist_id">
             <?php foreach ($playlists as $playlist): ?>
-                <option value="<?= htmlspecialchars($playlist['playlist_title']) ?>"><?= htmlspecialchars($playlist['playlist_title']) ?></option>
+                <option value="<?= htmlspecialchars($playlist['playlist_id']) ?>"><?= htmlspecialchars($playlist['playlist_title']) ?></option>
             <?php endforeach; ?>
         </select>
-        <input type="submit" value="Add">
+        <input type="submit" name="add_to_playlist" value="Add">
     </form>
 </div>
 </body>
