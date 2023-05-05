@@ -1,3 +1,14 @@
+<!--
+File Creator: Wayland Moody
+
+File Description:
+
+    This file is the back end page for the artistPageAdmin.php Page.
+    It executes queries and returns the results back to the artistPageAdmin
+
+All Coding Sections: Wayland Moody
+-->
+
 <?php
 
 require_once '../src/config/config.php';
