@@ -290,7 +290,9 @@ $potentialCollabs = $controller->collectPotentialCollabs();
     <h2>Potential Collaborators</h2>
     <ul>
         <?php foreach ($potentialCollabs as $row): ?>
-            <li><?php echo $row['stage_name']; ?></li>
+            <?php if ($row['stage_name'] !== $artistName['stage_name']) {
+                echo '<li>' . $row['stage_name'] . '</li>';
+                }?>
         <?php endforeach; ?>
     </ul>
 
