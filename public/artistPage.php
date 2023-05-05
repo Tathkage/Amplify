@@ -1,4 +1,4 @@
-<?php
+a<?php
 require_once '../src/controllers/artistPageController.php';
 $controller = new artistPageController();
 
