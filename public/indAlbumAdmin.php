@@ -11,13 +11,19 @@ All Coding Sections: Tathluach Chol
 <?php
 require_once '../src/controllers/indAlbumAdminController.php';
 
+// Instantiate a new instance of the indAlbumController class
 $controller = new indAlbumAdminController();
 
-// Access the data array defined in artistsController.php
+// Get the album, reviews, and songs data from the back-end
 $album = $controller->defaultAlbum() ?? [];
-$reviews = $controller->albumReviews() ?? [];
-$songs = $controller->albumSongs() ?? [];
+$reviews = $controller->getAlbumReviews() ?? [];
+$songs = $controller->getAlbumSongs() ?? [];
+
+// Get the album ID from the URL parameter
+$album_id = $_GET['albumid'];
+
 ?>
+
 <!DOCTYPE html>
 <html lang="">
 <head>
@@ -28,8 +34,12 @@ $songs = $controller->albumSongs() ?? [];
 <body>
 <h1>Amplify: Albums</h1>
 <div class="album-container">
-    <h2><?php echo $album[0]; ?></h2>
+
+    <!-- Display the album details on the page -->
+    <h2><?php echo $album_id; ?></h2>
     <p><strong>Songs:</strong> 10 | <strong>Reviews:</strong> 5 | <strong>Release Date:</strong> <?php echo $album[1]; ?></p>
+
+    <!-- Display the list of songs on the album -->
     <h2>Songs</h2>
     <table>
         <thead>
@@ -40,7 +50,7 @@ $songs = $controller->albumSongs() ?? [];
         </thead>
         <tbody>
 
-        <!-- Loops through albums and albumCollaborators to show needed information -->
+        <!-- Loop through each song and display its title and length -->
         <?php foreach ($songs as $song): ?>
             <tr>
                 <td><?php echo $song['song_title']; ?></td>
@@ -49,6 +59,8 @@ $songs = $controller->albumSongs() ?? [];
         <?php endforeach; ?>
         </tbody>
     </table>
+
+    <!-- Display the list of reviews for the album -->
     <h2>Album Reviews</h2>
     <table>
         <thead>
@@ -60,7 +72,7 @@ $songs = $controller->albumSongs() ?? [];
         </thead>
         <tbody>
 
-        <!-- Loops through albums and albumCollaborators to show needed information -->
+        <!-- Loop through each review and display the reviewer's username, rating, and comment -->
         <?php foreach ($reviews as $review): ?>
             <tr>
                 <td><?php echo $review['username']; ?></td>
@@ -71,6 +83,7 @@ $songs = $controller->albumSongs() ?? [];
         </tbody>
     </table>
 
+    <!-- Display a form to allow the user to submit a new review -->
     <h2>Add Review</h2>
     <form action="<?php echo $controller->handleFormSubmit(); ?> " name="reviewForm" method="post">
         <label for="review">Review:</label>

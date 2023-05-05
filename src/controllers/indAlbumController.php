@@ -39,7 +39,7 @@ class indAlbumController {
     //////////////////////////
 
     // Get information on current album
-    public function defaultAlbum() {
+    public function getAlbumInfo() {
         $this->connect();
 
         // Collects all songs created by artist
@@ -68,7 +68,7 @@ class indAlbumController {
     }
 
     // Get all songs inside of album
-    public function albumSongs() {
+    public function getAlbumSongs() {
         $this->connect();
 
         // Collects all songs created by artist
@@ -99,7 +99,7 @@ class indAlbumController {
     }
 
     // Get all reviews on album
-    public function albumReviews() {
+    public function getAlbumReviews() {
         $this->connect();
 
         // Collects all songs created by artist

@@ -11,14 +11,19 @@ All Coding Sections: Tathluach Chol
 <?php
 require_once '../src/controllers/indAlbumController.php';
 
+// Instantiate a new instance of the indAlbumController class
 $controller = new indAlbumController();
 
-// Access the data array defined in artistsController.php
-$album = $controller->defaultAlbum() ?? [];
-$reviews = $controller->albumReviews() ?? [];
-$songs = $controller->albumSongs() ?? [];
+// Get the album, reviews, and songs data from the back-end
+$album = $controller->getAlbumInfo() ?? [];
+$reviews = $controller->getAlbumReviews() ?? [];
+$songs = $controller->getAlbumSongs() ?? [];
+
+// Get the album ID from the URL parameter
 $album_id = $_GET['albumid'];
+
 ?>
+
 <!DOCTYPE html>
 <html lang="">
 <head>
@@ -29,8 +34,12 @@ $album_id = $_GET['albumid'];
 <body>
 <h1>Amplify: Albums</h1>
 <div class="album-container">
+
+    <!-- Display the album details on the page -->
     <h2><?php echo $album_id; ?></h2>
     <p><strong>Songs:</strong> 10 | <strong>Reviews:</strong> 5 | <strong>Release Date:</strong> <?php echo $album[1]; ?></p>
+
+    <!-- Display the list of songs on the album -->
     <h2>Songs</h2>
     <table>
         <thead>
@@ -41,7 +50,7 @@ $album_id = $_GET['albumid'];
         </thead>
         <tbody>
 
-        <!-- Loops through albums and albumCollaborators to show needed information -->
+        <!-- Loop through each song and display its title and length -->
         <?php foreach ($songs as $song): ?>
             <tr>
                 <td><?php echo $song['song_title']; ?></td>
@@ -50,6 +59,8 @@ $album_id = $_GET['albumid'];
         <?php endforeach; ?>
         </tbody>
     </table>
+
+    <!-- Display the list of reviews for the album -->
     <h2>Album Reviews</h2>
     <table>
         <thead>
@@ -61,7 +72,7 @@ $album_id = $_GET['albumid'];
         </thead>
         <tbody>
 
-        <!-- Loops through albums and albumCollaborators to show needed information -->
+        <!-- Loop through each review and display the reviewer's username, rating, and comment -->
         <?php foreach ($reviews as $review): ?>
             <tr>
                 <td><?php echo $review['username']; ?></td>
@@ -72,6 +83,7 @@ $album_id = $_GET['albumid'];
         </tbody>
     </table>
 
+    <!-- Display a form to allow the user to submit a new review -->
     <h2>Add Review</h2>
     <form action="<?php echo $controller->handleFormSubmit(); ?> " name="reviewForm" method="post">
         <label for="review">Review:</label>

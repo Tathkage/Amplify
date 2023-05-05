@@ -11,12 +11,17 @@ All Coding Sections: Tathluach Chol
 <?php
 require_once '../src/controllers/indSongAdminController.php';
 
+// Instantiate a new instance of the indSongController class
 $controller = new indSongAdminController();
 
-// Access the data array defined in artistsController.php
-$song = $controller->defaultSong() ?? [];
-$reviews = $controller->songReviews() ?? [];
-$playlists = $controller->userPlaylists() ?? [];
+// Get the song, reviews, and playlistss data from the back-end
+$song = $controller->getSongInfo() ?? [];
+$reviews = $controller->getSongReviews() ?? [];
+$playlists = $controller->getUserPlaylists() ?? [];
+
+// Get the song ID from the URL parameter
+$song_id = $_GET['songid'];
+
 ?>
 
 <!DOCTYPE html>
@@ -29,9 +34,13 @@ $playlists = $controller->userPlaylists() ?? [];
 <body>
 <h1>Amplify: Songs</h1>
 <div class="song-container">
-    <h2><?php echo $song[0]; ?></h2>
+
+    <!-- Display the song details on the page -->
+    <h2><?php echo $song_id; ?></h2>
     <p><strong>Views:</strong> <?php echo $song[1]; ?> | <strong>Reviews:</strong> 5 | <strong>Length:</strong> <?php echo $song[2]; ?> | <strong>Release Date:</strong> <?php echo $song[3]; ?> </p>
     <h2>Reviews</h2>
+
+    <!-- Display reviews in a table -->
     <table>
         <thead>
         <tr>
@@ -42,7 +51,7 @@ $playlists = $controller->userPlaylists() ?? [];
         </thead>
         <tbody>
 
-        <!-- Loops through albums and albumCollaborators to show needed information -->
+        <!-- Loop through each review and display its information -->
         <?php foreach ($reviews as $review): ?>
             <tr>
                 <td><?php echo $review['username']; ?></td>
@@ -52,6 +61,8 @@ $playlists = $controller->userPlaylists() ?? [];
         <?php endforeach; ?>
         </tbody>
     </table>
+
+    <!-- Allow users to add reviews through a form -->
     <h2>Add Review</h2>
     <form action="<?php echo $controller->handleFormSubmit(); ?> " name="reviewForm" method="post">
         <label for="review">Review:</label>
@@ -69,6 +80,8 @@ $playlists = $controller->userPlaylists() ?? [];
         </div>
         <input type="submit" value="Submit">
     </form>
+
+    <!-- Allow users to add the song to their playlists through a form -->
     <h2>Add to Playlist</h2>
     <form action="<?php echo $controller->handleFormSubmit(); ?> " name="playlistForm" method="post">
         <label for="playlist_id">Playlist Name:</label>
