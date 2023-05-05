@@ -6,10 +6,14 @@ class artistPageController
 {
     private $conn;
 
+    ///////////////////////////////////
+    // Database Connection Functions //
+    ///////////////////////////////////
+
     // Connect to database
     public function connect()
     {
-        $this->conn =  mysqli_connect(DB_HOST, DB_USERNAME, DB_PASSWORD, DB_NAME);
+        $this->conn = mysqli_connect(DB_HOST, DB_USERNAME, DB_PASSWORD, DB_NAME);
         if ($this->conn->connect_error) {
             die("Connection failed: " . $this->conn->connect_error);
         }
@@ -23,7 +27,13 @@ class artistPageController
         }
     }
 
-    public function collectPotentialCollabs() {
+    //////////////////////////////////////////////////////////////
+    // INFORMATION COLLECTION FUNCTIONS: 8 SELECTS AND 1 UPDATE //
+    //////////////////////////////////////////////////////////////
+
+
+    public function collectPotentialCollabs()
+    {
         $this->connect();
 
         $sql = "SELECT *  FROM potential_collabs";
@@ -45,7 +55,8 @@ class artistPageController
         return $Artists;
     }
 
-    public function collectStageName() {
+    public function collectStageName()
+    {
         $this->connect();
 
         //
@@ -130,7 +141,8 @@ class artistPageController
     }
 
     // function to collect songs with no album for new album creation
-    function collectNonAlbumSongs() {
+    function collectNonAlbumSongs()
+    {
         $this->connect();
 
         $sql = "SELECT songs.song_id, songs.song_title
@@ -157,7 +169,8 @@ class artistPageController
     }
 
     //  Function to show other artists for potential collabs
-    function collectOtherArtists() {
+    function collectOtherArtists()
+    {
         $this->connect();
 
         $sql = "SELECT artists.artist_id, artists.stage_name FROM artists WHERE artists.artist_id != 1 ";
@@ -180,7 +193,8 @@ class artistPageController
     }
 
     // Function to show collaborators for song or album (input is the array) and type is either song or album
-    function showCollaborators($input, $type) {
+    function showCollaborators($input, $type)
+    {
         $this->connect();
         $collabArray = array();
 
@@ -196,9 +210,7 @@ class artistPageController
                 WHERE artists.artist_id != 1 AND songs.song_id = ?');
                 mysqli_stmt_bind_param($sql, 'i', $songID);
                 mysqli_stmt_execute($sql);
-            }
-
-            else {
+            } else {
                 $albumID = $value['album_id'];
                 $sql = mysqli_prepare($this->conn, 'SELECT artists.stage_name
                 FROM albums
@@ -232,8 +244,12 @@ class artistPageController
         return $collabArray;
     }
 
+    /////////////////////////////////////////////////
+    // Data Saving Functions: 6 INSERTS 1 UPDATES //
+    ///////////////////////////////////////////////
+
     // function to save information for new song
-    function saveNewSongData($song_title = 'default', $length = '00:00:00', $album_id ='NULL', $release_date ='/01/01/2022', $release_time = '12:45:00', $collaborators = [], $albumCreation = false)
+    function saveNewSongData($song_title = 'default', $length = '00:00:00', $album_id = 'NULL', $release_date = '/01/01/2022', $release_time = '12:45:00', $collaborators = [], $albumCreation = false)
     {
         $this->connect();
 
@@ -253,7 +269,7 @@ class artistPageController
             return;
         }
 
-        if ($album_id === 'NULL' || empty($album_id) ) {
+        if ($album_id === 'NULL' || empty($album_id)) {
             $album_id = NULL;
         }
 
@@ -285,6 +301,7 @@ class artistPageController
         $this->disconnect();
 
     }
+
     // function to save information for new album
     function saveNewAlbumData()
     {
@@ -298,7 +315,6 @@ class artistPageController
         $songLengths = $_POST['length'];
         $collaborators = $_POST['collaborators'];
         $newSongs = array_combine($songTitles, $songLengths);
-
 
 
         //    handle empty cases
@@ -353,32 +369,28 @@ class artistPageController
         }
     }
 
-    function changeName() {
+    /////////////////////////////////////////
+    // Data Changing Functions: 2 UPDATES //
+    ///////////////////////////////////////
+
+    // allows
+    function changeName()
+    {
         $this->connect();
 
-        //    get information from album form
-        $release_date = $_POST['release_date'];
-        $release_time = $_POST['release_time'];
-        $song_id = $_POST['song_id'];
+        //    get information from change name form
+        $newName = $_POST['new_name'];
 
+        //    handle empty cases
+        if (empty($newName)) {
+            return;
+        }
 
-        // Update Artists song information in database
-        $songEdit = mysqli_prepare($this->conn, 'UPDATE songs set release_date = ? AND release_time = ? WHERE song_id = ?');
-        mysqli_stmt_bind_param($songEdit, 'ssi', $release_date, $release_time, $song_id);
-        mysqli_stmt_execute($songEdit);
-        mysqli_stmt_close($songEdit);
-
-    }
-
-    // Delete Artist if needed
-    function deleteArtist() {
-        $this->connect();
-
-
-        // Delete artist from database
-        $removeArtist = mysqli_prepare($this->conn, 'DELETE FROM artists WHERE artist_id = 1'); // artist id is hardcoded as login is not implemented
-        mysqli_stmt_execute($removeArtist);
-        mysqli_stmt_close($removeArtist);
+        // Update Artists name in database
+        $nameChange = mysqli_prepare($this->conn, 'UPDATE artists set stage_name = ? WHERE artist_id = 1');
+        mysqli_stmt_bind_param($nameChange, 's', $newName);
+        mysqli_stmt_execute($nameChange);
+        mysqli_stmt_close($nameChange);
 
         if ($this->conn) {
             $this->disconnect();
@@ -386,37 +398,9 @@ class artistPageController
 
     }
 
-    // function that deletes song give song id, it will delete artist connection in song_artist and keep the song in the song table
-    function deleteSong($song_id) {
-        $this->connect();
-
-        // delete row from table
-        $deleteSongStatement = mysqli_prepare($this->conn, 'DELETE FROM song_artists WHERE song_id = ? AND artist_id = 1'); // artist id is hardcoded as login is not implemented
-        mysqli_stmt_bind_param($deleteSongStatement, 'i', $song_id);
-        mysqli_stmt_execute($deleteSongStatement);
-        mysqli_stmt_close($deleteSongStatement);
-
-        if ($this->conn) {
-            $this->disconnect();
-        }
-    }
-
-    // function that deletes album given the specific album_id it will delete artist connection in album_artist and keep the album in the ablum table
-    function deleteAlbum($album_id) {
-        $this->connect();
-
-        // delete row from table
-        $deleteAlbumStatement = mysqli_prepare($this->conn, 'DELETE FROM album_artists WHERE album_id = ? AND artist_id = 1');
-        mysqli_stmt_bind_param($deleteAlbumStatement, 'i', $album_id);
-        mysqli_stmt_execute($deleteAlbumStatement);
-        mysqli_stmt_close($deleteAlbumStatement);
-
-        if ($this->conn) {
-            $this->disconnect();
-        }
-    }
-
-    function editAlbum() {
+    //   Function that changes the release date and time for a specific album_id
+    function editAlbum()
+    {
         $this->connect();
 
         //    get information from edit album form
@@ -435,37 +419,82 @@ class artistPageController
         }
 
     }
+
+    /////////////////////////////////////////
+    // Data Deleting Functions: 3 DELETES //
+    ///////////////////////////////////////
+
+    // Delete Artist if needed
+    function deleteArtist()
+    {
+        $this->connect();
+
+        // Delete artist from database
+        $removeArtist = mysqli_prepare($this->conn, 'DELETE FROM artists WHERE artist_id = 1'); // artist id is hardcoded as login is not implemented
+        mysqli_stmt_execute($removeArtist);
+        mysqli_stmt_close($removeArtist);
+
+        if ($this->conn) {
+            $this->disconnect();
+        }
+
+    }
+
+    // function that deletes song give song id, it will delete artist connection in song_artist and keep the song in the song table
+    function deleteSong($song_id)
+    {
+        $this->connect();
+
+        // delete row from table
+        $deleteSongStatement = mysqli_prepare($this->conn, 'DELETE FROM song_artists WHERE song_id = ? AND artist_id = 1'); // artist id is hardcoded as login is not implemented
+        mysqli_stmt_bind_param($deleteSongStatement, 'i', $song_id);
+        mysqli_stmt_execute($deleteSongStatement);
+        mysqli_stmt_close($deleteSongStatement);
+
+        if ($this->conn) {
+            $this->disconnect();
+        }
+    }
+
+    // function that deletes album given the specific album_id it will delete artist connection in album_artist and keep the album in the ablum table
+    function deleteAlbum($album_id)
+    {
+        $this->connect();
+
+        // delete row from table
+        $deleteAlbumStatement = mysqli_prepare($this->conn, 'DELETE FROM album_artists WHERE album_id = ? AND artist_id = 1');
+        mysqli_stmt_bind_param($deleteAlbumStatement, 'i', $album_id);
+        mysqli_stmt_execute($deleteAlbumStatement);
+        mysqli_stmt_close($deleteAlbumStatement);
+
+        if ($this->conn) {
+            $this->disconnect();
+        }
+    }
+
+    ///////////////////
+    // Form Handling //
+    ///////////////////
+
     // function to handle which action to take based on form version
     public function handleFormSubmit()
     {
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             if (isset($_POST['songForm'])) {
                 $this->saveNewSongData();
-            }
-
-            elseif (isset($_POST['albumForm'])) {
+            } elseif (isset($_POST['albumForm'])) {
                 $this->saveNewAlbumData();
-            }
-
-            elseif (isset($_POST['changeNameForm'])) {
+            } elseif (isset($_POST['changeNameForm'])) {
                 $this->changeName();
-            }
-
-            elseif (isset($_POST['deleteArtistForm'])) {
+            } elseif (isset($_POST['deleteArtistForm'])) {
                 $this->deleteArtist();
-                header("Location: /homePage.php" );
+                header("Location: /homePage.php");
                 exit();
-            }
-
-            elseif (isset($_POST['deleteAlbumForm'])) {
+            } elseif (isset($_POST['deleteAlbumForm'])) {
                 $this->deleteAlbum($_POST['album_id']);
-            }
-
-            elseif (isset($_POST['deleteSongForm'])) {
+            } elseif (isset($_POST['deleteSongForm'])) {
                 $this->deleteSong($_POST['song_id']);
-            }
-
-            elseif (isset($_POST['editAlbumForm'])) {
+            } elseif (isset($_POST['editAlbumForm'])) {
                 $this->editAlbum();
             }
 
