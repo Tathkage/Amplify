@@ -99,7 +99,7 @@ class indPlaylistController {
 
     //////////////////////////
     // SQL Delete Functions //
-    /// //////////////////////
+    //////////////////////////
 
     // Function to delete song from playlist
     function deletePlaylistSong($selectedSong) {
@@ -125,12 +125,37 @@ class indPlaylistController {
         $this->disconnect();
     }
 
+    //////////////////////////
+    // SQL Update Functions //
+    //////////////////////////
 
+    function editPlaylistName($playlistID, $newPlaylistName) {
+        $this->connect();
+
+        // Update the playlist title for the given playlist ID
+        $stmt = $this->conn->prepare("UPDATE playlists SET playlist_title = ? WHERE playlist_id = ?");
+        $stmt->bind_param("si", $newPlaylistName, $playlistID);
+        $stmt->execute();
+
+        $this->disconnect();
+    }
+
+    ////
+    // Handle Form Submissions //
+    ///
+    ///
     // Handle what to delete depending on form
     public function handleFormSubmit() {
         if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['selected_song'])) {
             $selectedSong = $_POST['selected_song'];
             $this->deletePlaylistSong($selectedSong);
+            header("Location: " . $_SERVER['REQUEST_URI']);
+            exit();
+        }
+        else if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['playlist_name'])) {
+            $playlistID = $_POST['playlist_id'];
+            $playlistName = $_POST['playlist_name'];
+            $this->editPlaylistName($playlistID, $playlistName);
             header("Location: " . $_SERVER['REQUEST_URI']);
             exit();
         }

@@ -21,7 +21,7 @@ $songs = $controller->getAlbumSongs() ?? [];
 
 // Get the album ID from the URL parameter
 $album_id = $_GET['albumid'];
-
+$album_id = 38;
 ?>
 
 <!DOCTYPE html>
@@ -37,6 +37,7 @@ $album_id = $_GET['albumid'];
 
     <!-- Display the album details on the page -->
     <h2><?php echo $album_id; ?></h2>
+    <h2><?php echo $album[0]; ?></h2>
     <p><strong>Songs:</strong> 10 | <strong>Reviews:</strong> 5 | <strong>Release Date:</strong> <?php echo $album[1]; ?></p>
 
     <!-- Display the list of songs on the album -->
