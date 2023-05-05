@@ -49,7 +49,7 @@ class artistPageController
         $this->connect();
 
         //
-        $sql = "SELECT stage_name FROM artists WHERE artist_id = 1";
+        $sql = "SELECT stage_name FROM artists WHERE artist_id = 1"; // artist id is hardcoded as login is not implemented
 
         $name = mysqli_query($this->conn, $sql);
 
@@ -76,12 +76,12 @@ class artistPageController
 
         // Collects all songs created by artist
         // artist_id hard coded until we get user code
-        $sql = "SELECT songs.song_title, songs.listens, songs.album_id, songs.song_id, albums.album_title, songs.length
+        $sql = "SELECT songs.song_title, songs.listens, songs.album_id, songs.song_id, albums.album_title, songs.length, songs.release_time, songs.release_date
             FROM songs
             JOIN song_artists ON songs.song_id = song_artists.song_id
             JOIN artists ON song_artists.artist_id = artists.artist_id
             LEFT JOIN albums ON songs.album_id = albums.album_ID
-            WHERE artists.artist_id = 1";
+            WHERE artists.artist_id = 1"; // artist id is hardcoded as login is not implemented
 
         $result = mysqli_query($this->conn, $sql);
 
@@ -110,7 +110,7 @@ class artistPageController
             FROM albums
             JOIN album_artists ON albums.album_id = album_artists.album_id
             JOIN artists ON album_artists.artist_id = artists.artist_id
-            WHERE artists.artist_id = 1";
+            WHERE artists.artist_id = 1"; // artist id is hardcoded as login is not implemented
 
         $result = mysqli_query($this->conn, $sql);
 
@@ -137,7 +137,7 @@ class artistPageController
             FROM songs
             JOIN song_artists ON songs.song_id = song_artists.song_id
             JOIN artists ON song_artists.artist_id = artists.artist_id
-            WHERE artists.artist_id = 1 AND songs.album_id is NULL";
+            WHERE artists.artist_id = 1 AND songs.album_id is NULL"; // artist id is hardcoded as login is not implemented
 
         $result = mysqli_query($this->conn, $sql);
 
@@ -266,7 +266,7 @@ class artistPageController
 
         //  query for inputting new song_artists
         $song_id = mysqli_insert_id($this->conn);
-        $artist_id = 1;
+        $artist_id = 1; // artist id is hardcoded as login is not implemented
         $songArtistsInput = mysqli_prepare($this->conn, 'INSERT INTO song_artists (song_id, artist_id) VALUES (?,?)');
         mysqli_stmt_bind_param($songArtistsInput, 'ii', $song_id, $artist_id);
         mysqli_stmt_execute($songArtistsInput);
@@ -314,7 +314,7 @@ class artistPageController
 
         // add new rows to album artists
         $album_id = mysqli_insert_id($this->conn);
-        $artist_id = 1;
+        $artist_id = 1; // artist id is hardcoded as login is not implemented
         $albumArtistsInput = mysqli_prepare($this->conn, 'INSERT INTO album_artists (album_id, artist_id) VALUES (?,?)');
         mysqli_stmt_bind_param($albumArtistsInput, 'ii', $album_id, $artist_id);
         mysqli_stmt_execute($albumArtistsInput);
@@ -357,29 +357,78 @@ class artistPageController
         $this->connect();
 
         //    get information from album form
-        $newName = $_POST['new_name'];
+        $release_date = $_POST['release_date'];
+        $release_time = $_POST['release_time'];
+        $song_id = $_POST['song_id'];
 
-        //    handle empty cases
-        if (empty($newName)) {
-            return;
-        }
 
-        // Update Artists name in database
-        $nameChange = mysqli_prepare($this->conn, 'UPDATE artists set stage_name = ? WHERE artist_id = 1');
-        mysqli_stmt_bind_param($nameChange, 's', $newName);
-        mysqli_stmt_execute($nameChange);
-        mysqli_stmt_close($nameChange);
+        // Update Artists song information in database
+        $songEdit = mysqli_prepare($this->conn, 'UPDATE songs set release_date = ? AND release_time = ? WHERE song_id = ?');
+        mysqli_stmt_bind_param($songEdit, 'ssi', $release_date, $release_time, $song_id);
+        mysqli_stmt_execute($songEdit);
+        mysqli_stmt_close($songEdit);
 
     }
 
+    // Delete Artist if needed
     function deleteArtist() {
         $this->connect();
 
 
         // Delete artist from database
-        $removeArtist = mysqli_prepare($this->conn, 'DELETE FROM artists WHERE artist_id = 1');
+        $removeArtist = mysqli_prepare($this->conn, 'DELETE FROM artists WHERE artist_id = 1'); // artist id is hardcoded as login is not implemented
         mysqli_stmt_execute($removeArtist);
         mysqli_stmt_close($removeArtist);
+
+        if ($this->conn) {
+            $this->disconnect();
+        }
+
+    }
+
+    // function that deletes song give song id, it will delete artist connection in song_artist and keep the song in the song table
+    function deleteSong($song_id) {
+        $this->connect();
+
+        // delete row from table
+        $deleteSongStatement = mysqli_prepare($this->conn, 'DELETE FROM song_artists WHERE song_id = ? AND artist_id = 1'); // artist id is hardcoded as login is not implemented
+        mysqli_stmt_bind_param($deleteSongStatement, 'i', $song_id);
+        mysqli_stmt_execute($deleteSongStatement);
+        mysqli_stmt_close($deleteSongStatement);
+
+        if ($this->conn) {
+            $this->disconnect();
+        }
+    }
+
+    // function that deletes album given the specific album_id it will delete artist connection in album_artist and keep the album in the ablum table
+    function deleteAlbum($album_id) {
+        $this->connect();
+
+        // delete row from table
+        $deleteAlbumStatement = mysqli_prepare($this->conn, 'DELETE FROM album_artists WHERE album_id = ? AND artist_id = 1');
+        mysqli_stmt_bind_param($deleteAlbumStatement, 'i', $album_id);
+        mysqli_stmt_execute($deleteAlbumStatement);
+        mysqli_stmt_close($deleteAlbumStatement);
+
+        if ($this->conn) {
+            $this->disconnect();
+        }
+    }
+
+    function editAlbum() {
+        $this->connect();
+
+        //    get information from edit album form
+        $release_date = $_POST['release_date'];
+        $release_time = $_POST['release_time'];
+        $album_id = $_POST['album_id'];
+
+        // edit row from table
+        $editAlbumStatement = mysqli_prepare($this->conn, 'UPDATE albums SET release_date = ?, release_time = ? WHERE album_id = ?');
+        mysqli_stmt_bind_param($editAlbumStatement, 'ssi', $release_date, $release_time, $album_id);
+        mysqli_stmt_execute($editAlbumStatement);
+        mysqli_stmt_close($editAlbumStatement);
 
         if ($this->conn) {
             $this->disconnect();
@@ -406,6 +455,18 @@ class artistPageController
                 $this->deleteArtist();
                 header("Location: /homePage.php" );
                 exit();
+            }
+
+            elseif (isset($_POST['deleteAlbumForm'])) {
+                $this->deleteAlbum($_POST['album_id']);
+            }
+
+            elseif (isset($_POST['deleteSongForm'])) {
+                $this->deleteSong($_POST['song_id']);
+            }
+
+            elseif (isset($_POST['editAlbumForm'])) {
+                $this->editAlbum();
             }
 
             header("Location: " . $_SERVER['REQUEST_URI']);

@@ -5,6 +5,8 @@ require_once '../src/config/config.php';
 class artistPageAdminController
 {
 
+    private $conn;
+
     // Connect to database
     public function connect()
     {
@@ -22,7 +24,6 @@ class artistPageAdminController
         }
     }
 
-    private $conn;
     public function collectAdminName() {
         $this->connect();
 
@@ -74,7 +75,7 @@ class artistPageAdminController
         return $albums;
     }
 
-    //  Function to show other artists for potential collabs
+    //  Function to show all artists
     function collectAllArtists() {
         $this->connect();
 
@@ -104,7 +105,7 @@ class artistPageAdminController
 
         // Collects all songs created by artist
         // artist_id hard coded until we get user code
-        $sql = "SELECT songs.song_title, songs.listens, songs.album_id, songs.song_id, albums.album_title, songs.length
+        $sql = "SELECT songs.song_title, songs.listens, songs.album_id, songs.song_id, albums.album_title, songs.length, songs.release_date, songs.release_time
             FROM songs
             LEFT JOIN albums ON songs.album_id = albums.album_ID";
 
@@ -195,7 +196,7 @@ class artistPageAdminController
                 }
             }
 
-            // adds collaborators to new row of collabArray
+            // adds collaborators to new row of artistArray
             $artistArray[] = $artists;
         }
 
@@ -347,9 +348,30 @@ class artistPageAdminController
         }
     }
 
+    function editAlbum() {
+        $this->connect();
+
+        //    get information from edit album form
+        $release_date = $_POST['release_date'];
+        $release_time = $_POST['release_time'];
+        $album_title = $_POST['album_title'];
+        $album_id = $_POST['album_id'];
+
+        // edit row from table
+        $editAlbumStatement = mysqli_prepare($this->conn, 'UPDATE albums SET release_date = ?, release_time = ?, album_title = ? WHERE album_id = ?');
+        mysqli_stmt_bind_param($editAlbumStatement, 'sssi', $release_date, $release_time, $album_title, $album_id);
+        mysqli_stmt_execute($editAlbumStatement);
+        mysqli_stmt_close($editAlbumStatement);
+
+        if ($this->conn) {
+            $this->disconnect();
+        }
+
+    }
+
 
     // function to handle which action to take based on form version album_id is optional
-    public function handleFormSubmit($album_id = NULL)
+    public function handleFormSubmit()
     {
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             if (isset($_POST['songForm'])) {
@@ -359,17 +381,17 @@ class artistPageAdminController
             elseif (isset($_POST['albumForm'])) {
                 $this->saveNewAlbumData();
             }
-//
-//            elseif (isset($_POST['changeNameForm'])) {
-//                $this->changeName();
-//            }
-//
+
             elseif (isset($_POST['deleteAlbumForm'])) {
                 $this->deleteAlbum($_POST['album_id']);
             }
 
             elseif (isset($_POST['deleteSongForm'])) {
                 $this->deleteSong($_POST['song_id']);
+            }
+
+            elseif (isset($_POST['editAlbumForm'])) {
+                $this->editAlbum();
             }
 
             header("Location: " . $_SERVER['REQUEST_URI']);

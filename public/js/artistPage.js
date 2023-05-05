@@ -18,6 +18,15 @@ function closeNewAlbumPopup() {
     document.getElementById("popup2").style.display = "none";
 }
 
+// functions for edit album popup
+function editAlbumPopup(album_id) {
+    document.getElementById("id" + album_id).style.display = "block";
+}
+
+function closeEditAlbumPopup(album_id) {
+    document.getElementById("id" + album_id).style.display = "none";
+}
+
 function showChangeNameForm() {
     if (document.getElementById("nf").style.display == "none")
     {

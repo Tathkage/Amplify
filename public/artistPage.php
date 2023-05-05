@@ -91,6 +91,9 @@ $potentialCollabs = $controller->collectPotentialCollabs();
             <th>Collaborators</th>
             <th>Length</th>
             <th>Listens</th>
+            <th>Release Time</th>
+            <th>Release Date</th>
+            <th>Delete</th>
         </tr>
         </thead>
         <tbody>
@@ -110,6 +113,15 @@ $potentialCollabs = $controller->collectPotentialCollabs();
                 </td>
                 <td><?php echo $row['length']; ?></td>
                 <td><?php echo $row['listens']; ?></td>
+                <td><?php echo $row['release_time']; ?></td>
+                <td><?php echo $row['release_date']; ?></td>
+                <td>
+                    <!-- form for deleting the song in the same row -->
+                    <form action="<?php echo $controller->handleFormSubmit(); ?> " name="deleteSongForm" method="post">
+                        <input type="hidden" name="song_id" value="<?php echo $row['song_id']; ?>">
+                        <input type="submit" value="Delete Song" name="deleteSongForm">
+                    </form>
+                </td>
             </tr>
         <?php endforeach; ?>
         </tbody>
@@ -191,6 +203,9 @@ $potentialCollabs = $controller->collectPotentialCollabs();
             <th>Collaborators</th>
             <th>Release Date</th>
             <th>Release Time</th>
+            <th>Delete</th>
+            <th>Edit</th>
+
         </tr>
         </thead>
         <tbody>
@@ -205,6 +220,52 @@ $potentialCollabs = $controller->collectPotentialCollabs();
                 </td>
                 <td><?php echo $row['release_date']; ?></td>
                 <td><?php echo $row['release_time']; ?></td>
+                <td>
+                    <!-- Form for deleting the album from the same row-->
+                    <form action="<?php echo $controller->handleFormSubmit(); ?> " name="deleteAlbumForm" method="post">
+                        <input type="hidden" name="album_id" value="<?php echo $row['album_id']; ?>">
+                        <input type="submit" value="Delete Album" name="deleteAlbumForm">
+                    </form>
+                </td>
+
+                <!-- Option to edit the album on the given row through a pop up-->
+                <td>
+                    <button onclick="editAlbumPopup(<?php echo $row['album_id']; ?>)">Edit Album Times</button>
+                    <div id="id<?php echo $row['album_id']; ?>" class="popup">
+                        <div class="popup-content">
+                            <span class="close"
+                                  onclick="closeEditAlbumPopup(<?php echo $row['album_id']; ?>)">&times;</span>
+                            <h2>Edit Album</h2>
+
+                            <!--  form for creating new album  -->
+                            <form action="<?php echo $controller->handleFormSubmit(); ?> " name="editAlbumForm"
+                                  method="post">
+
+                                <label for="release_date">Release Date: </label>
+                                <input type="date" id="release_date" name="release_date" min="YYYY-MM-DD"
+                                       max="YYYY-MM-DD" value="<?php echo $row['release_date'] ?>">
+                                <br><br>
+
+                                <!-- Release time selection -->
+                                <label for="release_time">Release Time: </label>
+                                <select id="release_time" name="release_time">
+                                    <?php
+                                    $start_time = strtotime("9:00 AM");
+                                    $end_time = strtotime("10:00 PM");
+                                    $interval = 15 * 60; // 15 minutes
+
+                                    // loop through based on interval gap of 15 minutes
+                                    for ($i = $start_time; $i <= $end_time; $i += $interval) {
+                                        echo "<option value='" . date("H:i:s", $i) . "'>" . date("h:i A", $i) . "</option>";
+                                    }
+                                    ?>
+                                </select>
+                                <input type="hidden" name="album_id" value="<?php echo $row['album_id']; ?>">
+                                <input type="submit" value="Submit" name="editAlbumForm">
+                            </form>
+                        </div>
+                    </div>
+                </td>
             </tr>
         <?php endforeach; ?>
         </tbody>
@@ -217,11 +278,12 @@ $potentialCollabs = $controller->collectPotentialCollabs();
             <li><?php echo $row['stage_name']; ?></li>
         <?php endforeach; ?>
     </ul>
-    
+
     <br>
 
     <!-- Edit Artists From -->
-    <button onclick="showChangeNameForm()" id="nameButton">Change Stage Name</button> <br><br>
+    <button onclick="showChangeNameForm()" id="nameButton">Change Stage Name</button>
+    <br><br>
     <form action="<?php echo $controller->handleFormSubmit(); ?> " name="changeNameForm" method="post" id="nf">
         <label for="new_name">New name: </label>
         <input type="text" id="new_name" name="new_name"> <br><br>
@@ -229,7 +291,7 @@ $potentialCollabs = $controller->collectPotentialCollabs();
         <input type="submit" value="Submit" name="changeNameForm">
     </form>
 
-    <form action="<?php echo $controller->handleFormSubmit(); ?> " name="deleteArtistForm" method="post" >
+    <form action="<?php echo $controller->handleFormSubmit(); ?> " name="deleteArtistForm" method="post">
         <input type="submit" value="Retire Artist" name="deleteArtistForm">
     </form>
 </div>
