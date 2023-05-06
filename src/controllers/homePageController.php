@@ -193,7 +193,7 @@ class homePageController {
 
         while ($row = mysqli_fetch_assoc($userIdsQuery)) {
             $user_id = $row['user_id'];
-            $playlistInput = mysqli_prepare($this->conn, '  INTO playlists (user_id, playlist_title) VALUES (?,?)');
+            $playlistInput = mysqli_prepare($this->conn, ' INSERT INTO playlists (user_id, playlist_title) VALUES (?,?)');
             mysqli_stmt_bind_param($playlistInput, 'is', $user_id, $playlist_title);
             mysqli_stmt_execute($playlistInput);
             mysqli_stmt_close($playlistInput);
