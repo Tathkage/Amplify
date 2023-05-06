@@ -83,11 +83,7 @@ class homePageController {
     public function collectRandomSongs(){
         $this->connect();
 
-        $sql = "SELECT songs.song_title, songs.song_id, songs.listens, artists.stage_name
-        FROM songs
-        JOIN song_artists ON songs.song_id = song_artists.song_id
-        JOIN artists ON song_artists.artist_id = artists.artist_id
-        ORDER BY RAND() LIMIT 5";
+        $sql = "SELECT * FROM song_names";
 
         $result = mysqli_query($this->conn, $sql);
 
