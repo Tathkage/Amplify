@@ -13,7 +13,8 @@ All Coding Sections: Tathluach Chol
 
 require_once '../src/config/config.php';
 
-class indSongController {
+class indSongController
+{
     private $conn;
 
     ///////////////////////////////////
@@ -21,15 +22,17 @@ class indSongController {
     ///////////////////////////////////
 
     // Connect to database
-    public function connect() {
-        $this->conn =  mysqli_connect(DB_HOST, DB_USERNAME, DB_PASSWORD, DB_NAME);
+    public function connect()
+    {
+        $this->conn = mysqli_connect(DB_HOST, DB_USERNAME, DB_PASSWORD, DB_NAME);
         if ($this->conn->connect_error) {
             die("Connection failed: " . $this->conn->connect_error);
         }
     }
 
     // Disconnect from database
-    public function disconnect() {
+    public function disconnect()
+    {
         $this->conn->close();
     }
 
@@ -39,7 +42,8 @@ class indSongController {
     //////////////////////////
 
     // Get information on the current song
-    public function getSongInfo($song_id) {
+    public function getSongInfo($song_id)
+    {
         $this->connect();
 
         // Collects all songs created by artist
@@ -69,7 +73,8 @@ class indSongController {
     }
 
     // Get all reviews on the current song
-    public function getSongReviews($song_id) {
+    public function getSongReviews($song_id)
+    {
         $this->connect();
 
         // Collects all reviews for a given song
@@ -97,7 +102,8 @@ class indSongController {
     }
 
     // Get all playlists created by the user
-    public function getUserPlaylist($user_id) {
+    public function getUserPlaylist($user_id)
+    {
         $this->connect();
 
         $sql = "SELECT playlists.playlist_id, playlists.playlist_title
@@ -127,7 +133,8 @@ class indSongController {
     //////////////////////////
 
     // Save information for new review
-    function saveSongReview($user_id, $song_id, $album_id ='NULL', $comment = 'Default comment.', $rating = 5) {
+    function saveSongReview($user_id, $song_id, $album_id = 'NULL', $comment = 'Default comment.', $rating = 5)
+    {
 
         $this->connect();
 
@@ -140,7 +147,7 @@ class indSongController {
             return;
         }
 
-        if ($album_id === 'NULL' || empty($album_id) ) {
+        if ($album_id === 'NULL' || empty($album_id)) {
             $album_id = NULL;
         }
 
@@ -154,7 +161,8 @@ class indSongController {
     }
 
     // Save information to add song to playlist
-    function savePlaylistSong($song_id, $playlist_id) {
+    function savePlaylistSong($song_id, $playlist_id)
+    {
 
         $this->connect();
 
@@ -175,15 +183,15 @@ class indSongController {
     }
 
     // Handle which information to save based off form submitted
-    public function handleFormSubmit() {
+    public function handleFormSubmit()
+    {
         if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['comment'])) {
             $user_id = $_POST['user_id'];
             $song_id = $_POST['song_id'];
             $this->saveSongReview($user_id, $song_id);
             header("Location: " . $_SERVER['REQUEST_URI']);
             exit();
-        }
-        else if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['playlist_id'])) {
+        } else if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['playlist_id'])) {
             $song_id = $_POST['song_id'];
             $playlist_id = $_POST['playlist_id'];
             $this->savePlaylistSong($song_id, $playlist_id);

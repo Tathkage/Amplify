@@ -13,7 +13,8 @@ All Coding Sections: Tathluach Chol
 
 require_once '../src/config/config.php';
 
-class indSongAdminController {
+class indSongAdminController
+{
     private $conn;
 
     ///////////////////////////////////
@@ -21,15 +22,17 @@ class indSongAdminController {
     ///////////////////////////////////
 
     // Connect to database
-    public function connect() {
-        $this->conn =  mysqli_connect(DB_HOST, DB_USERNAME, DB_PASSWORD, DB_NAME);
+    public function connect()
+    {
+        $this->conn = mysqli_connect(DB_HOST, DB_USERNAME, DB_PASSWORD, DB_NAME);
         if ($this->conn->connect_error) {
             die("Connection failed: " . $this->conn->connect_error);
         }
     }
 
     // Disconnect from database
-    public function disconnect() {
+    public function disconnect()
+    {
         $this->conn->close();
     }
 
@@ -39,7 +42,8 @@ class indSongAdminController {
     //////////////////////////
 
     // Get information on the current song
-    public function getSongInfo($song_id) {
+    public function getSongInfo($song_id)
+    {
         $this->connect();
 
         $sql = "SELECT songs.song_title, songs.listens, songs.length, songs.release_date, songs.release_time
@@ -66,7 +70,8 @@ class indSongAdminController {
     }
 
     // Get all reviews on the current song
-    public function getSongReviews($song_id) {
+    public function getSongReviews($song_id)
+    {
         $this->connect();
 
         $sql = "SELECT reviews.review_id, reviews.user_id, users.username, reviews.comment, reviews.rating
@@ -92,7 +97,8 @@ class indSongAdminController {
     }
 
     // Get flagged reviews on the current song
-    public function getFlaggedReviews($song_id) {
+    public function getFlaggedReviews($song_id)
+    {
         $this->connect();
 
         // Collect reviews with popular curse words in the comments
@@ -123,7 +129,8 @@ class indSongAdminController {
     }
 
     // Get all playlists created by the user
-    public function getUserPlaylists($user_id) {
+    public function getUserPlaylists($user_id)
+    {
         $this->connect();
 
         $sql = "SELECT playlists.playlist_id, playlists.playlist_title
@@ -153,7 +160,8 @@ class indSongAdminController {
     //////////////////////////
 
     // Save information for new review
-    function saveSongReview($user_id, $song_id, $album_id ='NULL', $comment = 'Default comment.', $rating = 5) {
+    function saveSongReview($user_id, $song_id, $album_id = 'NULL', $comment = 'Default comment.', $rating = 5)
+    {
 
         $this->connect();
 
@@ -166,7 +174,7 @@ class indSongAdminController {
             return;
         }
 
-        if ($album_id === 'NULL' || empty($album_id) ) {
+        if ($album_id === 'NULL' || empty($album_id)) {
             $album_id = NULL;
         }
 
@@ -180,7 +188,8 @@ class indSongAdminController {
     }
 
     // Save information to add song to playlist
-    function savePlaylistSong($song_id, $playlist_id) {
+    function savePlaylistSong($song_id, $playlist_id)
+    {
 
         $this->connect();
 
@@ -204,8 +213,9 @@ class indSongAdminController {
     // SQL Delete Functions //
     //////////////////////////
 
-    // Function to delete song from playlist
-    function deleteSongReview($reviewID) {
+    // Function to delete review from song
+    function deleteSongReview($reviewID)
+    {
         $this->connect();
 
         // Delete the corresponding entity from the reviews table
@@ -221,7 +231,8 @@ class indSongAdminController {
     //////////////////////////
 
     // Function to update the reviews comment
-    function editReviewComment($reviewID, $newComment) {
+    function editReviewComment($reviewID, $newComment)
+    {
         $this->connect();
 
         // Update the playlist title for the given playlist ID
@@ -237,7 +248,8 @@ class indSongAdminController {
     /////////////////////////////
 
     // Handle what to function to do depending on form
-    public function handleFormSubmit() {
+    public function handleFormSubmit()
+    {
 
         // If a review information is sent, call the function to add it to the database
         if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['comment'])) {
@@ -246,25 +258,21 @@ class indSongAdminController {
             $this->saveSongReview($user_id, $song_id);
             header("Location: " . $_SERVER['REQUEST_URI']);
             exit();
-        }
-        // If playlist information is sent, call the function to add it to the database
+        } // If playlist information is sent, call the function to add it to the database
         else if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['playlist_id'])) {
             $song_id = $_POST['song_id'];
             $playlist_id = $_POST['playlist_id'];
             $this->savePlaylistSong($song_id, $playlist_id);
             header("Location: " . $_SERVER['REQUEST_URI']);
             exit();
-        }
-
-        // If a review needs to be changed call the appropriate function to delete or update it
+        } // If a review needs to be changed call the appropriate function to delete or update it
         else if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['review_id'])) {
             $reviewID = $_POST['review_id'];
 
             if (isset($_POST['review_comment']) && !empty($_POST['review_comment'])) {
                 $reviewComment = $_POST['review_comment'];
                 $this->editReviewComment($reviewID, $reviewComment);
-            }
-            else {
+            } else {
                 $this->deleteSongReview($reviewID);
             }
 

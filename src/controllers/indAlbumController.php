@@ -13,7 +13,8 @@ All Coding Sections: Tathluach Chol
 
 require_once '../src/config/config.php';
 
-class indAlbumController {
+class indAlbumController
+{
     private $conn;
 
     ///////////////////////////////////
@@ -21,15 +22,17 @@ class indAlbumController {
     ///////////////////////////////////
 
     // Connect to database
-    public function connect() {
-        $this->conn =  mysqli_connect(DB_HOST, DB_USERNAME, DB_PASSWORD, DB_NAME);
+    public function connect()
+    {
+        $this->conn = mysqli_connect(DB_HOST, DB_USERNAME, DB_PASSWORD, DB_NAME);
         if ($this->conn->connect_error) {
             die("Connection failed: " . $this->conn->connect_error);
         }
     }
 
     // Disconnect from database
-    public function disconnect() {
+    public function disconnect()
+    {
         $this->conn->close();
     }
 
@@ -39,7 +42,8 @@ class indAlbumController {
     //////////////////////////
 
     // Get information on current album
-    public function getAlbumInfo($album_id) {
+    public function getAlbumInfo($album_id)
+    {
         $this->connect();
 
         // Collect album info by album_id
@@ -81,7 +85,8 @@ class indAlbumController {
     }
 
     // Get all songs inside of album
-    public function getAlbumSongs($album_id) {
+    public function getAlbumSongs($album_id)
+    {
         $this->connect();
 
         // Collects all songs created by artist
@@ -124,7 +129,8 @@ class indAlbumController {
     }
 
     // Get all reviews on album
-    public function getAlbumReviews($album_id) {
+    public function getAlbumReviews($album_id)
+    {
         $this->connect();
 
         // Collects all reviews for an album
@@ -170,7 +176,8 @@ class indAlbumController {
     //////////////////////////
 
     // Save information for new review
-    public function saveAlbumReview($user_id, $song_id = null, $album_id, $comment, $rating) {
+    public function saveAlbumReview($user_id, $song_id = null, $album_id, $comment, $rating)
+    {
         $this->connect();
 
         // Handle empty cases
@@ -178,7 +185,7 @@ class indAlbumController {
             return;
         }
 
-        if ($song_id === 'NULL' || empty($song_id) ) {
+        if ($song_id === 'NULL' || empty($song_id)) {
             $song_id = null;
         }
 
@@ -192,7 +199,8 @@ class indAlbumController {
     }
 
     // Handle which information to save based off form submitted
-    public function handleFormSubmit() {
+    public function handleFormSubmit()
+    {
         if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['comment'])) {
             $user_id = $_POST['user_id'] ?? 3;
             $album_id = $_POST['album_id'] ?? 38;
