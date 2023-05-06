@@ -103,13 +103,15 @@ $flaggedReviews = $controller->getFlaggedReviews() ?? [];
 
         <!-- Loop through each flagged review and display its information -->
         <?php foreach ($flaggedReviews as $flaggedReview): ?>
-            <tr>
-                <td><?php echo $flaggedReview['review_id']; ?></td>
-                <td><?php echo $flaggedReview['user_id']; ?></td>
-                <td><?php echo $flaggedReview['username']; ?></td>
-                <td><?php echo $flaggedReview['rating']; ?></td>
-                <td><?php echo $flaggedReview['comment']; ?></td>
-            </tr>
+            <?php if ($album_id === $flaggedReview['album_id']) {
+                echo '<tr>
+                <td>' . $flaggedReview['review_id'] . '</td>
+                <td>' . $flaggedReview['user_id'] . '</td>
+                <td>' . $flaggedReview['username'] . '</td>
+                <td>' . $flaggedReview['rating'] . '</td>
+                <td>' . $flaggedReview['comment'] . '</td>
+                </tr>';
+            } ?>
         <?php endforeach; ?>
         </tbody>
     </table>
