@@ -1,12 +1,10 @@
 <!--
-File Creator: Rohan Dhawan
+File Creator: Irving Salinas
 
-File Description:
+File Description: Takes care of users trying to create an account.
 
-    This file takes care of a lot of the bulk of the operations as users have te ability to create new playlists, delete
-    playlists and also update their own information. This just adds functionality and makes the process of using Amplify
-    much more enjoyable.
-All Coding Sections: Rohan Dhawan
+
+All Coding Sections: Irving Salinas
 -->
 <?php
 require_once '../src/controllers/homePageController.php';
