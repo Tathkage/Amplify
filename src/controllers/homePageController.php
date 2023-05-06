@@ -7,7 +7,7 @@ File Description:
     homePageAdmin.php. All types of queries are utilised, SELECT, UPDATE, INSERT, and DELETE are all queries that are
     integral to the design of the database.
 
-All Coding Sections: Rohan Dhawan
+Majority Coding Sections: Rohan Dhawan
 -->
 <?php
 
@@ -241,6 +241,24 @@ class homePageController {
 
         return $num_rows_updated > 0;
     }
+    public function newAccount() {
+        $this->connect();
+        $username = $_POST['username'];
+        $password = $_POST['password'];
+        $first_name = $_POST['first_name'];
+        $last_name = $_POST['last_name'];
+        $email = $_POST['email'];
+
+        $insertQuery = mysqli_prepare($this->conn, 'INSERT INTO users (username, password, first_name, last_name, email) VALUES (?, ?, ?, ?, ?)');
+        mysqli_stmt_bind_param($insertQuery, 'sssss', $username, $password, $first_name, $last_name, $email);
+        mysqli_stmt_execute($insertQuery);
+        $num_rows_inserted = mysqli_stmt_affected_rows($insertQuery);
+        mysqli_stmt_close($insertQuery);
+
+        $this->disconnect();
+
+        return $num_rows_inserted > 0;
+    }
 
     // function to handle which action to take based on form version
     public function handleFormSubmit()
@@ -262,6 +280,9 @@ class homePageController {
             }
             if(isset($_POST['updateUser'])){
                 $this->updateUserInfo();
+            }
+            if(isset($_POST['newAccount'])){
+                $this->newAccount();
             }
 
             header("Location: " . $_SERVER['REQUEST_URI']);
