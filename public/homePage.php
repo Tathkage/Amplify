@@ -1,3 +1,14 @@
+<!--
+File Creator: Rohan Dhawan
+
+File Description:
+
+    This file is for searching for songs and albums and also displaying songs and albums "For You". It gives users the
+    luxury of being able to have any song or album at their fingertips and potentially discover new songs or albums that
+    they didn't know about.
+
+All Coding Sections: Rohan Dhawan
+-->
 <?php
 require_once '../src/controllers/homePageController.php';
 

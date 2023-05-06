@@ -1,3 +1,14 @@
+<!--
+File Creator: Rohan Dhawan
+
+File Description:
+
+    This file takes care of all controller functions for the playlistcreation.php, playlistcreationadmin.php, homePage.php,
+    homePageAdmin.php. All types of queries are utilised, SELECT, UPDATE, INSERT, and DELETE are all queries that are
+    integral to the design of the database.
+
+All Coding Sections: Rohan Dhawan
+-->
 <?php
 
 require_once '../src/config/config.php';
@@ -182,7 +193,7 @@ class homePageController {
 
         while ($row = mysqli_fetch_assoc($userIdsQuery)) {
             $user_id = $row['user_id'];
-            $playlistInput = mysqli_prepare($this->conn, 'INSERT INTO playlists (user_id, playlist_title) VALUES (?,?)');
+            $playlistInput = mysqli_prepare($this->conn, '  INTO playlists (user_id, playlist_title) VALUES (?,?)');
             mysqli_stmt_bind_param($playlistInput, 'is', $user_id, $playlist_title);
             mysqli_stmt_execute($playlistInput);
             mysqli_stmt_close($playlistInput);
