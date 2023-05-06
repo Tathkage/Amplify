@@ -13,7 +13,8 @@ All Coding Sections: Tathluach Chol
 
 require_once '../src/config/config.php';
 
-class indPlaylistController {
+class indPlaylistController
+{
     private $conn;
 
     ///////////////////////////////////
@@ -21,15 +22,17 @@ class indPlaylistController {
     ///////////////////////////////////
 
     // Connect to database
-    public function connect() {
-        $this->conn =  mysqli_connect(DB_HOST, DB_USERNAME, DB_PASSWORD, DB_NAME);
+    public function connect()
+    {
+        $this->conn = mysqli_connect(DB_HOST, DB_USERNAME, DB_PASSWORD, DB_NAME);
         if ($this->conn->connect_error) {
             die("Connection failed: " . $this->conn->connect_error);
         }
     }
 
     // Disconnect from database
-    public function disconnect() {
+    public function disconnect()
+    {
         $this->conn->close();
     }
 
@@ -39,7 +42,8 @@ class indPlaylistController {
     //////////////////////////
 
     // Get information on current playlist
-    public function getPlaylistInfo($playlist_id) {
+    public function getPlaylistInfo($playlist_id)
+    {
         $this->connect();
 
         // Collects all songs created by artist
@@ -70,7 +74,8 @@ class indPlaylistController {
     }
 
     // Get all songs in a playlist
-    public function getPlaylistSongs($playlist_id) {
+    public function getPlaylistSongs($playlist_id)
+    {
         $this->connect();
 
         // Collects all songs created by artist
@@ -106,7 +111,8 @@ class indPlaylistController {
     //////////////////////////
 
     // Function to delete song from playlist
-    function deletePlaylistSong($selectedSong) {
+    function deletePlaylistSong($selectedSong)
+    {
         $this->connect();
 
         // Find the song_id corresponding to the selected song title
@@ -134,7 +140,8 @@ class indPlaylistController {
     //////////////////////////
 
     // Function to edit the playlists name
-    function editPlaylistName($playlistID, $newPlaylistName) {
+    function editPlaylistName($playlistID, $newPlaylistName)
+    {
         $this->connect();
 
         // Update the playlist title for the given playlist ID
@@ -150,14 +157,14 @@ class indPlaylistController {
     /////////////////////////////
 
     // Handle what to function to do depending on form
-    public function handleFormSubmit() {
+    public function handleFormSubmit()
+    {
         if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['selected_song'])) {
             $selectedSong = $_POST['selected_song'];
             $this->deletePlaylistSong($selectedSong);
             header("Location: " . $_SERVER['REQUEST_URI']);
             exit();
-        }
-        else if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['playlist_name'])) {
+        } else if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['playlist_name'])) {
             $playlistID = $_POST['playlist_id'];
             $playlistName = $_POST['playlist_name'];
             $this->editPlaylistName($playlistID, $playlistName);

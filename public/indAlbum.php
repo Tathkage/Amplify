@@ -37,7 +37,8 @@ $songs = $controller->getAlbumSongs($album_id) ?? [];
 
     <!-- Display the album details on the page -->
     <h2><?php echo $album[0]; ?></h2>
-    <p><strong>Songs:</strong> 10 | <strong>Reviews:</strong> 5 | <strong>Release Date:</strong> <?php echo $album[1]; ?></p>
+    <p><strong>Songs:</strong> 10 | <strong>Reviews:</strong> 5 | <strong>Release
+            Date:</strong> <?php echo $album[1]; ?></p>
 
     <!-- Display the list of songs on the album -->
     <h2>Songs</h2>

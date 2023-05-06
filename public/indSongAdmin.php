@@ -39,7 +39,8 @@ $playlists = $controller->getUserPlaylists($user_id) ?? [];
 
     <!-- Display the song details on the page -->
     <h2><?php echo $song[0]; ?></h2>
-    <p><strong>Views:</strong> <?php echo $song[1]; ?> | <strong>Reviews:</strong> 5 | <strong>Length:</strong> <?php echo $song[2]; ?> | <strong>Release Date:</strong> <?php echo $song[3]; ?> </p>
+    <p><strong>Views:</strong> <?php echo $song[1]; ?> | <strong>Reviews:</strong> 5 |
+        <strong>Length:</strong> <?php echo $song[2]; ?> | <strong>Release Date:</strong> <?php echo $song[3]; ?> </p>
 
     <!-- Display reviews in a table -->
     <h2>Song Reviews</h2>
@@ -127,7 +128,8 @@ $playlists = $controller->getUserPlaylists($user_id) ?? [];
         <label for="playlist_id">Playlist Name:</label>
         <select id="playlist_id" name="playlist_id">
             <?php foreach ($playlists as $playlist): ?>
-                <option value="<?= htmlspecialchars($playlist['playlist_id']) ?>"><?= htmlspecialchars($playlist['playlist_title']) ?></option>
+                <option
+                    value="<?= htmlspecialchars($playlist['playlist_id']) ?>"><?= htmlspecialchars($playlist['playlist_title']) ?></option>
             <?php endforeach; ?>
         </select>
         <input type="submit" name="add_to_playlist" value="Add">

@@ -165,6 +165,32 @@ class indAlbumAdminController {
         return $albumReviews;
     }
 
+    // Get flagged reviews on the current song
+    public function getFlaggedReviews()
+    {
+        $this->connect();
+
+        // Collect reviews with popular curse words in the comments
+        $sql = "SELECT * FROM flagged_album_reviews";
+
+        $result = mysqli_query($this->conn, $sql);
+
+        // Check if query execution was successful
+        if (!$result) {
+            die("Query failed: " . $this->conn->error);
+        }
+
+        // Store songs in array
+        $flaggedReviews = array();
+        if ($result->num_rows > 0) {
+            while ($row = $result->fetch_assoc()) {
+                $flaggedReviews[] = $row;
+            }
+        }
+        $this->disconnect();
+        return $flaggedReviews;
+    }
+
     // Get all album collaborators
     public function getAlbumCollaborators($album_id) {
         $this->connect();
@@ -236,19 +262,27 @@ class indAlbumAdminController {
         $this->disconnect();
     }
 
+    // Function to delete review from song
+    function deleteAlbumReview($reviewID)
+    {
+        $this->connect();
+
+        // Delete the corresponding entity from the reviews table
+        $stmt = $this->conn->prepare("DELETE FROM reviews WHERE review_id = ?");
+        $stmt->bind_param("i", $reviewID);
+        $stmt->execute();
+
+        $this->disconnect();
+    }
 
     //////////////////////////
     // SQL INSERT Functions //
     //////////////////////////
 
     // Save information for new review
-    function saveAlbumReview($user_id = 3, $song_id ='NULL', $album_id ='NULL', $comment = 'Default comment.', $rating = 5) {
+    function saveAlbumReview($user_id, $album_id, $song_id = NULL) {
 
         $this->connect();
-
-        // Get information from page
-        $user_id = 3;
-        $album_id = 38;
 
         // Get information from review form
         $comment = $_POST['comment'];
@@ -259,13 +293,9 @@ class indAlbumAdminController {
             return;
         }
 
-        if ($song_id === 'NULL' || empty($song_id) ) {
-            $song_id = NULL;
-        }
-
         // Query for inputting new review
         $reviewInput = mysqli_prepare($this->conn, 'INSERT INTO reviews (user_id, song_id, album_id, comment, rating) VALUES (?,?,?,?,?)');
-        mysqli_stmt_bind_param($reviewInput, 'ssiss', $user_id, $song_id, $album_id, $comment, $rating);
+        mysqli_stmt_bind_param($reviewInput, 'isssi', $user_id, $song_id, $album_id, $comment, $rating);
         mysqli_stmt_execute($reviewInput);
         mysqli_stmt_close($reviewInput);
 
@@ -285,6 +315,23 @@ class indAlbumAdminController {
         $this->disconnect();
     }
 
+    //////////////////////////
+    // SQL Update Functions //
+    //////////////////////////
+
+    // Function to update the reviews comment
+    function editReviewComment($reviewID, $newComment)
+    {
+        $this->connect();
+
+        // Update the playlist title for the given playlist ID
+        $stmt = $this->conn->prepare("UPDATE reviews SET comment = ? WHERE review_id = ?");
+        $stmt->bind_param("si", $newComment, $reviewID);
+        $stmt->execute();
+
+        $this->disconnect();
+    }
+
     /////////////////////////////
     // Handle Form Submissions //
     /////////////////////////////
@@ -292,7 +339,22 @@ class indAlbumAdminController {
     // Handle what to function to do depending on form
     public function handleFormSubmit() {
         if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['comment'])) {
-            $this->saveAlbumReview();
+            $user_id = $_POST['user_id'];
+            $album_id = $_POST['album_id'];
+            $this->saveAlbumReview($user_id, $album_id);
+            header("Location: " . $_SERVER['REQUEST_URI']);
+            exit();
+        }
+        else if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['review_id'])) {
+            $reviewID = $_POST['review_id'];
+
+            if (isset($_POST['review_comment']) && !empty($_POST['review_comment'])) {
+                $reviewComment = $_POST['review_comment'];
+                $this->editReviewComment($reviewID, $reviewComment);
+            } else {
+                $this->deleteAlbumReview($reviewID);
+            }
+
             header("Location: " . $_SERVER['REQUEST_URI']);
             exit();
         }

@@ -19,7 +19,7 @@ $song_id = $_GET['songid'];
 
 $user_id = $_GET['userid'];
 
-// Get the song, reviews, and playlistss data from the back-end
+// Get the song, reviews, and playlists data from the back-end
 $song = $controller->getSongInfo($song_id) ?? [];
 $reviews = $controller->getSongReviews($song_id) ?? [];
 $playlists = $controller->getUserPlaylist($user_id) ?? [];
@@ -38,7 +38,8 @@ $playlists = $controller->getUserPlaylist($user_id) ?? [];
 
     <!-- Display the song details on the page -->
     <h2><?php echo $song[0]; ?></h2>
-    <p><strong>Views:</strong> <?php echo $song[1]; ?> | <strong>Reviews:</strong> 5 | <strong>Length:</strong> <?php echo $song[2]; ?> | <strong>Release Date:</strong> <?php echo $song[3]; ?> </p>
+    <p><strong>Views:</strong> <?php echo $song[1]; ?> | <strong>Reviews:</strong> 5 |
+        <strong>Length:</strong> <?php echo $song[2]; ?> | <strong>Release Date:</strong> <?php echo $song[3]; ?> </p>
 
     <!-- Display reviews in a table -->
     <h2>Song Reviews</h2>
@@ -90,7 +91,8 @@ $playlists = $controller->getUserPlaylist($user_id) ?? [];
         <label for="playlist_id">Playlist Name:</label>
         <select id="playlist_id" name="playlist_id">
             <?php foreach ($playlists as $playlist): ?>
-                <option value="<?= htmlspecialchars($playlist['playlist_id']) ?>"><?= htmlspecialchars($playlist['playlist_title']) ?></option>
+                <option
+                    value="<?= htmlspecialchars($playlist['playlist_id']) ?>"><?= htmlspecialchars($playlist['playlist_title']) ?></option>
             <?php endforeach; ?>
         </select>
         <input type="submit" name="add_to_playlist" value="Add">
