@@ -1,3 +1,14 @@
+<!--
+File Creator: Rohan Dhawan
+
+File Description:
+
+    This file is for searching for playlists based on user_id's and playlist_id's while also displaying curated songs
+    for the admin currently using this. This is mainly for admins to be able to verify if a combination of a playlist_id
+    and user_id are valid and also tells the admin the name of the playlist.
+
+All Coding Sections: Rohan Dhawan
+-->
 <?php
 require_once '../src/controllers/homePageController.php';
 

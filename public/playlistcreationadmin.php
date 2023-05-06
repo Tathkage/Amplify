@@ -1,3 +1,14 @@
+<!--
+File Creator: Rohan Dhawan
+
+File Description:
+
+    This file takes care of a lot of the bulk of the operations for admins as they get the power to create playlists for all users in the database as well as
+    being able to delete a playlist simply based on its id. and also the ability to update the ownership of a playlist from
+    one user to another.
+All Coding Sections: Rohan Dhawan
+-->
+
 <?php
 require_once '../src/controllers/homePageController.php';
 
