@@ -1,3 +1,11 @@
+<!--
+File Creator: Tathluach Chol & Wayland Moody
+
+File Description: This file loads the database tables and the entities that should be in them by default.
+
+All Coding Sections: Wayland Mooyd & Tathluach Chol
+-->
+
 <?php
 require_once 'config.php';
 
@@ -25,9 +33,9 @@ $sql = "DROP TABLE IF EXISTS album_artists, song_artists, song_playlists, admins
 DROP VIEW IF EXISTS potential_collabs, flagged_album_reviews;
 
 CREATE TABLE `admins` (
-  `admin_id` int(11) NOT NULL,
-  `admin_password` int(11) NOT NULL,
-  `user_id` int(11) NOT NULL
+  `admin_id` int NOT NULL,
+  `admin_password` int NOT NULL,
+  `user_id` int NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -37,8 +45,8 @@ CREATE TABLE `admins` (
 --
 
 CREATE TABLE `albums` (
-  `album_id` int(11) NOT NULL,
-  `album_title` varchar(100) NOT NULL,
+  `album_id` int NOT NULL,
+  `album_title` varchar(100) COLLATE utf8mb4_general_ci NOT NULL,
   `release_date` date NOT NULL,
   `release_time` time NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -58,9 +66,9 @@ INSERT INTO `albums` (`album_id`, `album_title`, `release_date`, `release_time`)
 --
 
 CREATE TABLE `album_artists` (
-  `album_artists_id` int(11) NOT NULL,
-  `album_id` int(11) NOT NULL,
-  `artist_id` int(11) NOT NULL
+  `album_artists_id` int NOT NULL,
+  `album_id` int NOT NULL,
+  `artist_id` int NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -78,9 +86,9 @@ INSERT INTO `album_artists` (`album_artists_id`, `album_id`, `artist_id`) VALUES
 --
 
 CREATE TABLE `artists` (
-  `artist_id` int(11) NOT NULL,
-  `user_id` int(11) NOT NULL,
-  `stage_name` varchar(50) NOT NULL
+  `artist_id` int NOT NULL,
+  `user_id` int NOT NULL,
+  `stage_name` varchar(50) COLLATE utf8mb4_general_ci NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -98,13 +106,13 @@ INSERT INTO `artists` (`artist_id`, `user_id`, `stage_name`) VALUES
 -- (See below for the actual view)
 --
 CREATE TABLE `flagged_album_reviews` (
-`review_id` int(11)
-,`user_id` int(11)
-,`username` varchar(20)
+`album_id` int
 ,`comment` text
-,`rating` int(11)
-,`album_id` int(11)
-,`song_id` int(11)
+,`rating` int
+,`review_id` int
+,`song_id` int
+,`user_id` int
+,`username` varchar(20)
 );
 
 -- --------------------------------------------------------
@@ -114,9 +122,9 @@ CREATE TABLE `flagged_album_reviews` (
 --
 
 CREATE TABLE `playlists` (
-  `playlist_id` int(11) NOT NULL,
-  `user_id` int(11) DEFAULT NULL,
-  `playlist_title` varchar(100) NOT NULL
+  `playlist_id` int NOT NULL,
+  `user_id` int DEFAULT NULL,
+  `playlist_title` varchar(100) COLLATE utf8mb4_general_ci NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -126,7 +134,8 @@ CREATE TABLE `playlists` (
 INSERT INTO `playlists` (`playlist_id`, `user_id`, `playlist_title`) VALUES
 (7, 1, 'My Playlist'),
 (8, 3, 'My Playlist'),
-(9, 2, 'My Playlist');
+(9, 2, 'My Playlist'),
+(10, 2, 'Testing');
 
 -- --------------------------------------------------------
 
@@ -145,12 +154,12 @@ CREATE TABLE `potential_collabs` (
 --
 
 CREATE TABLE `reviews` (
-  `review_id` int(11) NOT NULL,
-  `user_id` int(11) NOT NULL,
-  `song_id` int(11) DEFAULT NULL,
-  `album_id` int(11) DEFAULT NULL,
-  `comment` text NOT NULL,
-  `rating` int(11) NOT NULL
+  `review_id` int NOT NULL,
+  `user_id` int NOT NULL,
+  `song_id` int DEFAULT NULL,
+  `album_id` int DEFAULT NULL,
+  `comment` text COLLATE utf8mb4_general_ci NOT NULL,
+  `rating` int NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -160,11 +169,11 @@ CREATE TABLE `reviews` (
 --
 
 CREATE TABLE `songs` (
-  `song_id` int(11) NOT NULL,
-  `song_title` varchar(100) NOT NULL,
+  `song_id` int NOT NULL,
+  `song_title` varchar(100) COLLATE utf8mb4_general_ci NOT NULL,
   `length` time NOT NULL,
-  `listens` int(11) NOT NULL,
-  `album_id` int(11) DEFAULT NULL,
+  `listens` int NOT NULL,
+  `album_id` int DEFAULT NULL,
   `release_date` date NOT NULL,
   `release_time` time NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -185,9 +194,9 @@ INSERT INTO `songs` (`song_id`, `song_title`, `length`, `listens`, `album_id`, `
 --
 
 CREATE TABLE `song_artists` (
-  `song_artist_id` int(11) NOT NULL,
-  `song_id` int(11) NOT NULL,
-  `artist_id` int(11) NOT NULL
+  `song_artist_id` int NOT NULL,
+  `song_id` int NOT NULL,
+  `artist_id` int NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -206,10 +215,17 @@ INSERT INTO `song_artists` (`song_artist_id`, `song_id`, `artist_id`) VALUES
 --
 
 CREATE TABLE `song_playlists` (
-  `song_playlist_id` int(11) NOT NULL,
-  `playlist_id` int(11) NOT NULL,
-  `song_id` int(11) NOT NULL
+  `song_playlist_id` int NOT NULL,
+  `playlist_id` int NOT NULL,
+  `song_id` int NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `song_playlists`
+--
+
+INSERT INTO `song_playlists` (`song_playlist_id`, `playlist_id`, `song_id`) VALUES
+(2, 9, 107);
 
 -- --------------------------------------------------------
 
@@ -218,12 +234,12 @@ CREATE TABLE `song_playlists` (
 --
 
 CREATE TABLE `users` (
-  `user_id` int(11) NOT NULL,
-  `username` varchar(20) NOT NULL,
-  `password` varchar(20) NOT NULL,
-  `first_name` varchar(30) NOT NULL,
-  `last_name` varchar(30) NOT NULL,
-  `email` varchar(320) NOT NULL
+  `user_id` int NOT NULL,
+  `username` varchar(20) COLLATE utf8mb4_general_ci NOT NULL,
+  `password` varchar(20) COLLATE utf8mb4_general_ci NOT NULL,
+  `first_name` varchar(30) COLLATE utf8mb4_general_ci NOT NULL,
+  `last_name` varchar(30) COLLATE utf8mb4_general_ci NOT NULL,
+  `email` varchar(320) COLLATE utf8mb4_general_ci NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -242,7 +258,7 @@ INSERT INTO `users` (`user_id`, `username`, `password`, `first_name`, `last_name
 --
 DROP TABLE IF EXISTS `flagged_album_reviews`;
 
-CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `flagged_album_reviews`  AS SELECT `reviews`.`review_id` AS `review_id`, `reviews`.`user_id` AS `user_id`, `users`.`username` AS `username`, `reviews`.`comment` AS `comment`, `reviews`.`rating` AS `rating`, `reviews`.`album_id` AS `album_id`, `reviews`.`song_id` AS `song_id` FROM (`reviews` join `users` on(`reviews`.`user_id` = `users`.`user_id`)) WHERE `reviews`.`comment` like '%first curse%' OR `reviews`.`comment` like '%second curse%' OR `reviews`.`comment` like '%third curse%''%third curse%'  ;
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `flagged_album_reviews`  AS SELECT `reviews`.`review_id` AS `review_id`, `reviews`.`user_id` AS `user_id`, `users`.`username` AS `username`, `reviews`.`comment` AS `comment`, `reviews`.`rating` AS `rating`, `reviews`.`album_id` AS `album_id`, `reviews`.`song_id` AS `song_id` FROM (`reviews` join `users` on((`reviews`.`user_id` = `users`.`user_id`))) WHERE ((`reviews`.`comment` like '%first curse%') OR (`reviews`.`comment` like '%second curse%') OR (`reviews`.`comment` like '%third curse%\'%third curse%'))  ;
 
 -- --------------------------------------------------------
 
@@ -251,7 +267,7 @@ CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW 
 --
 DROP TABLE IF EXISTS `potential_collabs`;
 
-CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `potential_collabs`  AS SELECT `artists`.`stage_name` AS `stage_name` FROM `artists` ORDER BY rand() ASC LIMIT 10;
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `potential_collabs`  AS SELECT `artists`.`stage_name` AS `stage_name` FROM `artists` ORDER BY rand() ASC LIMIT 0, 1010  ;
 
 --
 -- Indexes for dumped tables
@@ -261,6 +277,8 @@ CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW 
 -- Indexes for table `admins`
 --
 ALTER TABLE `admins`
+  ADD PRIMARY KEY (`admin_id`),
+  ADD UNIQUE KEY `admin_id` (`admin_id`),
   ADD KEY `Admin to User` (`user_id`);
 
 --
@@ -296,6 +314,8 @@ ALTER TABLE `playlists`
 -- Indexes for table `reviews`
 --
 ALTER TABLE `reviews`
+  ADD PRIMARY KEY (`review_id`),
+  ADD UNIQUE KEY `review_id` (`review_id`),
   ADD KEY `Review to User` (`user_id`),
   ADD KEY `Review to Song` (`song_id`),
   ADD KEY `Review to Album` (`album_id`);
@@ -341,49 +361,49 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT for table `albums`
 --
 ALTER TABLE `albums`
-  MODIFY `album_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=83;
+  MODIFY `album_id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=83;
 
 --
 -- AUTO_INCREMENT for table `album_artists`
 --
 ALTER TABLE `album_artists`
-  MODIFY `album_artists_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=81;
+  MODIFY `album_artists_id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=81;
 
 --
 -- AUTO_INCREMENT for table `artists`
 --
 ALTER TABLE `artists`
-  MODIFY `artist_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `artist_id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `playlists`
 --
 ALTER TABLE `playlists`
-  MODIFY `playlist_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+  MODIFY `playlist_id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
 -- AUTO_INCREMENT for table `songs`
 --
 ALTER TABLE `songs`
-  MODIFY `song_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=110;
+  MODIFY `song_id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=110;
 
 --
 -- AUTO_INCREMENT for table `song_artists`
 --
 ALTER TABLE `song_artists`
-  MODIFY `song_artist_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=105;
+  MODIFY `song_artist_id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=105;
 
 --
 -- AUTO_INCREMENT for table `song_playlists`
 --
 ALTER TABLE `song_playlists`
-  MODIFY `song_playlist_id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `song_playlist_id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `user_id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- Constraints for dumped tables

@@ -14,12 +14,9 @@ require_once '../src/controllers/indAlbumController.php';
 // Instantiate a new instance of the indAlbumController class
 $controller = new indAlbumController();
 
-// Get the album ID from the URL parameter
+// Get the album ID and user ID from the URL parameter
 $album_id = $_GET['albumid'];
-$album_id = 38;
-
 $user_id = $_GET['userid'];
-$user_id = 3;
 
 // Get the album, reviews, and songs data from the back-end
 $album = $controller->getAlbumInfo($album_id) ?? [];

@@ -11,14 +11,13 @@ All Coding Sections: Tathluach Chol
 <?php
 require_once '../src/controllers/indAlbumAdminController.php';
 
-// Instantiate a new instance of the indAlbumController class
+// Instantiate a new instance of the indAlbumAdminController class
 $controller = new indAlbumAdminController();
 
 // Get the album ID from the URL parameter
 $album_id = $_GET['albumid'];
-$album_id = 38;
 
-// Get the album, reviews, and songs data from the back-end
+// Get the album, reviews, songs, collaborators, and non-collaborators data from the back-end
 $album = $controller->getAlbumInfo($album_id) ?? [];
 $reviews = $controller->getAlbumReviews($album_id) ?? [];
 $songs = $controller->getAlbumSongs($album_id) ?? [];

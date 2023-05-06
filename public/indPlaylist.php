@@ -16,7 +16,6 @@ $controller = new indPlaylistController();
 
 // Get the playlist ID from the URL parameter
 $playlist_id = $_GET['playlistid'];
-$playlist_id = 7;
 
 // Get the playlist and songs data from the back-end
 $playlist = $controller->getPlaylistInfo($playlist_id) ?? [];
@@ -71,7 +70,7 @@ $songs = $controller->getPlaylistSongs($playlist_id) ?? [];
     <form action="<?php echo $controller->handleFormSubmit(); ?> " name="songDeleteForm" method="post">
         <label for="delete-song">Delete Song:</label>
         <select id="delete-song" name="delete_song">
-            <?php foreach($songs as $song): ?>
+            <?php foreach ($songs as $song): ?>
                 <option value="<?php echo $song['song_title']; ?>"><?php echo $song['song_title']; ?></option>
             <?php endforeach; ?>
         </select>
