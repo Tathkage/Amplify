@@ -116,7 +116,7 @@ $potentialCollabs = $controller->collectPotentialCollabs();
         <?php foreach ($songs as $index => $row): ?>
             <tr>
                 <!-- link allows you to pass id to next page -->
-                <td><a href="http://localhost:81/indSong.php?songid=<?php echo $row['song_id']; ?>"><?php echo $row['song_title']; ?></a></td>
+                <td><a href="http://localhost:81/indSong.php?songid=<?php echo $row['song_id']; ?>&userid=2"><?php echo $row['song_title']; ?></a></td>
                 <td><?php if ($row['album_title']) {
                         echo $row['album_title'];
                     } else echo 'no album'
@@ -228,7 +228,7 @@ $potentialCollabs = $controller->collectPotentialCollabs();
         <?php foreach ($albums as $index => $row): ?>
             <tr>
                 <!-- link allows you to pass id to next page -->
-                <td><a href="http://localhost:81/indAlbum.php?albumid=<?php echo $row['album_id']; ?>"><?php echo $row['album_title']; ?></a></td>
+                <td><a href="http://localhost:81/indAlbum.php?albumid=<?php echo $row['album_id']; ?>&userid=2"><?php echo $row['album_title']; ?></a></td>
                 <td><?php foreach ($albumCollaborators[$index] as $name): ?>
                         <?php echo $name['stage_name']; ?> |
                     <?php endforeach; ?>

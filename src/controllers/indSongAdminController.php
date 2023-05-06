@@ -153,13 +153,9 @@ class indSongAdminController {
     //////////////////////////
 
     // Save information for new review
-    function saveSongReview($user_id = 3, $song_id ='NULL', $album_id ='NULL', $comment = 'Default comment.', $rating = 5) {
+    function saveSongReview($user_id, $song_id, $album_id ='NULL', $comment = 'Default comment.', $rating = 5) {
 
         $this->connect();
-
-        // Get information from page
-        $user_id = 3;
-        $song_id = 79;
 
         // Get information from review form
         $comment = $_POST['comment'];
@@ -181,7 +177,6 @@ class indSongAdminController {
         mysqli_stmt_close($reviewInput);
 
         $this->disconnect();
-
     }
 
     // Save information to add song to playlist
@@ -246,11 +241,12 @@ class indSongAdminController {
 
         // If a review information is sent, call the function to add it to the database
         if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['comment'])) {
-            $this->saveSongReview();
+            $user_id = $_POST['user_id'];
+            $song_id = $_POST['song_id'];
+            $this->saveSongReview($user_id, $song_id);
             header("Location: " . $_SERVER['REQUEST_URI']);
             exit();
         }
-
         // If playlist information is sent, call the function to add it to the database
         else if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['playlist_id'])) {
             $song_id = $_POST['song_id'];

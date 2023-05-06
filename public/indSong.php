@@ -16,10 +16,8 @@ $controller = new indSongController();
 
 // Get the song ID from the URL parameter
 $song_id = $_GET['songid'];
-$song_id = 79;
 
 $user_id = $_GET['userid'];
-$user_id = 2;
 
 // Get the song, reviews, and playlistss data from the back-end
 $song = $controller->getSongInfo($song_id) ?? [];
@@ -87,7 +85,7 @@ $playlists = $controller->getUserPlaylist($user_id) ?? [];
 
     <!-- Allow users to add the song to their playlists through a form -->
     <h2>Add to Playlist</h2>
-    <form action="<?php echo $_SERVER['PHP_SELF']; ?>" name="playlistForm" method="post">
+    <form action="<?php echo $controller->handleFormSubmit(); ?>" name="playlistForm" method="post">
         <input type="hidden" name="song_id" value="<?php echo $song_id; ?>">
         <label for="playlist_id">Playlist Name:</label>
         <select id="playlist_id" name="playlist_id">
